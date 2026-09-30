@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Balon Pintar - SD Negeri Kesilir 02</title>
+    <style>
+        /* ================================
+           CSS RESET & BASE STYLES
+        ================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #bae6fd 70%, #86efac 70%, #4ade80 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+            color: #1e293b;
+        }
+
+        /* ================================
+           ANIMATED DECORATIONS
+        ================================ */
+        .sky-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .sun {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            width: 70px;
+            height: 70px;
+            background: #facc15;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #fde047;
+            animation: pulse-sun 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse-sun {
+            0% { transform: scale(1); box-shadow: 0 0 20px #fde047; }
+            100% { transform: scale(1.1); box-shadow: 0 0 50px #facc15; }
+        }
+
+        .cloud {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50px;
+            opacity: 0.9;
+            animation: float-cloud linear infinite;
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .cloud1 { width: 120px; height: 40px; top: 10%; left: -150px; animation-duration: 35s; }
+        .cloud1::before { width: 50px; height: 50px; top: -20px; left: 20px; }
+        .cloud1::after { width: 40px; height: 40px; top: -15px; left: 55px; }
+
+        .cloud2 { width: 160px; height: 50px; top: 25%; left: -180px; animation-duration: 45s; animation-delay: 12s; }
+        .cloud2::before { width: 65px; height: 65px; top: -30px; left: 25px; }
+        .cloud2::after { width: 50px; height: 50px; top: -20px; left: 75px; }
+
+        @keyframes float-cloud {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 250px)); }
+        }
+
+        .bird {
+            position: absolute;
+            font-size: 20px;
+            animation: fly-bird linear infinite;
+            z-index: 1;
+        }
+
+        .bird1 { top: 15%; left: -50px; animation-duration: 22s; }
+        .bird2 { top: 28%; left: -50px; animation-duration: 28s; animation-delay: 8s; }
+
+        @keyframes fly-bird {
+            0% { transform: translate(0, 0) scaleX(1); }
+            50% { transform: translate(50vw, -20px) scaleX(1); }
+            51% { transform: translate(50vw, -20px) scaleX(-1); }
+            100% { transform: translate(-100px, 20px) scaleX(-1); }
+        }
+
+        .ground-decor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 5px;
+        }
+
+        .tree, .flower { font-size: 32px; }
+
+        /* ================================
+           CONTAINER & SCREENS
+        ================================ */
+        #app-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            z-index: 20;
+        }
+
+        .screen.active { display: flex; }
+
+        /* ================================
+           UI CARDS & BUTTONS
+        ================================ */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.08);
+            border: 4px solid #ffffff;
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            color: #0284c7;
+            text-shadow: 3px 3px 0px #e0f2fe, 5px 5px 0px rgba(0,0,0,0.1);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: #0369a1;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .school-name {
+            font-size: 1rem;
+            color: #15803d;
+            font-weight: 800;
+            background: #dcfce7;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #86efac;
+        }
+
+        .section-label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #334155;
+            margin: 12px 0 8px 0;
+            text-align: left;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .opt-btn {
+            background: #f1f5f9;
+            border: 3px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 12px 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .opt-btn:hover {
+            transform: translateY(-2px);
+            background: #e2e8f0;
+        }
+
+        .opt-btn.selected {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            border-bottom: 5px solid #15803d;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(22, 163, 74, 0.3);
+            transition: all 0.15s ease;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(22, 163, 74, 0.4);
+            background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+        }
+
+        .primary-btn:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .audio-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 100;
+            background: white;
+            border: 3px solid #cbd5e1;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ================================
+           GAME HUD & TOP HEADER
+        ================================ */
+        #game-screen {
+            padding: 0;
+            justify-content: flex-start;
+        }
+
+        .game-header {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 4px solid #38bdf8;
+            padding: 8px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 30;
+        }
+
+        .top-nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pause-btn {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            border-bottom: 3px solid #d97706;
+            border-radius: 12px;
+            padding: 4px 12px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .question-progress {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0369a1;
+            background: #e0f2fe;
+            padding: 3px 12px;
+            border-radius: 15px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #22c55e);
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 3px solid #0284c7;
+            border-radius: 16px;
+            padding: 10px 15px;
+            width: 98%;
+            max-width: 800px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #0f172a;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-top: 2px;
+        }
+
+        /* ================================
+           SPLIT SCREEN PLAY ARENA
+        ================================ */
+        .play-arena {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .divider {
+            width: 6px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 25;
+            position: relative;
+        }
+
+        .player-zone {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .player-zone.p1 { background: rgba(239, 68, 68, 0.05); }
+        .player-zone.p2 { background: rgba(59, 130, 246, 0.05); }
+
+        .player-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 2px solid rgba(0,0,0,0.05);
+            z-index: 20;
+        }
+
+        .player-identity {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .p1 .player-identity { color: #dc2626; }
+        .p2 .player-identity { color: #2563eb; }
+
+        .score-badge {
+            background: #fef08a;
+            border: 2px solid #eab308;
+            color: #854d0e;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-msg {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.85);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            z-index: 40;
+            display: none;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        .status-msg.active { display: block; animation: popIn 0.3s ease; }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* ================================
+           BALLOON SYSTEM
+        ================================ */
+        .balloon-container {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 85px;
+            height: 100px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+            cursor: pointer;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.15), inset 10px 10px 20px rgba(255,255,255,0.3), 0 8px 15px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+            z-index: 10;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid currentColor;
+            filter: brightness(0.8);
+        }
+
+        .balloon-string {
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            width: 2px;
+            height: 22px;
+            background: rgba(0,0,0,0.2);
+            transform: translateX(-50%);
+        }
+
+        .balloon-shine {
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 15px;
+            height: 25px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+        /* Balloon Animations */
+        @keyframes floatA {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(15px, -30px) rotate(4deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes floatB {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -25px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes floatC {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10px, -35px) rotate(-3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes floatD {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-12px, -20px) rotate(6deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .anim-floatA { animation: floatA 6s ease-in-out infinite; }
+        .anim-floatB { animation: floatB 7s ease-in-out infinite; }
+        .anim-floatC { animation: floatC 8s ease-in-out infinite; }
+        .anim-floatD { animation: floatD 6.5s ease-in-out infinite; }
+
+        .balloon.popping {
+            animation: popOut 0.25s forwards ease-out !important;
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .balloon.shake {
+            animation: shake 0.4s ease-in-out !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* ================================
+           OVERLAYS & MODALS
+        ================================ */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay.active { display: flex; }
+
+        .winner-card {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
+            max-width: 550px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 5px solid #fde047;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .res-box {
+            padding: 15px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+        }
+
+        .res-box.p1 { border-color: #fca5a5; background: #fef2f2; }
+        .res-box.p2 { border-color: #93c5fd; background: #eff6ff; }
+
+        .res-title { font-weight: 800; margin-bottom: 5px; }
+        .res-score { font-size: 1.8rem; font-weight: 900; }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .main-title { font-size: 2rem; }
+            .question-card { font-size: 1rem; padding: 8px; }
+            .balloon { width: 68px; height: 82px; font-size: 1rem; }
+            .options-grid { grid-template-columns: repeat(2, 1fr); }
+            .res-score { font-size: 1.3rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .anim-floatA, .anim-floatB, .anim-floatC, .anim-floatD, .sun, .cloud, .bird {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DECORATION LAYER -->
+    <div class="sky-bg">
+        <div class="sun"></div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="bird bird1">🐦</div>
+        <div class="bird bird2">🐦</div>
+    </div>
+
+    <div class="ground-decor">
+        <span class="tree">🌳</span>
+        <span class="flower">🌼</span>
+        <span class="tree">🌱</span>
+        <span class="flower">🌸</span>
+        <span class="tree">🌳</span>
+    </div>
+
+    <button class="audio-toggle" id="audio-btn" onclick="toggleSound()">🔊</button>
+
+    <!-- APP CONTAINER -->
+    <div id="app-container">
+
+        <!-- SCREEN 1: MENU UTAMA -->
+        <div id="menu-screen" class="screen active">
+            <div class="glass-card">
+                <div class="main-title">🎈 BALON PINTAR</div>
+                <div class="sub-title">GAME EDUKASI 2 PEMAIN</div>
+                <div class="school-name">SD NEGERI KESILIR 02</div>
+
+                <div class="section-label">📚 Pilih Kelas:</div>
+                <div class="options-grid" id="class-options">
+                    <button class="opt-btn" onclick="selectOption('selectedClass', 1, this)">Kelas 1</button>
+                    <button class="opt-btn" onclick="selectOption('selectedClass', 2, this)">Kelas 2</button>
+                    <button class="opt-btn" onclick="selectOption('selectedClass', 3, this)">Kelas 3</button>
+                    <button class="opt-btn selected" onclick="selectOption('selectedClass', 4, this)">Kelas 4</button>
+                    <button class="opt-btn" onclick="selectOption('selectedClass', 5, this)">Kelas 5</button>
+                    <button class="opt-btn" onclick="selectOption('selectedClass', 6, this)">Kelas 6</button>
+                </div>
+
+                <div class="section-label">📖 Pilih Mata Pelajaran:</div>
+                <div class="options-grid" id="subject-options">
+                    <button class="opt-btn selected" onclick="selectOption('selectedSubject', 'matematika', this)">📐 Matematika</button>
+                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'bahasaIndonesia', this)">📖 B. Indonesia</button>
+                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'ipas', this)">🌱 IPAS</button>
+                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'pancasila', this)">🇮🇩 Pancasila</button>
+                </div>
+
+                <div class="section-label">🎯 Pilih Kesulitan:</div>
+                <div class="options-grid" id="diff-options">
+                    <button class="opt-btn" onclick="selectOption('difficulty', 'mudah', this)">🟢 Mudah</button>
+                    <button class="opt-btn selected" onclick="selectOption('difficulty', 'sedang', this)">🟡 Sedang</button>
+                    <button class="opt-btn" onclick="selectOption('difficulty', 'sulit', this)">🔴 Sulit</button>
+                </div>
+
+                <div class="section-label">🔢 Jumlah Soal:</div>
+                <div class="options-grid" id="count-options">
+                    <button class="opt-btn" onclick="selectOption('totalQuestions', 5, this)">5 Soal</button>
+                    <button class="opt-btn selected" onclick="selectOption('totalQuestions', 10, this)">10 Soal</button>
+                    <button class="opt-btn" onclick="selectOption('totalQuestions', 15, this)">15 Soal</button>
+                    <button class="opt-btn" onclick="selectOption('totalQuestions', 20, this)">20 Soal</button>
+                </div>
+
+                <button class="primary-btn" onclick="startGame()">🚀 MULAI BERMAIN</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAMEPLAY -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="top-nav">
+                    <button class="pause-btn" onclick="pauseGame()">⏸ PAUSE</button>
+                    <div class="question-progress" id="q-progress-text">SOAL 1 / 10</div>
+                    <div style="width:70px"></div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+                <div class="question-card" id="question-text">Memuat Pertanyaan...</div>
+            </div>
+
+            <div class="play-arena">
+                <!-- PLAYER 1 (LEFT) -->
+                <div class="player-zone p1">
+                    <div class="player-hud">
+                        <div class="player-identity">👦 PLAYER 1</div>
+                        <div class="score-badge">⭐ <span id="p1-score">0</span></div>
+                    </div>
+                    <div class="status-msg" id="p1-status"></div>
+                    <div class="balloon-container" id="p1-balloons"></div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- PLAYER 2 (RIGHT) -->
+                <div class="player-zone p2">
+                    <div class="player-hud">
+                        <div class="player-identity">👧 PLAYER 2</div>
+                        <div class="score-badge">⭐ <span id="p2-score">0</span></div>
+                    </div>
+                    <div class="status-msg" id="p2-status"></div>
+                    <div class="balloon-container" id="p2-balloons"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OVERLAY: PAUSE -->
+        <div class="overlay" id="pause-modal">
+            <div class="glass-card" style="max-width: 400px;">
+                <h2 style="font-size: 2rem; color: #0284c7; margin-bottom: 15px;">⏸ GAME DIJEDA</h2>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="primary-btn" onclick="resumeGame()" style="margin:0; font-size: 1.1rem; padding: 12px;">▶ LANJUTKAN</button>
+                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.1rem; padding: 12px;">🏠 KEMBALI KE MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- OVERLAY: HASIL AKHIR -->
+        <div class="overlay" id="result-modal">
+            <div class="winner-card">
+                <h1 style="font-size: 2.2rem; color: #0284c7; margin-bottom: 5px;">🎈 PERMAINAN SELESAI 🎈</h1>
+                <p style="color: #64748b; font-weight: bold;">SD NEGERI KESILIR 02</p>
+
+                <div class="result-grid">
+                    <div class="res-box p1">
+                        <div class="res-title" style="color:#dc2626;">👦 PLAYER 1</div>
+                        <div class="res-score" id="res-p1-score">0</div>
+                        <div style="font-size: 0.85rem; color:#475569; margin-top: 5px;">
+                            Benar: <span id="res-p1-c">0</span> | Salah: <span id="res-p1-w">0</span>
+                        </div>
+                    </div>
+                    <div class="res-box p2">
+                        <div class="res-title" style="color:#2563eb;">👧 PLAYER 2</div>
+                        <div class="res-score" id="res-p2-score">0</div>
+                        <div style="font-size: 0.85rem; color:#475569; margin-top: 5px;">
+                            Benar: <span id="res-p2-c">0</span> | Salah: <span id="res-p2-w">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="winner-announcement" style="font-size: 1.4rem; font-weight: 900; color: #15803d; margin: 15px 0;">
+                    🏆 PEMENANG: PLAYER 1!
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button class="primary-btn" onclick="startGame()" style="margin:0; font-size: 1.1rem; padding: 12px 20px;">🔄 MAIN LAGI</button>
+                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.1rem; padding: 12px 20px;">🏠 MENU</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        /* ================================
+           DATA BANK SOAL LENGKAP
+        ================================ */
+        const questionBank = {
+            kelas1: {
+                matematika: [
+                    { question: "Berapa jumlah benda 🍎🍎🍎?", answers: ["2", "3", "4", "5"], correct: 1, difficulty: "mudah" },
+                    { question: "Hasil dari 4 + 2 adalah...", answers: ["5", "6", "7", "8"], correct: 1, difficulty: "mudah" },
+                    { question: "Hasil dari 7 - 3 adalah...", answers: ["2", "3", "4", "5"], correct: 2, difficulty: "mudah" },
+                    { question: "Manakah angka yang lebih besar?", answers: ["3", "8", "5", "2"], correct: 1, difficulty: "sedang" },
+                    { question: "Bentuk dari bola basket adalah...", answers: ["Kotak", "Lingkaran", "Segitiga", "Tabung"], correct: 1, difficulty: "sedang" },
+                    { question: "Hasil dari 5 + 5 adalah...", answers: ["8", "9", "10", "11"], correct: 2, difficulty: "sedang" },
+                    { question: "Urutan angka setelah 8 adalah...", answers: ["7", "9", "10", "6"], correct: 1, difficulty: "mudah" },
+                    { question: "Hasil dari 10 - 4 adalah...", answers: ["5", "6", "7", "4"], correct: 1, difficulty: "sulit" },
+                    { question: "Lanjutan pola: 2, 4, 6, ...", answers: ["7", "8", "9", "10"], correct: 1, difficulty: "sulit" },
+                    { question: "Hasil dari 8 + 3 adalah...", answers: ["10", "11", "12", "13"], correct: 1, difficulty: "sulit" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Huruf pertama dari kata 'Buku' adalah...", answers: ["A", "B", "C", "D"], correct: 1, difficulty: "mudah" },
+                    { question: "Suara kucing adalah...", answers: ["Guk guk", "MEOONG", "Moo", "Kukuruyuk"], correct: 1, difficulty: "mudah" },
+                    { question: "Jumlah suku kata dari 'MATA' adalah...", answers: ["1", "2", "3", "4"], correct: 1, difficulty: "sedang" },
+                    { question: "Benda untuk menulis adalah...", answers: ["Pensil", "Sepatu", "Piring", "Baju"], correct: 0, difficulty: "mudah" },
+                    { question: "Lanjutan kalimat: Ibu memasak di...", answers: ["Kamar", "Dapur", "Halaman", "Atap"], correct: 1, difficulty: "sedang" },
+                    { question: "Huruf vokal pada kata 'BOLA' adalah...", answers: ["B dan L", "O dan A", "B dan A", "O dan L"], correct: 1, difficulty: "sulit" }
+                ],
+                ipas: [
+                    { question: "Anggota tubuh untuk melihat adalah...", answers: ["Telinga", "Mata", "Hidung", "Mulut"], correct: 1, difficulty: "mudah" },
+                    { question: "Anggota tubuh untuk mendengar adalah...", answers: ["Mata", "Telinga", "Tangan", "Kaki"], correct: 1, difficulty: "mudah" },
+                    { question: "Hewan yang memiliki belalai adalah...", answers: ["Kucing", "Gajah", "Ayam", "Kelinci"], correct: 1, difficulty: "mudah" },
+                    { question: "Tumbuhan membutuhkan ... untuk tumbuh.", answers: ["Batu", "Air", "Plastik", "Minyak"], correct: 1, difficulty: "sedang" }
+                ],
+                pancasila: [
+                    { question: "Simbol Sila Pertama Pancasila adalah...", answers: ["Rantai", "Bintang", "Pohon Beringin", "Banteng"], correct: 1, difficulty: "mudah" },
+                    { question: "Saat bertemu guru kita harus bersikap...", answers: ["Acuh", "Sopan", "Marah", "Lari"], correct: 1, difficulty: "mudah" },
+                    { question: "Warna bendera negara Indonesia adalah...", answers: ["Merah Putih", "Biru Putih", "Hijau Kuning", "Merah Hijau"], correct: 0, difficulty: "mudah" }
+                ]
+            },
+            kelas2: {
+                matematika: [
+                    { question: "Hasil dari 15 + 12 adalah...", answers: ["25", "26", "27", "28"], correct: 2, difficulty: "mudah" },
+                    { question: "Hasil dari 30 - 14 adalah...", answers: ["15", "16", "17", "18"], correct: 1, difficulty: "sedang" },
+                    { question: "3 x 4 sama dengan...", answers: ["7", "10", "12", "15"], correct: 2, difficulty: "sedang" },
+                    { question: "20 dibagi 5 adalah...", answers: ["3", "4", "5", "6"], correct: 1, difficulty: "sulit" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Tanda baca untuk akhir kalimat berita adalah...", answers: ["Tanda Tanya (?)", "Tanda Titik (.)", "Tanda Seru (!)", "Tanda Koma (,)"], correct: 1, difficulty: "mudah" },
+                    { question: "Lawak kata dari 'SANGAT RAJIN' adalah...", answers: ["Pintar", "Malas", "Patuh", "Giat"], correct: 1, difficulty: "sedang" }
+                ],
+                ipas: [
+                    { question: "Tempat hidup ikan adalah di...", answers: ["Darat", "Air", "Udara", "Pohon"], correct: 1, difficulty: "mudah" },
+                    { question: "Benda yang bentuknya berubah mengikuti tempatnya adalah...", answers: ["Batu", "Pensil", "Air", "Kayu"], correct: 2, difficulty: "sedang" }
+                ],
+                pancasila: [
+                    { question: "Simbol Sila Kedua Pancasila adalah...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Padi dan Kapas"], correct: 1, difficulty: "mudah" },
+                    { question: "Tugas utama seorang siswa di sekolah adalah...", answers: ["Bermain", "Belajar", "Tidur", "Berkelahi"], correct: 1, difficulty: "mudah" }
+                ]
+            },
+            kelas3: {
+                matematika: [
+                    { question: "Hasil dari 8 x 7 adalah...", answers: ["54", "56", "58", "60"], correct: 1, difficulty: "mudah" },
+                    { question: "Hasil dari 45 : 5 adalah...", answers: ["8", "9", "10", "7"], correct: 1, difficulty: "sedang" },
+                    { question: "Pecahan setengah ditulis...", answers: ["1/3", "1/2", "1/4", "2/3"], correct: 1, difficulty: "mudah" },
+                    { question: "Bangun datar dengan 3 sisi adalah...", answers: ["Persegi", "Segitiga", "Lingkaran", "Trapesium"], correct: 1, difficulty: "mudah" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Gagasan utama dalam sebuah paragraf disebut...", answers: ["Ide Pokok", "Judul", "Kalimat Penjelas", "Ringkasan"], correct: 0, difficulty: "sedang" }
+                ],
+                ipas: [
+                    { question: "Proses pembuatan makanan pada tumbuhan hijau disebut...", answers: ["Respirasi", "Fotosintesis", "Adaptasi", "Evolusi"], correct: 1, difficulty: "sulit" },
+                    { question: "Benda cair jika dibekukan akan menjadi...", answers: ["Gas", "Padat", "Uap", "Mencair"], correct: 1, difficulty: "mudah" }
+                ],
+                pancasila: [
+                    { question: "Sila ketiga berbunyi...", answers: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil", "Persatuan Indonesia", "Keadilan sosial"], correct: 2, difficulty: "sedang" }
+                ]
+            },
+            kelas4: {
+                matematika: [
+                    { question: "KPK dari 4 dan 6 adalah...", answers: ["8", "12", "16", "24"], correct: 1, difficulty: "sedang" },
+                    { question: "FPB dari 12 dan 18 adalah...", answers: ["2", "3", "6", "12"], correct: 2, difficulty: "sulit" },
+                    { question: "Luas persegi dengan sisi 5 cm adalah...", answers: ["20 cm²", "25 cm²", "30 cm²", "15 cm²"], correct: 1, difficulty: "sedang" },
+                    { question: "Hasil dari 125 + 375 adalah...", answers: ["450", "500", "550", "600"], correct: 1, difficulty: "mudah" },
+                    { question: "Pecahan senilai dengan 1/2 adalah...", answers: ["2/3", "2/4", "3/5", "4/6"], correct: 1, difficulty: "mudah" },
+                    { question: "Sudut tegak lurus besarnya...", answers: ["45°", "90°", "180°", "360°"], correct: 1, difficulty: "mudah" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Kalimat yang mengandung subjek, predikat, dan objek disebut...", answers: ["Kalimat Utama", "Kalimat Efektif", "Kalimat Tanya", "Kalimat Perintah"], correct: 1, difficulty: "sedang" },
+                    { question: "Persamaan kata dari 'PINTAR' adalah...", answers: ["Pandai", "Rajin", "Tekun", "Cerdas"], correct: 0, difficulty: "mudah" }
+                ],
+                ipas: [
+                    { question: "Gaya yang menyebabkan benda jatuh ke bawah adalah...", answers: ["Gaya Gesek", "Gaya Gravitasi", "Gaya Magnet", "Gaya Pegas"], correct: 1, difficulty: "mudah" },
+                    { question: "Bentuk energi dari sinar matahari adalah...", answers: ["Energi Kimia", "Energi Cahaya & Panas", "Energi Bunyi", "Energi Gerak"], correct: 1, difficulty: "mudah" }
+                ],
+                pancasila: [
+                    { question: "Semboyan negara Indonesia adalah...", answers: ["Tut Wuri Handayani", "Bhinneka Tunggal Ika", "Pancasila Sakti", "Bersatu Kita Teguh"], correct: 1, difficulty: "mudah" }
+                ]
+            },
+            kelas5: {
+                matematika: [
+                    { question: "Bentuk desimal dari 1/4 adalah...", answers: ["0,20", "0,25", "0,50", "0,75"], correct: 1, difficulty: "sedang" },
+                    { question: "Volume kubus dengan rusuk 4 cm adalah...", answers: ["16 cm³", "32 cm³", "64 cm³", "128 cm³"], correct: 2, difficulty: "sedang" },
+                    { question: "Hasil dari 2,5 + 1,75 adalah...", answers: ["4,15", "4,25", "4,35", "4,50"], correct: 1, difficulty: "mudah" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Teks yang berisi fakta dan informasi nyata disebut...", answers: ["Fiksi", "Nonfiksi", "Dongeng", "Mitos"], correct: 1, difficulty: "mudah" }
+                ],
+                ipas: [
+                    { question: "Urutan rantai makanan: Padi -> Belalang -> Katak -> ...", answers: ["Ular", "Gajah", "Kelinci", "Sapi"], correct: 0, difficulty: "mudah" },
+                    { question: "Organ tubuh untuk memompa darah adalah...", answers: ["Paru-paru", "Jantung", "Lambung", "Hati"], correct: 1, difficulty: "mudah" }
+                ],
+                pancasila: [
+                    { question: "Keputusan bersama dalam musyawarah dicapai melalui...", answers: ["Pemaksaan", "Mufakat", "Pertengkaran", "Voting Tunggal"], correct: 1, difficulty: "sedang" }
+                ]
+            },
+            kelas6: {
+                matematika: [
+                    { question: "Hasil dari (-12) + 20 adalah...", answers: ["-8", "8", "-32", "32"], correct: 1, difficulty: "sedang" },
+                    { question: "Luas lingkaran dengan jari-jari 7 cm adalah...", answers: ["44 cm²", "154 cm²", "308 cm²", "616 cm²"], correct: 1, difficulty: "sulit" },
+                    { question: "Hasil dari 3/4 x 2/5 adalah...", answers: ["5/9", "6/20", "5/20", "6/9"], correct: 1, difficulty: "sedang" }
+                ],
+                bahasaIndonesia: [
+                    { question: "Ringkasan akhir dari sebuah teks bacaan disebut...", answers: ["Ide Pokok", "Simpulan", "Latar", "Tema"], correct: 1, difficulty: "mudah" }
+                ],
+                ipas: [
+                    { question: "Planet terdekat dari matahari dalam tata surya adalah...", answers: ["Venus", "Merkurius", "Mars", "Bumi"], correct: 1, difficulty: "mudah" },
+                    { question: "Perubahan wujud dari gas menjadi cair disebut...", answers: ["Membeku", "Mengembun", "Menyublim", "Menguap"], correct: 1, difficulty: "sedang" }
+                ],
+                pancasila: [
+                    { question: "Hakim dan peradilan yang adil mencerminkan Sila ke-...", answers: ["2", "3", "4", "5"], correct: 3, difficulty: "sulit" }
+                ]
+            }
+        };
+
+        /* ================================
+           GAME STATE MANAGEMENT
+        ================================ */
+        let gameState = {
+            selectedClass: 4,
+            selectedSubject: "matematika",
+            difficulty: "sedang",
+            totalQuestions: 10,
+            currentQuestion: 0,
+            questions: [],
+            
+            p1Score: 0,
+            p2Score: 0,
+            p1Correct: 0,
+            p2Correct: 0,
+            p1Wrong: 0,
+            p2Wrong: 0,
+            
+            p1Answered: false,
+            p2Answered: false,
+            
+            soundEnabled: true,
+            paused: false
+        };
+
+        const balloonColors = [
+            '#ef4444', '#3b82f6', '#10b981', '#f59e0b', 
+            '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+        ];
+
+        /* ================================
+           WEB AUDIO API (SOUND SYNTHESIS)
+        ================================ */
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!gameState.soundEnabled) return;
+            initAudio();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'pop') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.setValueAtTime(150, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'win') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.linearRampToValueAtTime(800, now + 0.5);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            }
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            document.getElementById('audio-btn').innerText = gameState.soundEnabled ? '🔊' : '🔇';
+        }
+
+        /* ================================
+           SELECTION & NAVIGATION LOGIC
+        ================================ */
+        function selectOption(key, value, elem) {
+            gameState[key] = value;
+            const parent = elem.parentElement;
+            const buttons = parent.querySelectorAll('.opt-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            elem.classList.add('selected');
+            playSound('pop');
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        /* ================================
+           GAME FLOW LOGIC
+        ================================ */
+        function startGame() {
+            initAudio();
+            gameState.p1Score = 0;
+            gameState.p2Score = 0;
+            gameState.p1Correct = 0;
+            gameState.p2Correct = 0;
+            gameState.p1Wrong = 0;
+            gameState.p2Wrong = 0;
+            gameState.currentQuestion = 0;
+            gameState.paused = false;
+
+            document.getElementById('p1-score').innerText = '0';
+            document.getElementById('p2-score').innerText = '0';
+            document.getElementById('result-modal').classList.remove('active');
+            document.getElementById('pause-modal').classList.remove('active');
+
+            // Load and filter questions
+            const poolKey = `kelas${gameState.selectedClass}`;
+            let pool = questionBank[poolKey][gameState.selectedSubject] || [];
+            
+            // Fallback pool if empty
+            if (pool.length === 0) {
+                pool = [
+                    { question: "Berapa 5 + 5?", answers: ["8", "9", "10", "11"], correct: 2, difficulty: "mudah" },
+                    { question: "Ibu kota Indonesia?", answers: ["Bandung", "Jakarta", "Nusantara", "Surabaya"], correct: 2, difficulty: "mudah" }
+                ];
+            }
+
+            // Shuffle array
+            gameState.questions = shuffleArray([...pool]).slice(0, gameState.totalQuestions);
+            
+            switchScreen('game-screen');
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (gameState.currentQuestion >= gameState.questions.length) {
+                finishGame();
+                return;
+            }
+
+            gameState.p1Answered = false;
+            gameState.p2Answered = false;
+
+            document.getElementById('p1-status').classList.remove('active');
+            document.getElementById('p2-status').classList.remove('active');
+
+            const q = gameState.questions[gameState.currentQuestion];
+            
+            // Update Header HUD
+            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.questions.length}`;
+            document.getElementById('question-text').innerText = q.question;
+            
+            const progressPct = ((gameState.currentQuestion) / gameState.questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+
+            // Prepare Balloon Answers
+            renderBalloons(1, q);
+            renderBalloons(2, q);
+        }
+
+        function renderBalloons(playerNum, qData) {
+            const container = document.getElementById(`p${playerNum}-balloons`);
+            container.innerHTML = '';
+
+            // Map original index to shuffled answer objects
+            let options = qData.answers.map((text, idx) => ({
+                text: text,
+                isCorrect: idx === qData.correct
+            }));
+
+            options = shuffleArray(options);
+
+            const anims = ['anim-floatA', 'anim-floatB', 'anim-floatC', 'anim-floatD'];
+            const colors = shuffleArray([...balloonColors]);
+
+            // Layout positions (percentage coordinates within the zone)
+            const positions = [
+                { top: '15%', left: '15%' },
+                { top: '15%', left: '55%' },
+                { top: '55%', left: '15%' },
+                { top: '55%', left: '55%' }
+            ];
+
+            options.forEach((opt, idx) => {
+                const b = document.createElement('div');
+                b.className = `balloon ${anims[idx % anims.length]}`;
+                b.style.backgroundColor = colors[idx % colors.length];
+                b.style.color = colors[idx % colors.length];
+                b.style.top = positions[idx].top;
+                b.style.left = positions[idx].left;
+
+                b.innerHTML = `
+                    <div class="balloon-shine"></div>
+                    <span style="color:white; z-index:2;">${opt.text}</span>
+                    <div class="balloon-string"></div>
+                `;
+
+                b.onclick = () => handleBalloonClick(playerNum, opt.isCorrect, b);
+                container.appendChild(b);
+            });
+        }
+
+        function handleBalloonClick(playerNum, isCorrect, balloonElem) {
+            if (gameState.paused) return;
+            if (playerNum === 1 && gameState.p1Answered) return;
+            if (playerNum === 2 && gameState.p2Answered) return;
+
+            // Pop Animation
+            balloonElem.classList.add('popping');
+            playSound('pop');
+
+            setTimeout(() => {
+                balloonElem.style.visibility = 'hidden';
+            }, 200);
+
+            if (isCorrect) {
+                playSound('correct');
+                if (playerNum === 1) {
+                    gameState.p1Score += 10;
+                    gameState.p1Correct++;
+                    gameState.p1Answered = true;
+                    document.getElementById('p1-score').innerText = gameState.p1Score;
+                    showStatus(1, '🎉 BENAR! (+10)');
+                } else {
+                    gameState.p2Score += 10;
+                    gameState.p2Correct++;
+                    gameState.p2Answered = true;
+                    document.getElementById('p2-score').innerText = gameState.p2Score;
+                    showStatus(2, '🎉 BENAR! (+10)');
+                }
+            } else {
+                playSound('wrong');
+                if (playerNum === 1) {
+                    gameState.p1Wrong++;
+                    showStatus(1, '❌ SALAH! Coba lagi');
+                } else {
+                    gameState.p2Wrong++;
+                    showStatus(2, '❌ SALAH! Coba lagi');
+                }
+            }
+
+            checkRoundComplete();
+        }
+
+        function showStatus(playerNum, text) {
+            const statusElem = document.getElementById(`p${playerNum}-status`);
+            statusElem.innerText = text;
+            statusElem.classList.add('active');
+
+            if (text.includes('SALAH')) {
+                setTimeout(() => {
+                    statusElem.classList.remove('active');
+                }, 1200);
+            }
+        }
+
+        function checkRoundComplete() {
+            // Check if both players answered correctly or both zones finished
+            if (gameState.p1Answered && gameState.p2Answered) {
+                setTimeout(() => {
+                    gameState.currentQuestion++;
+                    loadNextQuestion();
+                }, 1000);
+            } else if (gameState.p1Answered && !gameState.p2Answered) {
+                showStatus(1, '⏳ MENUNGGU PLAYER 2...');
+            } else if (!gameState.p1Answered && gameState.p2Answered) {
+                showStatus(2, '⏳ MENUNGGU PLAYER 1...');
+            }
+        }
+
+        function finishGame() {
+            playSound('win');
+            document.getElementById('res-p1-score').innerText = gameState.p1Score;
+            document.getElementById('res-p1-c').innerText = gameState.p1Correct;
+            document.getElementById('res-p1-w').innerText = gameState.p1Wrong;
+
+            document.getElementById('res-p2-score').innerText = gameState.p2Score;
+            document.getElementById('res-p2-c').innerText = gameState.p2Correct;
+            document.getElementById('res-p2-w').innerText = gameState.p2Wrong;
+
+            const winAnnounce = document.getElementById('winner-announcement');
+            if (gameState.p1Score > gameState.p2Score) {
+                winAnnounce.innerText = "🏆 PEMENANG: PLAYER 1!";
+                winAnnounce.style.color = "#dc2626";
+            } else if (gameState.p2Score > gameState.p1Score) {
+                winAnnounce.innerText = "🏆 PEMENANG: PLAYER 2!";
+                winAnnounce.style.color = "#2563eb";
+            } else {
+                winAnnounce.innerText = "🤝 HASIL SERI! KALIAN HEBAT!";
+                winAnnounce.style.color = "#16a34a";
+            }
+
+            document.getElementById('result-modal').classList.add('active');
+            triggerConfetti();
+        }
+
+        function pauseGame() {
+            gameState.paused = true;
+            document.getElementById('pause-modal').classList.add('active');
+        }
+
+        function resumeGame() {
+            gameState.paused = false;
+            document.getElementById('pause-modal').classList.remove('active');
+        }
+
+        function returnToMenu() {
+            gameState.paused = false;
+            document.getElementById('pause-modal').classList.remove('active');
+            document.getElementById('result-modal').classList.remove('active');
+            switchScreen('menu-screen');
+        }
+
+        /* ================================
+           UTILITY FUNCTIONS
+        ================================ */
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        /* ================================
+           CONFETTI SYSTEM (CANVAS)
+        ================================ */
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#f43f5e', '#3b82f6', '#10b981', '#eab308', '#a855f7'];
+
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 10 + 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vy: Math.random() * 3 + 2,
+                    vx: Math.random() * 2 - 1
+                });
+            }
+
+            let animationFrame;
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+
+                if (particles.some(p => p.y < canvas.height)) {
+                    animationFrame = requestAnimationFrame(render);
+                }
+            }
+            render();
+        }
+    </script>
+</body>
+</html>
