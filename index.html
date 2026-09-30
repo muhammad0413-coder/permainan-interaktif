@@ -219,52 +219,49 @@
         }
 
         /* ================================
-           SUPER CUTE & SLOW BALLOONS
+           SUPER CUTE & TIDAK BERTABRAKAN
         ================================ */
         .balloon-container { width: 100%; flex: 1; position: relative; overflow: hidden; }
         .balloon-container.disabled { pointer-events: none; opacity: 0.4; filter: grayscale(1); transition: all 0.5s; }
 
         .balloon {
-            position: absolute; width: 110px; height: 130px;
+            position: absolute; width: 95px; height: 115px;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white; font-weight: 900; font-size: 1.3rem;
+            text-align: center; color: white; font-weight: 900; font-size: 1.1rem;
             text-shadow: 2px 2px 0px rgba(0,0,0,0.4); cursor: pointer; z-index: 10;
-            box-shadow: inset -15px -15px 25px rgba(0,0,0,0.2), inset 15px 15px 25px rgba(255,255,255,0.4), 0 10px 20px rgba(0,0,0,0.2);
-            top: -200px;
+            box-shadow: inset -12px -12px 20px rgba(0,0,0,0.2), inset 12px 12px 20px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.2);
+            top: -180px;
         }
         .balloon::before {
-            content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent;
-            border-top: 14px solid currentColor; filter: brightness(0.8);
+            content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
+            border-top: 12px solid currentColor; filter: brightness(0.8);
         }
         .balloon-string {
-            position: absolute; bottom: -45px; left: 50%; width: 4px; height: 35px;
+            position: absolute; bottom: -35px; left: 50%; width: 3px; height: 30px;
             background: rgba(0,0,0,0.3); transform: translateX(-50%); border-radius: 2px;
         }
         .balloon-shine {
-            position: absolute; top: 15%; left: 20%; width: 20px; height: 35px;
+            position: absolute; top: 15%; left: 20%; width: 16px; height: 28px;
             background: rgba(255,255,255,0.6); border-radius: 50%; transform: rotate(-30deg);
         }
 
         /* Muka Balon Lucu */
         .balloon-face { position: absolute; top: 30%; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
-        .balloon-eyes { display: flex; gap: 15px; }
-        .balloon-eye { width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 0 0 3px black; animation: blink 4s infinite; }
-        .balloon-cheeks { display: flex; gap: 28px; position: absolute; top: 8px; }
-        .balloon-cheek { width: 12px; height: 6px; background: rgba(255,105,180,0.8); border-radius: 50%; }
-        .balloon-mouth { width: 12px; height: 6px; border-bottom: 4px solid white; border-radius: 0 0 12px 12px; }
+        .balloon-eyes { display: flex; gap: 12px; }
+        .balloon-eye { width: 8px; height: 8px; background: white; border-radius: 50%; box-shadow: 0 0 2px black; animation: blink 4s infinite; }
+        .balloon-cheeks { display: flex; gap: 24px; position: absolute; top: 6px; }
+        .balloon-cheek { width: 10px; height: 5px; background: rgba(255,105,180,0.8); border-radius: 50%; }
+        .balloon-mouth { width: 10px; height: 5px; border-bottom: 3px solid white; border-radius: 0 0 10px 10px; }
 
         @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
 
-        /* ANIMASI JATUH SANGAT LAMBAT */
-        @keyframes fallSlowA { 0% { top: -200px; transform: translateX(0) rotate(0); } 50% { transform: translateX(25px) rotate(10deg); } 100% { top: 120%; transform: translateX(-15px) rotate(-5deg); } }
-        @keyframes fallSlowB { 0% { top: -200px; transform: translateX(0) rotate(0); } 50% { transform: translateX(-30px) rotate(-10deg); } 100% { top: 120%; transform: translateX(20px) rotate(8deg); } }
-        @keyframes fallSlowC { 0% { top: -200px; transform: translateX(0) rotate(0); } 50% { transform: translateX(35px) rotate(8deg); } 100% { top: 120%; transform: translateX(-25px) rotate(-8deg); } }
-
-        .anim-fallA { animation: fallSlowA linear infinite; }
-        .anim-fallB { animation: fallSlowB linear infinite; }
-        .anim-fallC { animation: fallSlowC linear infinite; }
+        /* JALUR KOLOM TERPISAH (TIDAK BENTURAN) */
+        @keyframes fallColumn {
+            0% { top: -180px; }
+            100% { top: 120%; }
+        }
 
         .balloon.popping { animation: popOut 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
         @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
@@ -300,7 +297,7 @@
         @media (max-width: 640px) {
             .main-title { font-size: 2.3rem; }
             .question-card { font-size: 1.1rem; padding: 12px; }
-            .balloon { width: 85px; height: 105px; font-size: 1.1rem; }
+            .balloon { width: 72px; height: 90px; font-size: 0.95rem; }
             .options-grid { grid-template-columns: repeat(2, 1fr); }
             .res-score { font-size: 2rem; }
         }
@@ -493,7 +490,6 @@
 
         const questionBank = { kelas1: defaultMataPelajaran, kelas2: defaultMataPelajaran, kelas3: defaultMataPelajaran, kelas4: defaultMataPelajaran, kelas5: defaultMataPelajaran, kelas6: defaultMataPelajaran };
 
-        /* Generator Soal Otomatis & 100% Unik per Nomor */
         function getUniqueQuestions(kelas, mapel, count) {
             let list = [];
             if (questionBank[`kelas${kelas}`] && questionBank[`kelas${kelas}`][mapel]) {
@@ -611,38 +607,34 @@
             const container1 = document.getElementById('p1-balloons'); const container2 = document.getElementById('p2-balloons');
             container1.innerHTML = ''; container2.innerHTML = '';
 
-            const correctText = qData.answers[qData.correct];
-            const wrongTexts = qData.answers.filter((_, idx) => idx !== qData.correct);
-
-            let p1List = []; let p2List = [];
-            for (let i = 0; i < 10; i++) {
-                if (i === 0) {
-                    p1List.push({ text: correctText, isCorrect: true });
-                    p2List.push({ text: correctText, isCorrect: true });
-                } else {
-                    p1List.push({ text: wrongTexts[Math.floor(Math.random() * wrongTexts.length)], isCorrect: false });
-                    p2List.push({ text: wrongTexts[Math.floor(Math.random() * wrongTexts.length)], isCorrect: false });
-                }
-            }
-
-            generateBalloonsForContainer(container1, shuffleArray(p1List), 1);
-            generateBalloonsForContainer(container2, shuffleArray(p2List), 2);
+            // 4 Pilihan jawaban (1 benar, 3 salah) agar pas di 4 jalur vertikal terpisah tanpa tabrakan
+            const options = [...qData.answers];
+            
+            generateBalloonsForContainer(container1, options, qData.correct, 1);
+            generateBalloonsForContainer(container2, options, qData.correct, 2);
         }
 
-        function generateBalloonsForContainer(container, balloonList, playerNum) {
-            const anims = ['anim-fallA', 'anim-fallB', 'anim-fallC'];
-            const minSpeed = 15; 
-            const speedRange = 6; 
+        function generateBalloonsForContainer(container, options, correctIndex, playerNum) {
+            // 4 Jalur Kolom Terpisah (Left positions: 10%, 35%, 60%, 85%) -> Dijamin tidak bertabrakan!
+            const lanePositions = [10, 35, 60, 85];
+            const shuffledLanes = shuffleArray([...lanePositions]);
 
-            balloonList.forEach((opt) => {
+            options.forEach((optText, idx) => {
                 const b = document.createElement('div');
-                b.className = `balloon ${anims[Math.floor(Math.random() * anims.length)]}`;
+                b.className = 'balloon';
+                
                 const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
                 b.style.backgroundColor = color; b.style.color = color;
-                b.style.left = `${Math.floor(Math.random() * 70) + 5}%`;
                 
-                b.style.animationDuration = `${Math.random() * speedRange + minSpeed}s`;
-                b.style.animationDelay = `${Math.random() * 3}s`;
+                // Set posisi di jalur masing-masing
+                b.style.left = `${shuffledLanes[idx]}%`;
+                
+                // Kecepatan sangat lambat dan santai (16 - 22 detik)
+                const duration = Math.random() * 6 + 16;
+                b.style.animation = `fallColumn ${duration}s linear infinite`;
+                b.style.animationDelay = `${idx * 0.8}s`;
+
+                const isCorrect = (idx === correctIndex);
 
                 b.innerHTML = `
                     <div class="balloon-string"></div>
@@ -652,10 +644,10 @@
                         <div class="balloon-cheeks"><div class="balloon-cheek"></div><div class="balloon-cheek"></div></div>
                         <div class="balloon-mouth"></div>
                     </div>
-                    <span style="color:white; z-index:2; margin-top:20px;">${opt.text}</span>
+                    <span style="color:white; z-index:2; margin-top:20px;">${optText}</span>
                 `;
 
-                b.onclick = () => handleBalloonClick(playerNum, opt.isCorrect, b);
+                b.onclick = () => handleBalloonClick(playerNum, isCorrect, b);
                 container.appendChild(b);
             });
         }
@@ -668,19 +660,19 @@
             balloonElem.classList.add('popping'); playSound('pop');
 
             if (isCorrect) {
-                // JIKA BENAR: DAPAT POIN, LANGSUNG LANJUT SOAL BERIKUTNYA
+                // JIKA BENAR: DAPAT POIN, LANGSUNG LANJUT KE SOAL BERIKUTNYA
                 gameState.roundResolved = true; playSound('correct');
 
                 if (playerNum === 1) {
                     gameState.p1Score += 10; gameState.p1Correct++; gameState.p1Answered = true;
                     document.getElementById('p1-score').innerText = gameState.p1Score;
                     showStatus(1, '⚡ PLAYER 1 BENAR! (+10)');
-                    showStatus(2, '❌ KETIKUNG! PLAYER 1 DULUAN');
+                    showStatus(2, '❌ KETIKUNG! PLAYER 1 BENAR DULUAN');
                 } else {
                     gameState.p2Score += 10; gameState.p2Correct++; gameState.p2Answered = true;
                     document.getElementById('p2-score').innerText = gameState.p2Score;
                     showStatus(2, '⚡ PLAYER 2 BENAR! (+10)');
-                    showStatus(1, '❌ KETIKUNG! PLAYER 2 DULUAN');
+                    showStatus(1, '❌ KETIKUNG! PLAYER 2 BENAR DULUAN');
                 }
 
                 document.getElementById('p1-balloons').classList.add('disabled');
@@ -692,17 +684,17 @@
                 }, 1500);
 
             } else {
-                // JIKA SALAH: HANYA BISA 1 KESEMPATAN, KUNCI ZONA PEMAIN INI DAN TUNGGU LAWAN
+                // JIKA SALAH: 1 KESEMPATAN, KUNCI ZONA PEMAIN INI DAN TUNGGU LAWAN
                 playSound('wrong');
 
                 if (playerNum === 1) {
                     gameState.p1Wrong++; gameState.p1Answered = true;
                     document.getElementById('p1-balloons').classList.add('disabled');
-                    showStatus(1, '❌ SALAH! Menunggu Lawan...');
+                    showStatus(1, '❌ SALAH! Menunggu Player 2...');
                 } else {
                     gameState.p2Wrong++; gameState.p2Answered = true;
                     document.getElementById('p2-balloons').classList.add('disabled');
-                    showStatus(2, '❌ SALAH! Menunggu Lawan...');
+                    showStatus(2, '❌ SALAH! Menunggu Player 1...');
                 }
 
                 // Jika kedua pemain sudah salah semua, otomatis lanjut ke soal berikutnya
