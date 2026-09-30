@@ -212,6 +212,7 @@
             background: rgba(15, 23, 42, 0.9); color: white; padding: 12px 20px;
             border-radius: 20px; font-weight: bold; font-size: 1.1rem; z-index: 40;
             display: none; text-align: center; border: 2px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
         .status-msg.active { display: block; animation: popIn 0.3s ease; }
 
@@ -220,28 +221,25 @@
         ================================ */
         .balloon-container {
             width: 100%; flex: 1; position: relative; overflow: hidden;
-            /* Container untuk area jatuhnya balon */
         }
 
         .balloon-container.disabled {
             pointer-events: none;
-            opacity: 0.5;
-            transition: opacity 0.3s;
+            opacity: 0.4;
+            filter: grayscale(0.6);
+            transition: all 0.3s;
         }
 
         .balloon {
             position: absolute; width: 80px; height: 95px;
-            /* Bentuk balon dibalik karena dia jatuh / simpul di atas */
             border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
             display: flex; align-items: center; justify-content: center; text-align: center;
             color: white; font-weight: 900; font-size: 1.1rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
             cursor: pointer; z-index: 10;
             box-shadow: inset -10px -10px 20px rgba(0,0,0,0.15), inset 10px 10px 20px rgba(255,255,255,0.3);
-            /* Balon diinisialisasi di atas layar */
             top: -150px; 
         }
 
-        /* Simpul Balon di atas */
         .balloon::before {
             content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
             width: 0; height: 0;
@@ -249,7 +247,6 @@
             border-top: 10px solid currentColor; filter: brightness(0.8);
         }
 
-        /* Tali Balon di atas */
         .balloon-string {
             position: absolute; top: -28px; left: 50%; width: 2px; height: 22px;
             background: rgba(0,0,0,0.4); transform: translateX(-50%);
@@ -260,7 +257,6 @@
             background: rgba(255,255,255,0.4); border-radius: 50%; transform: rotate(30deg);
         }
 
-        /* Animasi Jatuh dari atas ke bawah */
         @keyframes fallA {
             0% { top: -150px; transform: translateX(0px) rotate(0deg); }
             50% { transform: translateX(15px) rotate(5deg); }
@@ -352,7 +348,7 @@
         <div id="menu-screen" class="screen active">
             <div class="glass-card">
                 <div class="main-title">🎈 BALON PINTAR</div>
-                <div class="sub-title">GAME EDUKASI 2 PEMAIN</div>
+                <div class="sub-title">GAME EDUKASI ADU CEPAT 2 PEMAIN</div>
                 <div class="school-name">SD NEGERI KESILIR 02</div>
 
                 <div class="section-label">📚 Pilih Kelas:</div>
@@ -488,23 +484,30 @@
         /* ================================
            DATA BANK SOAL LENGKAP
         ================================ */
-        // Contoh soal untuk mengakomodasi seluruh mata pelajaran
         const defaultMataPelajaran = {
             matematika: [
                 { question: "Hasil dari 5 + 3 adalah...", answers: ["7", "8", "9", "10"], correct: 1 },
-                { question: "Berapa 10 - 4?", answers: ["5", "6", "7", "8"], correct: 1 }
+                { question: "Berapa 10 - 4?", answers: ["5", "6", "7", "8"], correct: 1 },
+                { question: "Hasil dari 6 x 3 adalah...", answers: ["15", "16", "18", "20"], correct: 2 },
+                { question: "Berapa 20 : 4?", answers: ["4", "5", "6", "7"], correct: 1 },
+                { question: "Manakah angka genap di bawah ini?", answers: ["3", "5", "8", "9"], correct: 2 }
             ],
             bahasaIndonesia: [
                 { question: "Persamaan kata pintar adalah...", answers: ["Bodoh", "Malas", "Pandai", "Lelah"], correct: 2 },
-                { question: "Lawan kata rajin adalah...", answers: ["Pintar", "Malas", "Kuat", "Cepat"], correct: 1 }
+                { question: "Lawan kata rajin adalah...", answers: ["Pintar", "Malas", "Kuat", "Cepat"], correct: 1 },
+                { question: "Ibu membeli sayur di...", answers: ["Pasar", "Kamar", "Kantor", "Sawah"], correct: 0 },
+                { question: "Benda yang digunakan untuk membaca adalah...", answers: ["Pensil", "Buku", "Penghapus", "Tas"], correct: 1 }
             ],
             ipas: [
                 { question: "Matahari terbit di sebelah...", answers: ["Utara", "Selatan", "Timur", "Barat"], correct: 2 },
-                { question: "Hewan pemakan rumput disebut...", answers: ["Karnivora", "Herbivora", "Omnivora", "Insektivora"], correct: 1 }
+                { question: "Hewan pemakan rumput disebut...", answers: ["Karnivora", "Herbivora", "Omnivora", "Insektivora"], correct: 1 },
+                { question: "Organ tubuh untuk bernapas adalah...", answers: ["Jantung", "Paru-paru", "Lambung", "Hati"], correct: 1 },
+                { question: "Air jika dipanaskan akan...", answers: ["Membeku", "Menguap", "Mencair", "Padat"], correct: 1 }
             ],
             pancasila: [
                 { question: "Lambang sila ke-3 adalah...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Banteng"], correct: 2 },
-                { question: "Warna bendera kita adalah...", answers: ["Merah Biru", "Merah Putih", "Putih Merah", "Hijau Kuning"], correct: 1 }
+                { question: "Warna bendera kita adalah...", answers: ["Merah Biru", "Merah Putih", "Putih Merah", "Hijau Kuning"], correct: 1 },
+                { question: "Sikap saling membantu disebut...", answers: ["Gotong Royong", "Sombong", "Mandiri", "Marah"], correct: 0 }
             ],
             seni: [
                 { question: "Alat musik gitar dimainkan dengan cara...", answers: ["Ditiup", "Dipukul", "Dipetik", "Digesek"], correct: 2 },
@@ -549,6 +552,7 @@
             p1Wrong: 0, p2Wrong: 0,
             
             p1Answered: false, p2Answered: false,
+            roundResolved: false,
             
             soundEnabled: true, paused: false
         };
@@ -642,7 +646,6 @@
             const poolKey = `kelas${gameState.selectedClass}`;
             let pool = questionBank[poolKey][gameState.selectedSubject] || defaultMataPelajaran[gameState.selectedSubject] || defaultMataPelajaran.matematika;
 
-            // Generate enough questions by repeating if necessary
             let selectedQuestions = [];
             while(selectedQuestions.length < gameState.totalQuestions) {
                 selectedQuestions = selectedQuestions.concat(shuffleArray([...pool]));
@@ -661,11 +664,11 @@
 
             gameState.p1Answered = false;
             gameState.p2Answered = false;
+            gameState.roundResolved = false;
 
             document.getElementById('p1-status').classList.remove('active');
             document.getElementById('p2-status').classList.remove('active');
             
-            // Aktifkan kembali area balon
             document.getElementById('p1-balloons').classList.remove('disabled');
             document.getElementById('p2-balloons').classList.remove('disabled');
 
@@ -677,43 +680,61 @@
             const progressPct = ((gameState.currentQuestion) / gameState.questions.length) * 100;
             document.getElementById('progress-bar').style.width = `${progressPct}%`;
 
-            renderFallingBalloons(1, q);
-            renderFallingBalloons(2, q);
+            renderSharedFallingBalloons(q);
         }
 
-        function renderFallingBalloons(playerNum, qData) {
-            const container = document.getElementById(`p${playerNum}-balloons`);
-            container.innerHTML = '';
+        function renderSharedFallingBalloons(qData) {
+            const container1 = document.getElementById('p1-balloons');
+            const container2 = document.getElementById('p2-balloons');
+            container1.innerHTML = '';
+            container2.innerHTML = '';
 
-            // Hujan Balon: 12 balon per pemain (3 benar, 9 salah diacak)
-            let balloonData = [];
             const correctText = qData.answers[qData.correct];
             const wrongTexts = qData.answers.filter((_, idx) => idx !== qData.correct);
 
-            for(let i=0; i<12; i++) {
-                if (i < 3) {
-                    balloonData.push({ text: correctText, isCorrect: true });
+            // Tentukan di sisi mana (Player 1 atau 2) BALON BENAR TUNGGAL akan muncul
+            const correctTargetPlayer = Math.random() < 0.5 ? 1 : 2;
+
+            // Buat daftar isi balon untuk Player 1 dan Player 2 (masing-masing 10 balon)
+            let p1List = [];
+            let p2List = [];
+
+            for (let i = 0; i < 10; i++) {
+                // Sisi yang beruntung mendapatkan 1 jawaban benar di indeks acak
+                if (correctTargetPlayer === 1 && i === 0) {
+                    p1List.push({ text: correctText, isCorrect: true });
                 } else {
-                    const randomWrong = wrongTexts[Math.floor(Math.random() * wrongTexts.length)];
-                    balloonData.push({ text: randomWrong, isCorrect: false });
+                    p1List.push({ text: wrongTexts[Math.floor(Math.random() * wrongTexts.length)], isCorrect: false });
+                }
+
+                if (correctTargetPlayer === 2 && i === 0) {
+                    p2List.push({ text: correctText, isCorrect: true });
+                } else {
+                    p2List.push({ text: wrongTexts[Math.floor(Math.random() * wrongTexts.length)], isCorrect: false });
                 }
             }
 
-            balloonData = shuffleArray(balloonData);
+            p1List = shuffleArray(p1List);
+            p2List = shuffleArray(p2List);
+
+            generateBalloonsForContainer(container1, p1List, 1);
+            generateBalloonsForContainer(container2, p2List, 2);
+        }
+
+        function generateBalloonsForContainer(container, balloonList, playerNum) {
             const anims = ['anim-fallA', 'anim-fallB', 'anim-fallC'];
 
-            balloonData.forEach((opt, idx) => {
+            balloonList.forEach((opt, idx) => {
                 const b = document.createElement('div');
                 const animClass = anims[Math.floor(Math.random() * anims.length)];
                 b.className = `balloon ${animClass}`;
                 
-                // Random warna, posisi X, dan durasi jatuh
                 const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
                 b.style.backgroundColor = color;
                 b.style.color = color;
-                b.style.left = `${Math.floor(Math.random() * 75) + 5}%`; // 5% - 80%
-                b.style.animationDuration = `${Math.random() * 5 + 6}s`; // 6s - 11s
-                b.style.animationDelay = `${Math.random() * 4}s`; // 0s - 4s
+                b.style.left = `${Math.floor(Math.random() * 75) + 5}%`;
+                b.style.animationDuration = `${Math.random() * 4 + 6}s`; // 6s - 10s
+                b.style.animationDelay = `${Math.random() * 3}s`; // 0s - 3s
 
                 b.innerHTML = `
                     <div class="balloon-string"></div>
@@ -727,65 +748,69 @@
         }
 
         function handleBalloonClick(playerNum, isCorrect, balloonElem) {
-            if (gameState.paused) return;
+            if (gameState.paused || gameState.roundResolved) return;
             if (playerNum === 1 && gameState.p1Answered) return;
             if (playerNum === 2 && gameState.p2Answered) return;
 
-            // Efek Pop
             balloonElem.classList.add('popping');
             playSound('pop');
 
-            // Nonaktifkan area balon pemain tersebut (hanya 1 kesempatan)
             const container = document.getElementById(`p${playerNum}-balloons`);
-            container.classList.add('disabled');
 
             if (isCorrect) {
+                // JIKA BENAR: SIAPA CEPAT DIA DAPAT (+10), RONDE LANGSUNG SELESAI
+                gameState.roundResolved = true;
                 playSound('correct');
+
                 if (playerNum === 1) {
                     gameState.p1Score += 10; gameState.p1Correct++; gameState.p1Answered = true;
                     document.getElementById('p1-score').innerText = gameState.p1Score;
-                    showStatus(1, '🎉 BENAR! (+10)');
+                    showStatus(1, '⚡ BENAR! SIAPA CEPAT DIA DAPAT! (+10)');
+                    showStatus(2, '❌ KETIKUNG! PLAYER 1 BENAR');
                 } else {
                     gameState.p2Score += 10; gameState.p2Correct++; gameState.p2Answered = true;
                     document.getElementById('p2-score').innerText = gameState.p2Score;
-                    showStatus(2, '🎉 BENAR! (+10)');
+                    showStatus(2, '⚡ BENAR! SIAPA CEPAT DIA DAPAT! (+10)');
+                    showStatus(1, '❌ KETIKUNG! PLAYER 2 BENAR');
                 }
+
+                // Matikan kedua area dan lanjut ke soal berikutnya
+                document.getElementById('p1-balloons').classList.add('disabled');
+                document.getElementById('p2-balloons').classList.add('disabled');
+
+                setTimeout(() => {
+                    gameState.currentQuestion++;
+                    loadNextQuestion();
+                }, 1500);
+
             } else {
+                // JIKA SALAH: MENUNGGU PLAYER YANG LAIN
                 playSound('wrong');
+                container.classList.add('disabled');
+
                 if (playerNum === 1) {
                     gameState.p1Wrong++; gameState.p1Answered = true;
-                    showStatus(1, '❌ SALAH! (0 Poin)');
+                    showStatus(1, '❌ SALAH! Menunggu Player 2...');
                 } else {
                     gameState.p2Wrong++; gameState.p2Answered = true;
-                    showStatus(2, '❌ SALAH! (0 Poin)');
+                    showStatus(2, '❌ SALAH! Menunggu Player 1...');
+                }
+
+                // Jika kedua pemain ternyata sama-sama salah, lanjut ke soal berikutnya
+                if (gameState.p1Answered && gameState.p2Answered) {
+                    gameState.roundResolved = true;
+                    setTimeout(() => {
+                        gameState.currentQuestion++;
+                        loadNextQuestion();
+                    }, 1500);
                 }
             }
-
-            checkRoundComplete();
         }
 
         function showStatus(playerNum, text) {
             const statusElem = document.getElementById(`p${playerNum}-status`);
             statusElem.innerText = text;
             statusElem.classList.add('active');
-        }
-
-        function checkRoundComplete() {
-            if (gameState.p1Answered && gameState.p2Answered) {
-                // Keduanya selesai, lanjut ke soal berikutnya
-                setTimeout(() => {
-                    gameState.currentQuestion++;
-                    loadNextQuestion();
-                }, 1200);
-            } else if (gameState.p1Answered && !gameState.p2Answered) {
-                setTimeout(() => {
-                    if(!gameState.p2Answered) showStatus(1, '⏳ MENUNGGU PLAYER 2...');
-                }, 1000);
-            } else if (!gameState.p1Answered && gameState.p2Answered) {
-                setTimeout(() => {
-                    if(!gameState.p1Answered) showStatus(2, '⏳ MENUNGGU PLAYER 1...');
-                }, 1000);
-            }
         }
 
         function finishGame() {
