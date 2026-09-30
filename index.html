@@ -522,7 +522,7 @@
         let gameState = {
             selectedClass: 4, selectedSubject: "matematika", difficulty: "sedang", totalQuestions: 10,
             currentQuestion: 0, questions: [], p1Score: 0, p2Score: 0, p1Correct: 0, p2Correct: 0,
-            p1Wrong: 0, p2Wrong: 0, roundResolved: false,
+            p1Wrong: 0, p2Wrong: 0, p1Answered: false, p2Answered: false, roundResolved: false,
             soundEnabled: true, paused: false
         };
 
@@ -595,7 +595,7 @@
         function loadNextQuestion() {
             if (gameState.currentQuestion >= gameState.questions.length) { finishGame(); return; }
 
-            gameState.roundResolved = false;
+            gameState.p1Answered = false; gameState.p2Answered = false; gameState.roundResolved = false;
             document.getElementById('p1-status').classList.remove('active'); document.getElementById('p2-status').classList.remove('active');
             document.getElementById('p1-balloons').classList.remove('disabled'); document.getElementById('p2-balloons').classList.remove('disabled');
 
@@ -614,7 +614,6 @@
             const correctText = qData.answers[qData.correct];
             const wrongTexts = qData.answers.filter((_, idx) => idx !== qData.correct);
 
-            // Masing-masing player memiliki balon jawaban benar di layarnya
             let p1List = []; let p2List = [];
             for (let i = 0; i < 10; i++) {
                 if (i === 0) {
@@ -663,20 +662,22 @@
 
         function handleBalloonClick(playerNum, isCorrect, balloonElem) {
             if (gameState.paused || gameState.roundResolved) return;
+            if (playerNum === 1 && gameState.p1Answered) return;
+            if (playerNum === 2 && gameState.p2Answered) return;
 
             balloonElem.classList.add('popping'); playSound('pop');
 
             if (isCorrect) {
-                // SIAPA CEPAT DIA DAPAT: JIKA ADA YANG BENAR, RONDE LANGSUNG SELESAI DAN GANTI SOAL
+                // JIKA BENAR: DAPAT POIN, LANGSUNG LANJUT SOAL BERIKUTNYA
                 gameState.roundResolved = true; playSound('correct');
 
                 if (playerNum === 1) {
-                    gameState.p1Score += 10; gameState.p1Correct++;
+                    gameState.p1Score += 10; gameState.p1Correct++; gameState.p1Answered = true;
                     document.getElementById('p1-score').innerText = gameState.p1Score;
                     showStatus(1, '⚡ PLAYER 1 BENAR! (+10)');
                     showStatus(2, '❌ KETIKUNG! PLAYER 1 DULUAN');
                 } else {
-                    gameState.p2Score += 10; gameState.p2Correct++;
+                    gameState.p2Score += 10; gameState.p2Correct++; gameState.p2Answered = true;
                     document.getElementById('p2-score').innerText = gameState.p2Score;
                     showStatus(2, '⚡ PLAYER 2 BENAR! (+10)');
                     showStatus(1, '❌ KETIKUNG! PLAYER 2 DULUAN');
@@ -691,16 +692,26 @@
                 }, 1500);
 
             } else {
-                // JIKA SALAH: TETAP LANJUT TANPA MENGURANGI POIN
+                // JIKA SALAH: HANYA BISA 1 KESEMPATAN, KUNCI ZONA PEMAIN INI DAN TUNGGU LAWAN
                 playSound('wrong');
+
                 if (playerNum === 1) {
-                    gameState.p1Wrong++;
-                    showStatus(1, '❌ SALAH! Coba lagi...');
-                    setTimeout(() => document.getElementById('p1-status').classList.remove('active'), 1000);
+                    gameState.p1Wrong++; gameState.p1Answered = true;
+                    document.getElementById('p1-balloons').classList.add('disabled');
+                    showStatus(1, '❌ SALAH! Menunggu Lawan...');
                 } else {
-                    gameState.p2Wrong++;
-                    showStatus(2, '❌ SALAH! Coba lagi...');
-                    setTimeout(() => document.getElementById('p2-status').classList.remove('active'), 1000);
+                    gameState.p2Wrong++; gameState.p2Answered = true;
+                    document.getElementById('p2-balloons').classList.add('disabled');
+                    showStatus(2, '❌ SALAH! Menunggu Lawan...');
+                }
+
+                // Jika kedua pemain sudah salah semua, otomatis lanjut ke soal berikutnya
+                if (gameState.p1Answered && gameState.p2Answered) {
+                    gameState.roundResolved = true;
+                    setTimeout(() => {
+                        gameState.currentQuestion++;
+                        loadNextQuestion();
+                    }, 1500);
                 }
             }
         }
