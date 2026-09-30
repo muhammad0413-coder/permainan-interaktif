@@ -219,16 +219,16 @@
         }
 
         /* ================================
-           SUPER CUTE & TIDAK BERTABRAKAN
+           SUPER CUTE & TIDAK BERTABRAKAN (4 JALUR)
         ================================ */
         .balloon-container { width: 100%; flex: 1; position: relative; overflow: hidden; }
         .balloon-container.disabled { pointer-events: none; opacity: 0.4; filter: grayscale(1); transition: all 0.5s; }
 
         .balloon {
-            position: absolute; width: 95px; height: 115px;
+            position: absolute; width: 90px; height: 110px;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white; font-weight: 900; font-size: 1.1rem;
+            text-align: center; color: white; font-weight: 900; font-size: 1.05rem;
             text-shadow: 2px 2px 0px rgba(0,0,0,0.4); cursor: pointer; z-index: 10;
             box-shadow: inset -12px -12px 20px rgba(0,0,0,0.2), inset 12px 12px 20px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.2);
             top: -180px;
@@ -257,7 +257,6 @@
 
         @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
 
-        /* JALUR KOLOM TERPISAH (TIDAK BENTURAN) */
         @keyframes fallColumn {
             0% { top: -180px; }
             100% { top: 120%; }
@@ -297,7 +296,7 @@
         @media (max-width: 640px) {
             .main-title { font-size: 2.3rem; }
             .question-card { font-size: 1.1rem; padding: 12px; }
-            .balloon { width: 72px; height: 90px; font-size: 0.95rem; }
+            .balloon { width: 70px; height: 90px; font-size: 0.9rem; }
             .options-grid { grid-template-columns: repeat(2, 1fr); }
             .res-score { font-size: 2rem; }
         }
@@ -607,16 +606,16 @@
             const container1 = document.getElementById('p1-balloons'); const container2 = document.getElementById('p2-balloons');
             container1.innerHTML = ''; container2.innerHTML = '';
 
-            // 4 Pilihan jawaban (1 benar, 3 salah) agar pas di 4 jalur vertikal terpisah tanpa tabrakan
             const options = [...qData.answers];
             
+            // KEDUA PLAYER DIJAMIN PUNYA JAWABAN BENAR MASING-MASING DI LAYARNYA
             generateBalloonsForContainer(container1, options, qData.correct, 1);
             generateBalloonsForContainer(container2, options, qData.correct, 2);
         }
 
         function generateBalloonsForContainer(container, options, correctIndex, playerNum) {
-            // 4 Jalur Kolom Terpisah (Left positions: 10%, 35%, 60%, 85%) -> Dijamin tidak bertabrakan!
-            const lanePositions = [10, 35, 60, 85];
+            // 4 Kolom jalur terpisah (12%, 37%, 62%, 87%) dijamin tidak tumpang tindih
+            const lanePositions = [12, 37, 62, 87];
             const shuffledLanes = shuffleArray([...lanePositions]);
 
             options.forEach((optText, idx) => {
@@ -626,13 +625,12 @@
                 const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
                 b.style.backgroundColor = color; b.style.color = color;
                 
-                // Set posisi di jalur masing-masing
                 b.style.left = `${shuffledLanes[idx]}%`;
                 
                 // Kecepatan sangat lambat dan santai (16 - 22 detik)
                 const duration = Math.random() * 6 + 16;
                 b.style.animation = `fallColumn ${duration}s linear infinite`;
-                b.style.animationDelay = `${idx * 0.8}s`;
+                b.style.animationDelay = `${idx * 1.2}s`; // Jeda waktu antar balon agar tersusun rapi vertikal
 
                 const isCorrect = (idx === correctIndex);
 
@@ -660,7 +658,7 @@
             balloonElem.classList.add('popping'); playSound('pop');
 
             if (isCorrect) {
-                // JIKA BENAR: DAPAT POIN, LANGSUNG LANJUT KE SOAL BERIKUTNYA
+                // JIKA BENAR: DAPAT POIN, LANGSUNG LANJUT SOAL BERIKUTNYA
                 gameState.roundResolved = true; playSound('correct');
 
                 if (playerNum === 1) {
@@ -690,11 +688,11 @@
                 if (playerNum === 1) {
                     gameState.p1Wrong++; gameState.p1Answered = true;
                     document.getElementById('p1-balloons').classList.add('disabled');
-                    showStatus(1, '❌ SALAH! Menunggu Player 2...');
+                    showStatus(1, '❌ SALAH! Menunggu Lawan...');
                 } else {
                     gameState.p2Wrong++; gameState.p2Answered = true;
                     document.getElementById('p2-balloons').classList.add('disabled');
-                    showStatus(2, '❌ SALAH! Menunggu Player 1...');
+                    showStatus(2, '❌ SALAH! Menunggu Lawan...');
                 }
 
                 // Jika kedua pemain sudah salah semua, otomatis lanjut ke soal berikutnya
