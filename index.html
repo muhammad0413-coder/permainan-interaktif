@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Balon Pintar - SD Negeri Kesilir 02</title>
+    <title>Balon Pintar CP Deep Learning - SD Negeri Kesilir 02</title>
     <style>
         /* ================================
            CSS RESET & BASE STYLES
@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Nunito', 'Fredoka One', 'Comic Sans MS', sans-serif;
-            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #43e97b 50%, #38f9d7 100%);
+            background: linear-gradient(to bottom, #3b82f6 0%, #06b6d4 50%, #10b981 50%, #34d399 100%);
             height: 100vh; width: 100vw; overflow: hidden; position: relative; color: #1e293b;
         }
 
@@ -74,68 +74,78 @@
         .screen.active { display: flex; }
 
         /* ================================
-           KARTU MENU (KARTUN 3D STYLE)
+           KARTU MENU
         ================================ */
         .glass-card {
-            background: #ffffff; border-radius: 40px; padding: 30px;
+            background: #ffffff; border-radius: 40px; padding: 25px 30px;
             box-shadow: 0 20px 0 rgba(0, 0, 0, 0.15), inset 0 -10px 0 rgba(0,0,0,0.05);
-            border: 8px solid #cbd5e1; max-width: 950px; width: 95%; max-height: 92vh;
+            border: 8px solid #cbd5e1; max-width: 950px; width: 95%; max-height: 94vh;
             overflow-y: auto; text-align: center; position: relative;
         }
 
         .main-title {
-            font-size: 3.5rem; color: #ff3366; margin-bottom: 5px; font-weight: 900;
+            font-size: 3.2rem; color: #ff3366; margin-bottom: 2px; font-weight: 900;
             text-shadow: 4px 4px 0px #ffcc00, 8px 8px 0px rgba(0,0,0,0.15); letter-spacing: 2px;
             animation: bounce-title 2s infinite ease-in-out;
         }
-        @keyframes bounce-title { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05) rotate(2deg); } }
+        @keyframes bounce-title { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03) rotate(1deg); } }
 
         .school-name {
-            font-size: 1.1rem; color: white; font-weight: 900; background: #8b5cf6;
-            display: inline-block; padding: 8px 25px; border-radius: 30px;
-            margin-bottom: 20px; border: 4px solid #c4b5fd; box-shadow: 0 6px 0 #6d28d9;
+            font-size: 1rem; color: white; font-weight: 900; background: #8b5cf6;
+            display: inline-flex; align-items: center; gap: 10px; padding: 8px 25px; border-radius: 30px;
+            margin-bottom: 15px; border: 4px solid #c4b5fd; box-shadow: 0 5px 0 #6d28d9;
+        }
+
+        .cp-badge {
+            background: #10b981; color: white; font-size: 0.85rem; font-weight: 800;
+            padding: 4px 12px; border-radius: 20px; border: 2px solid #a7f3d0;
         }
 
         .section-label {
-            font-size: 1.3rem; font-weight: 900; color: #1e293b;
-            margin: 15px 0 10px 0; text-align: left; display: flex; align-items: center; gap: 10px;
-            background: #f1f5f9; padding: 8px 20px; border-radius: 20px; border-left: 8px solid #ff3366;
+            font-size: 1.2rem; font-weight: 900; color: #1e293b;
+            margin: 12px 0 8px 0; text-align: left; display: flex; align-items: center; justify-content: space-between;
+            background: #f1f5f9; padding: 8px 18px; border-radius: 20px; border-left: 8px solid #ff3366;
         }
 
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .sync-btn {
+            background: #0d9488; color: white; border: 3px solid #14b8a6;
+            border-radius: 15px; padding: 5px 12px; font-size: 0.9rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 #0f766e;
+        }
+        .sync-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f766e; }
+
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 15px; }
 
         .opt-btn {
-            background: white; border: 4px solid #cbd5e1; border-radius: 25px;
-            padding: 15px 10px; font-size: 1.1rem; font-weight: 900; color: #64748b;
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 0 #cbd5e1;
+            background: white; border: 4px solid #cbd5e1; border-radius: 22px;
+            padding: 12px 8px; font-size: 1rem; font-weight: 900; color: #64748b;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 0 #cbd5e1;
         }
-        .opt-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 0 #cbd5e1; background: #f8fafc; }
-        .opt-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #cbd5e1; }
+        .opt-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #cbd5e1; background: #f8fafc; }
+        .opt-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #cbd5e1; }
         
         .opt-btn.selected {
             background: #00c6ff; color: #ffffff; border-color: #0072ff;
-            box-shadow: 0 8px 0 #0072ff; transform: translateY(-2px);
+            box-shadow: 0 6px 0 #0072ff; transform: translateY(-2px);
         }
 
         .primary-btn {
             background: #ffcc00; color: #d97706; border: 6px solid #f59e0b;
-            border-radius: 50px; padding: 18px 50px; font-size: 1.8rem; font-weight: 900;
-            cursor: pointer; transition: all 0.2s; margin-top: 15px;
-            box-shadow: 0 12px 0 #d97706, 0 20px 25px rgba(0,0,0,0.2);
+            border-radius: 50px; padding: 16px 45px; font-size: 1.7rem; font-weight: 900;
+            cursor: pointer; transition: all 0.2s; margin-top: 10px;
+            box-shadow: 0 10px 0 #d97706, 0 15px 20px rgba(0,0,0,0.2);
             text-shadow: 2px 2px 0px rgba(255,255,255,0.5); letter-spacing: 2px;
         }
-        .primary-btn:hover { transform: translateY(-5px) scale(1.05); filter: brightness(1.1); box-shadow: 0 17px 0 #d97706, 0 25px 30px rgba(0,0,0,0.3); }
-        .primary-btn:active { transform: translateY(8px); box-shadow: 0 4px 0 #d97706; }
+        .primary-btn:hover { transform: translateY(-4px) scale(1.03); filter: brightness(1.08); box-shadow: 0 14px 0 #d97706; }
+        .primary-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #d97706; }
 
         .audio-toggle {
             position: absolute; top: 20px; right: 20px; z-index: 100;
             background: #ffffff; border: 5px solid #ffcc00; border-radius: 50%;
-            width: 65px; height: 65px; font-size: 30px; cursor: pointer;
+            width: 60px; height: 60px; font-size: 28px; cursor: pointer;
             box-shadow: 0 8px 0 #f59e0b; transition: transform 0.2s;
             display: flex; align-items: center; justify-content: center;
         }
-        .audio-toggle:hover { transform: scale(1.1); }
-        .audio-toggle:active { transform: translateY(4px); box-shadow: 0 4px 0 #f59e0b; }
 
         /* ================================
            GAME HUD & AREA BERMAIN
@@ -143,30 +153,29 @@
         #game-screen { padding: 0; justify-content: flex-start; }
 
         .game-header {
-            width: 100%; background: rgba(255, 255, 255, 0.95);
-            border-bottom: 8px solid #00c6ff; padding: 12px 25px;
+            width: 100%; background: rgba(255, 255, 255, 0.96);
+            border-bottom: 8px solid #00c6ff; padding: 10px 20px;
             display: flex; flex-direction: column; align-items: center; z-index: 30;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 0 0 30px 30px;
         }
 
-        .top-nav { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .top-nav { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         
         .pause-btn {
             background: #ff3366; color: white; border: 4px solid #e11d48;
-            border-radius: 20px; padding: 8px 20px; font-weight: 900; font-size: 1.1rem; cursor: pointer;
-            box-shadow: 0 6px 0 #be123c; transition: all 0.1s;
+            border-radius: 20px; padding: 6px 18px; font-weight: 900; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 5px 0 #be123c;
         }
-        .pause-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #be123c; }
 
         .question-progress {
             font-weight: 900; color: white; background: #8b5cf6;
-            padding: 6px 25px; border-radius: 25px; border: 4px solid #c4b5fd; font-size: 1.2rem;
-            box-shadow: 0 5px 0 #6d28d9;
+            padding: 5px 20px; border-radius: 25px; border: 4px solid #c4b5fd; font-size: 1.1rem;
+            box-shadow: 0 4px 0 #6d28d9;
         }
 
         .progress-bar-container {
-            width: 100%; height: 20px; background: #e2e8f0;
-            border-radius: 15px; margin-top: 5px; overflow: hidden; border: 4px solid #cbd5e1;
+            width: 100%; height: 16px; background: #e2e8f0;
+            border-radius: 12px; margin-top: 4px; overflow: hidden; border: 3px solid #cbd5e1;
         }
         .progress-bar-fill {
             height: 100%; width: 0%; background: linear-gradient(90deg, #ffcc00, #ff3366); transition: width 0.4s ease;
@@ -174,64 +183,63 @@
 
         .question-card {
             background: #ffffff; border: 6px solid #00c6ff; border-radius: 25px;
-            padding: 15px 25px; width: 100%; max-width: 900px; text-align: center;
-            font-size: 1.5rem; font-weight: 900; color: #0f172a; margin-top: 10px;
-            box-shadow: 0 10px 0 #0072ff;
+            padding: 12px 20px; width: 100%; max-width: 900px; text-align: center;
+            font-size: 1.35rem; font-weight: 900; color: #0f172a; margin-top: 8px;
+            box-shadow: 0 8px 0 #0072ff; line-height: 1.3;
         }
 
         /* SPLIT SCREEN */
         .play-arena { width: 100%; flex: 1; display: flex; position: relative; overflow: hidden; }
-        .divider { width: 12px; height: 100%; background: #ffffff; box-shadow: 0 0 20px rgba(0,0,0,0.3); z-index: 25; border-radius: 10px; }
+        .divider { width: 10px; height: 100%; background: #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.25); z-index: 25; border-radius: 8px; }
         
         .player-zone { flex: 1; position: relative; display: flex; flex-direction: column; overflow: hidden; }
-        .player-zone.p1 { background: rgba(255, 51, 102, 0.1); }
-        .player-zone.p2 { background: rgba(0, 198, 255, 0.1); }
+        .player-zone.p1 { background: rgba(255, 51, 102, 0.08); }
+        .player-zone.p2 { background: rgba(0, 198, 255, 0.08); }
 
         .player-hud {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 20px; background: rgba(255, 255, 255, 0.9); z-index: 20;
-            border-bottom: 5px solid rgba(0,0,0,0.1); border-radius: 0 0 20px 20px;
-            margin: 0 10px;
+            padding: 10px 18px; background: rgba(255, 255, 255, 0.92); z-index: 20;
+            border-bottom: 4px solid rgba(0,0,0,0.1); border-radius: 0 0 20px 20px; margin: 0 10px;
         }
 
-        .player-identity { font-weight: 900; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .player-identity { font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
         .p1 .player-identity { color: #e11d48; }
         .p2 .player-identity { color: #0369a1; }
 
         .score-badge {
-            background: #ffcc00; border: 4px solid #f59e0b; color: #b45309;
-            padding: 5px 18px; border-radius: 20px; font-weight: 900; font-size: 1.4rem; box-shadow: 0 5px 0 #d97706;
+            background: #ffcc00; border: 3px solid #f59e0b; color: #b45309;
+            padding: 4px 15px; border-radius: 18px; font-weight: 900; font-size: 1.3rem; box-shadow: 0 4px 0 #d97706;
         }
 
         .status-msg {
             position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            background: white; color: #0f172a; padding: 20px 30px;
-            border-radius: 30px; font-weight: 900; font-size: 1.3rem; z-index: 40;
+            background: white; color: #0f172a; padding: 18px 25px;
+            border-radius: 25px; font-weight: 900; font-size: 1.2rem; z-index: 40;
             display: none; text-align: center; border: 6px solid #ffcc00;
-            box-shadow: 0 15px 0 #d97706, 0 25px 40px rgba(0,0,0,0.4); width: 85%;
+            box-shadow: 0 12px 0 #d97706, 0 20px 30px rgba(0,0,0,0.35); width: 85%;
         }
-        .status-msg.active { display: block; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .status-msg.active { display: block; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .mascot-avatar {
-            width: 50px; height: 50px; border-radius: 50%; display: inline-flex;
-            align-items: center; justify-content: center; font-size: 30px;
-            background: white; border: 4px solid currentColor; box-shadow: 0 4px 0 currentColor;
+            width: 42px; height: 42px; border-radius: 50%; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 26px;
+            background: white; border: 3px solid currentColor; box-shadow: 0 3px 0 currentColor;
         }
 
         /* ================================
-           SUPER CUTE & TIDAK BERTABRAKAN (4 JALUR)
+           BALON JALUR
         ================================ */
         .balloon-container { width: 100%; flex: 1; position: relative; overflow: hidden; }
-        .balloon-container.disabled { pointer-events: none; opacity: 0.4; filter: grayscale(1); transition: all 0.5s; }
+        .balloon-container.disabled { pointer-events: none; opacity: 0.35; filter: grayscale(1); transition: all 0.4s; }
 
         .balloon {
-            position: absolute; width: 105px; height: 125px;
+            position: absolute; width: 110px; height: 130px;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white; font-weight: 900; font-size: 0.95rem;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.4); cursor: pointer; z-index: 10;
-            box-shadow: inset -12px -12px 20px rgba(0,0,0,0.2), inset 12px 12px 20px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.2);
-            top: -180px; padding: 6px;
+            text-align: center; color: white; font-weight: 900; font-size: 0.9rem;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5); cursor: pointer; z-index: 10;
+            box-shadow: inset -10px -10px 18px rgba(0,0,0,0.2), inset 10px 10px 18px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.2);
+            top: -180px; padding: 8px; line-height: 1.25;
         }
         .balloon::before {
             content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
@@ -243,17 +251,16 @@
             background: rgba(0,0,0,0.3); transform: translateX(-50%); border-radius: 2px;
         }
         .balloon-shine {
-            position: absolute; top: 15%; left: 20%; width: 16px; height: 28px;
+            position: absolute; top: 15%; left: 18%; width: 16px; height: 26px;
             background: rgba(255,255,255,0.6); border-radius: 50%; transform: rotate(-30deg);
         }
 
-        /* Muka Balon Lucu */
-        .balloon-face { position: absolute; top: 22%; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
-        .balloon-eyes { display: flex; gap: 12px; }
-        .balloon-eye { width: 8px; height: 8px; background: white; border-radius: 50%; box-shadow: 0 0 2px black; animation: blink 4s infinite; }
-        .balloon-cheeks { display: flex; gap: 24px; position: absolute; top: 6px; }
-        .balloon-cheek { width: 10px; height: 5px; background: rgba(255,105,180,0.8); border-radius: 50%; }
-        .balloon-mouth { width: 10px; height: 5px; border-bottom: 3px solid white; border-radius: 0 0 10px 10px; }
+        .balloon-face { position: absolute; top: 18%; display: flex; flex-direction: column; align-items: center; gap: 3px; pointer-events: none; }
+        .balloon-eyes { display: flex; gap: 10px; }
+        .balloon-eye { width: 7px; height: 7px; background: white; border-radius: 50%; box-shadow: 0 0 2px black; animation: blink 4s infinite; }
+        .balloon-cheeks { display: flex; gap: 22px; position: absolute; top: 5px; }
+        .balloon-cheek { width: 8px; height: 4px; background: rgba(255,105,180,0.8); border-radius: 50%; }
+        .balloon-mouth { width: 9px; height: 4px; border-bottom: 2px solid white; border-radius: 0 0 8px 8px; }
 
         @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
 
@@ -263,7 +270,7 @@
         }
 
         .balloon.popping { animation: popOut 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
-        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
+        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
 
         /* ================================
            OVERLAYS & HASIL AKHIR
@@ -276,29 +283,28 @@
         .overlay.active { display: flex; }
 
         .winner-card {
-            background: white; border-radius: 40px; padding: 30px; width: 95%; max-width: 650px;
-            text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 8px solid #ffcc00;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white; border-radius: 35px; padding: 25px; width: 95%; max-width: 620px;
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 8px solid #ffcc00;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .res-box { padding: 15px; border-radius: 22px; background: #f8fafc; border: 4px solid #cbd5e1; box-shadow: 0 6px 0 #cbd5e1; font-size: 0.95rem; }
-        .res-box.p1 { border-color: #fda4af; background: #fff1f2; box-shadow: 0 6px 0 #fda4af; }
-        .res-box.p2 { border-color: #7dd3fc; background: #f0f9ff; box-shadow: 0 6px 0 #7dd3fc; }
-        .res-title { font-weight: 900; margin-bottom: 5px; font-size: 1.2rem; }
-        .res-score { font-size: 2.5rem; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); margin-bottom: 8px; }
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .res-box { padding: 12px; border-radius: 20px; background: #f8fafc; border: 4px solid #cbd5e1; box-shadow: 0 5px 0 #cbd5e1; font-size: 0.9rem; }
+        .res-box.p1 { border-color: #fda4af; background: #fff1f2; box-shadow: 0 5px 0 #fda4af; }
+        .res-box.p2 { border-color: #7dd3fc; background: #f0f9ff; box-shadow: 0 5px 0 #7dd3fc; }
+        .res-title { font-weight: 900; margin-bottom: 4px; font-size: 1.1rem; }
+        .res-score { font-size: 2.3rem; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); margin-bottom: 6px; }
 
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
 
-        @keyframes popIn { 0% { transform: scale(0.3) translateY(50px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.3) translateY(40px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
-        /* RESPONSIVE */
         @media (max-width: 640px) {
-            .main-title { font-size: 2.3rem; }
-            .question-card { font-size: 1.1rem; padding: 12px; }
-            .balloon { width: 80px; height: 95px; font-size: 0.8rem; }
+            .main-title { font-size: 2.2rem; }
+            .question-card { font-size: 1.05rem; padding: 10px; }
+            .balloon { width: 85px; height: 105px; font-size: 0.75rem; }
             .options-grid { grid-template-columns: repeat(2, 1fr); }
-            .res-score { font-size: 2rem; }
+            .res-score { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -315,7 +321,7 @@
             <span class="bounce-anim">🌲</span>
             <span class="windmill">🎡</span>
             <span class="bounce-anim" style="animation-delay: 1s;">🍄</span>
-            <span style="font-size: 70px;">🎪</span>
+            <span style="font-size: 60px;">🎪</span>
             <span class="bounce-anim" style="animation-delay: 0.5s;">🌻</span>
             <span class="bounce-anim">🌲</span>
         </div>
@@ -330,11 +336,17 @@
         <div id="menu-screen" class="screen active">
             <div class="glass-card">
                 <div class="main-title">🎈 BALON PINTAR 🎈</div>
-                <div class="sub-title">⚡ GAME Kuis ADU CEPAT BALON!</div>
+                <div class="sub-title">⚡ GAME KUIS CP DEEP LEARNING MERDEKA</div>
                 <br>
-                <div class="school-name">🏫 SD NEGERI KESILIR 02</div>
+                <div class="school-name">
+                    🏫 SD NEGERI KESILIR 02
+                    <span class="cp-badge">✨ CP Deep Learning Active</span>
+                </div>
 
-                <div class="section-label">🎒 Pilih Kelas:</div>
+                <div class="section-label">
+                    <span>🎒 Pilih Kelas:</span>
+                    <button class="sync-btn" onclick="fetchCPUpdates()" title="Perbarui Soal CP Terbaru dari Server">🔄 Sync CP Online</button>
+                </div>
                 <div class="options-grid" id="class-options">
                     <button class="opt-btn" onclick="selectOption('selectedClass', 1, this)">Kelas 1</button>
                     <button class="opt-btn" onclick="selectOption('selectedClass', 2, this)">Kelas 2</button>
@@ -344,7 +356,7 @@
                     <button class="opt-btn" onclick="selectOption('selectedClass', 6, this)">Kelas 6</button>
                 </div>
 
-                <div class="section-label">📖 Pilih Mata Pelajaran:</div>
+                <div class="section-label">📖 Pilih Mata Pelajaran (Capaian Pembelajaran):</div>
                 <div class="options-grid" id="subject-options">
                     <button class="opt-btn selected" onclick="selectOption('selectedSubject', 'matematika', this)">📐 Matematika</button>
                     <button class="opt-btn" onclick="selectOption('selectedSubject', 'bahasaIndonesia', this)">📖 B. Indonesia</button>
@@ -356,14 +368,14 @@
                     <button class="opt-btn" onclick="selectOption('selectedSubject', 'pai', this)">🕌 Agama Islam</button>
                 </div>
 
-                <div class="section-label">🎯 Pilih Tingkat Kesulitan:</div>
+                <div class="section-label">🎯 Pilih Tingkat Kedalaman CP:</div>
                 <div class="options-grid" id="diff-options">
-                    <button class="opt-btn selected" onclick="selectOption('difficulty', 'mudah', this)">🟢 Mudah</button>
-                    <button class="opt-btn" onclick="selectOption('difficulty', 'sedang', this)">🟡 Sedang</button>
-                    <button class="opt-btn" onclick="selectOption('difficulty', 'sulit', this)">🔴 Sulit</button>
+                    <button class="opt-btn selected" onclick="selectOption('difficulty', 'mudah', this)">🟢 Dasar (Pemahaman)</button>
+                    <button class="opt-btn" onclick="selectOption('difficulty', 'sedang', this)">🟡 Menengah (Aplikasi)</button>
+                    <button class="opt-btn" onclick="selectOption('difficulty', 'sulit', this)">🔴 Deep Learning (HOTS)</button>
                 </div>
 
-                <div class="section-label">🔢 Jumlah Soal:</div>
+                <div class="section-label">🔢 Jumlah Soal Kuis:</div>
                 <div class="options-grid" id="count-options">
                     <button class="opt-btn" onclick="selectOption('totalQuestions', 5, this)">5 Soal</button>
                     <button class="opt-btn selected" onclick="selectOption('totalQuestions', 10, this)">10 Soal</button>
@@ -386,7 +398,7 @@
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" id="progress-bar"></div>
                 </div>
-                <div class="question-card" id="question-text">Memuat Pertanyaan...</div>
+                <div class="question-card" id="question-text">Memuat Pertanyaan CP...</div>
             </div>
 
             <div class="play-arena">
@@ -423,10 +435,10 @@
         <!-- OVERLAY: PAUSE -->
         <div class="overlay" id="pause-modal">
             <div class="glass-card" style="max-width: 450px;">
-                <h2 style="font-size: 2.8rem; color: #ff3366; margin-bottom: 20px; font-weight: 900;">⏸ GAME DIJEDA</h2>
+                <h2 style="font-size: 2.5rem; color: #ff3366; margin-bottom: 15px; font-weight: 900;">⏸ GAME DIJEDA</h2>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <button class="primary-btn" onclick="resumeGame()" style="margin:0; font-size: 1.4rem;">▶ LANJUTKAN</button>
-                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.2rem;">🏠 KEMBALI KE MENU</button>
+                    <button class="primary-btn" onclick="resumeGame()" style="margin:0; font-size: 1.3rem;">▶ LANJUTKAN</button>
+                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.1rem;">🏠 KEMBALI KE MENU</button>
                 </div>
             </div>
         </div>
@@ -434,10 +446,10 @@
         <!-- OVERLAY: HASIL AKHIR -->
         <div class="overlay" id="result-modal">
             <div class="winner-card">
-                <h1 style="font-size: 3rem; color: #00c6ff; margin-bottom: 5px; font-weight: 900;">🎉 SELESAI! 🎉</h1>
-                <p style="color: #64748b; font-weight: 900; font-size: 1.2rem;">SD NEGERI KESILIR 02</p>
+                <h1 style="font-size: 2.8rem; color: #00c6ff; margin-bottom: 5px; font-weight: 900;">🎉 EVALUASI CP SELESAI! 🎉</h1>
+                <p style="color: #64748b; font-weight: 900; font-size: 1.1rem;">SD NEGERI KESILIR 02 - DEEP LEARNING</p>
 
-                <div id="winner-announcement" style="font-size: 2rem; font-weight: 900; color: #d97706; margin: 15px 0; background: #ffcc00; padding: 12px; border-radius: 25px; border: 6px solid #f59e0b; box-shadow: 0 8px 0 #d97706;">
+                <div id="winner-announcement" style="font-size: 1.8rem; font-weight: 900; color: #d97706; margin: 15px 0; background: #ffcc00; padding: 10px; border-radius: 20px; border: 5px solid #f59e0b; box-shadow: 0 6px 0 #d97706;">
                     🦊 PLAYER 1 MENANG!
                 </div>
 
@@ -445,28 +457,26 @@
                     <div class="res-box p1">
                         <div class="res-title" style="color:#e11d48;">🦊 PLAYER 1</div>
                         <div class="res-score" id="res-p1-score">0</div>
-                        <div style="font-size: 0.9rem; color:#475569; font-weight: 900; line-height: 1.5;">
+                        <div style="font-size: 0.85rem; color:#475569; font-weight: 900; line-height: 1.5;">
                             ✅ Benar: <span id="res-p1-c">0</span><br>
                             ❌ Salah: <span id="res-p1-w">0</span><br>
-                            ⏳ Tertinggal (Ketikung): <span id="res-p1-l">0</span><br>
-                            💤 Tidak Menjawab: <span id="res-p1-u">0</span>
+                            ⏳ Ketikung Lawan: <span id="res-p1-l">0</span>
                         </div>
                     </div>
                     <div class="res-box p2">
                         <div class="res-title" style="color:#0369a1;">🐸 PLAYER 2</div>
                         <div class="res-score" id="res-p2-score">0</div>
-                        <div style="font-size: 0.9rem; color:#475569; font-weight: 900; line-height: 1.5;">
+                        <div style="font-size: 0.85rem; color:#475569; font-weight: 900; line-height: 1.5;">
                             ✅ Benar: <span id="res-p2-c">0</span><br>
                             ❌ Salah: <span id="res-p2-w">0</span><br>
-                            ⏳ Tertinggal (Ketikung): <span id="res-p2-l">0</span><br>
-                            💤 Tidak Menjawab: <span id="res-p2-u">0</span>
+                            ⏳ Ketikung Lawan: <span id="res-p2-l">0</span>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
-                    <button class="primary-btn" onclick="startGame()" style="margin:0; font-size: 1.3rem; padding: 12px 25px;">🔄 MAIN LAGI</button>
-                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.1rem; padding: 12px 20px;">🏠 MENU</button>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px;">
+                    <button class="primary-btn" onclick="startGame()" style="margin:0; font-size: 1.2rem; padding: 10px 22px;">🔄 MAIN LAGI</button>
+                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1rem; padding: 10px 18px;">🏠 MENU</button>
                 </div>
             </div>
         </div>
@@ -476,576 +486,374 @@
     <canvas id="confetti-canvas"></canvas>
 
     <script>
-        /* ================================
-           BANK SOAL LENGKAP (20+ SOAL NYATA PER MAPEL & KESULITAN)
-        ================================ */
-        const questionPoolsByDifficulty = {
+        /* =========================================================================
+           BANK SOAL CP DEEP LEARNING (REAL EDUCATIONAL DATA - KURIKULUM MERDEKA)
+           Disusun dengan prinsip Mindful, Meaningful, dan Joyful Learning (HOTS)
+        ========================================================================= */
+        const defaultCPQuestionBank = {
             mudah: {
                 matematika: [
-                    { q: "Berapa hasil dari 3 + 4?", answers: ["5", "7", "8", "6"], correct: 1 },
-                    { q: "Berapa hasil dari 10 - 3?", answers: ["7", "6", "8", "5"], correct: 0 },
-                    { q: "Berapa hasil dari 2 x 4?", answers: ["6", "7", "8", "9"], correct: 2 },
-                    { q: "Berapa hasil dari 8 : 2?", answers: ["2", "4", "3", "5"], correct: 1 },
-                    { q: "Berapa hasil dari 5 + 5?", answers: ["10", "8", "9", "11"], correct: 0 },
-                    { q: "Berapa hasil dari 6 - 2?", answers: ["3", "4", "5", "2"], correct: 1 },
-                    { q: "Berapa hasil dari 1 + 9?", answers: ["10", "8", "11", "7"], correct: 0 },
-                    { q: "Berapa hasil dari 4 x 2?", answers: ["6", "8", "10", "12"], correct: 1 },
-                    { q: "Berapa hasil dari 9 - 4?", answers: ["4", "5", "6", "3"], correct: 1 },
-                    { q: "Berapa hasil dari 6 : 3?", answers: ["2", "3", "4", "1"], correct: 0 },
-                    { q: "Berapa hasil dari 7 + 2?", answers: ["8", "9", "10", "6"], correct: 1 },
-                    { q: "Berapa hasil dari 10 - 5?", answers: ["3", "4", "5", "6"], correct: 2 },
-                    { q: "Berapa hasil dari 3 x 3?", answers: ["6", "8", "9", "12"], correct: 2 },
-                    { q: "Berapa hasil dari 4 : 2?", answers: ["1", "2", "3", "4"], correct: 1 },
-                    { q: "Berapa hasil dari 2 + 6?", answers: ["7", "8", "9", "10"], correct: 1 },
-                    { q: "Berapa hasil dari 8 - 4?", answers: ["2", "3", "4", "5"], correct: 2 },
-                    { q: "Berapa hasil dari 5 x 2?", answers: ["8", "10", "12", "15"], correct: 1 },
-                    { q: "Berapa hasil dari 10 : 5?", answers: ["1", "2", "3", "5"], correct: 1 },
-                    { q: "Berapa hasil dari 4 + 4?", answers: ["6", "7", "8", "9"], correct: 2 },
-                    { q: "Berapa hasil dari 7 - 3?", answers: ["3", "4", "5", "2"], correct: 1 }
+                    { q: "Pak Budi membagikan 12 pensil kepada 3 siswa sama rata. Berapa pensil yang diterima tiap siswa?", answers: ["3 pensil", "4 pensil", "5 pensil", "6 pensil"], correct: 1 },
+                    { q: "Pecahan manakah yang senilai dengan setengah (1/2)?", answers: ["2/4", "1/3", "3/5", "2/6"], correct: 0 },
+                    { q: "Sebuah buku berbentuk persegi panjang memiliki panjang 8 cm dan lebar 5 cm. Berapa kelilingnya?", answers: ["13 cm", "26 cm", "40 cm", "30 cm"], correct: 1 },
+                    { q: "Pada bilangan 4.752, angka 7 menempati nilai tempat...", answers: ["Satuan", "Puluhan", "Ratusan", "Ribuan"], correct: 2 },
+                    { q: "Sudut pojok pada lembaran kertas buku tulismu besarnya 90 derajat, disebut sudut...", answers: ["Lancip", "Siku-siku", "Tumpul", "Lurus"], correct: 1 },
+                    { q: "Ibu membeli 45 buah apel. Adik memakan 8 apel. Berapa sisa apel ibu sekarang?", answers: ["27 apel", "37 apel", "35 apel", "40 apel"], correct: 1 },
+                    { q: "Di taman ada 5 baris bunga, tiap baris ada 6 bunga. Total bunganya adalah...", answers: ["11", "20", "30", "36"], correct: 2 },
+                    { q: "Roda sepeda berbentuk bangun datar apa?", answers: ["Persegi", "Segitiga", "Trapesium", "Lingkaran"], correct: 3 },
+                    { q: "Bilangan ganjil setelah angka 15 adalah...", answers: ["16", "17", "18", "19"], correct: 1 },
+                    { q: "Tiga lembar uang dua ribuan sama nilainya dengan...", answers: ["Rp 5.000", "Rp 6.000", "Rp 4.000", "Rp 8.000"], correct: 1 }
                 ],
                 bahasaIndonesia: [
-                    { q: "Manakah yang termasuk huruf vokal dalam abjad?", answers: ["a, i, u, e, o", "b, c, d, f", "m, n, p, q", "s, t, w, z"], correct: 0 },
-                    { q: "Hewan peliharaan yang berbunyi 'meong' adalah...", answers: ["Anjing", "Kucing", "Sapi", "Bebek"], correct: 1 },
-                    { q: "Bagian tubuh yang digunakan untuk melihat adalah...", answers: ["Telinga", "Mata", "Hidung", "Tangan"], correct: 1 },
-                    { q: "Lawan kata dari 'panas' adalah...", answers: ["Dingin", "Sejuk", "Hangat", "Terang"], correct: 0 },
-                    { q: "Alat untuk menulis di buku adalah...", answers: ["Penghapus", "Pensil", "Penggaris", "Gunting"], correct: 1 },
-                    { q: "Bunga nasional Indonesia yang harum adalah...", answers: ["Melati", "Mawar", "Anggrek", "Sepatu"], correct: 0 },
-                    { q: "Warna darah manusia pada umumnya adalah...", answers: ["Biru", "Merah", "Hitam", "Putih"], correct: 1 },
-                    { q: "Jumlah hari dalam seminggu adalah...", answers: ["5 hari", "6 hari", "7 hari", "8 hari"], correct: 2 },
-                    { q: "Matahari bersinar terang pada waktu...", answers: ["Malam", "Siang", "Sore", "Tengah malam"], correct: 1 },
-                    { q: "Bulan yang ada setelah bulan Januari adalah...", answers: ["Februari", "Maret", "Desember", "Mei"], correct: 0 },
-                    { q: "Hewan yang hidup di air bernapas dengan...", answers: ["Paru-paru", "Insang", "Kulit", "Trakea"], correct: 1 },
-                    { q: "Buah yang rasanya manis dan berwarna kuning adalah...", answers: ["Jeruk", "Pisang", "Semangka", "Melon"], correct: 1 },
-                    { q: "Rumah tempat tinggal bersama keluarga disebut...", answers: ["Sekolah", "Rumah", "Pasar", "Kantor"], correct: 1 },
-                    { q: "Kendaraan roda dua yang dikayuh disebut...", answers: ["Mobil", "Sepeda", "Becak", "Kereta"], correct: 1 },
-                    { q: "Air terjun mengalir dari tempat yang...", answers: ["Rendah", "Tinggi", "Datar", "Sempit"], correct: 1 },
-                    { q: "Ibu dari ibu kita biasa dipanggil...", answers: ["Nenek", "Bibi", "Tante", "Kakak"], correct: 0 },
-                    { q: "Pohon kelapa banyak tumbuh di daerah...", answers: ["Pegunungan", "Pantai", "Gurun", "Kutub"], correct: 1 },
-                    { q: "Suara burung terdengar saat hari...", answers: ["Pagi", "Malam", "Hujan", "Petir"], correct: 0 },
-                    { q: "Kucing berjalan menggunakan... kaki", answers: ["Dua", "Tiga", "Empat", "Enam"], correct: 2 },
-                    { q: "Buku cerita anak biasanya berisi kisah yang...", answers: ["Menarik", "Kaku", "Seram", "Bermesin"], correct: 0 }
+                    { q: "Gagasan utama atau ide pokok suatu paragraf biasanya dijelaskan oleh...", answers: ["Kalimat utama", "Kalimat penjelas", "Judul saja", "Kalimat terakhir"], correct: 1 },
+                    { q: "Untuk menanyakan alasan terjadinya peristiwa, kita menggunakan kata tanya...", answers: ["Apa", "Bagaimana", "Mengapa", "Kapan"], correct: 2 },
+                    { q: "Cerita Si Kancil Mencuri Mentimun termasuk jenis cerita...", answers: ["Legenda", "Fabel", "Mitos", "Saga"], correct: 1 },
+                    { q: "Kata dasar dari kata berimbuhan 'membuatkan' adalah...", answers: ["Buatkan", "Buat", "Membuat", "Pembuat"], correct: 1 },
+                    { q: "Tanda baca yang tepat untuk mengakhiri kalimat perintah 'Tolong tutup pintu itu' adalah...", answers: ["Titik (.)", "Tanya (?)", "Seru (!)", "Koma (,)"], correct: 2 },
+                    { q: "Lawan kata dari 'Gelap' yang menggambarkan keadaan siang hari adalah...", answers: ["Mendung", "Terang", "Suram", "Silau"], correct: 1 },
+                    { q: "Orang yang pekerjaannya mengemudikan kereta api disebut...", answers: ["Pilot", "Masinis", "Nakhoda", "Sopir"], correct: 1 },
+                    { q: "Kalimat yang subjeknya melakukan suatu pekerjaan disebut kalimat...", answers: ["Pasif", "Tanya", "Aktif", "Perintah"], correct: 2 },
+                    { q: "Pesan kebaikan yang bisa kita ambil dari sebuah dongeng disebut...", answers: ["Tokoh", "Amanat", "Latar", "Alur"], correct: 1 },
+                    { q: "Buku yang berisi kumpulan arti kata disusun urut abjad disebut...", answers: ["Kamus", "Komik", "Majalah", "Koran"], correct: 0 }
                 ],
                 ipas: [
-                    { q: "Matahari terbit dari arah...", answers: ["Barat", "Timur", "Utara", "Selatan"], correct: 1 },
-                    { q: "Daun pada tumbuhan umumnya berwarna...", answers: ["Merah", "Biru", "Hijau", "Kuning"], correct: 2 },
-                    { q: "Wujud air di dalam botol minum adalah...", answers: ["Padat", "Cair", "Gas", "Keras"], correct: 1 },
-                    { q: "Hewan berkaki empat contohnya adalah...", answers: ["Ayam", "Kambing", "Burung", "Ikan"], correct: 1 },
-                    { q: "Bagian tumbuhan yang berada di dalam tanah adalah...", answers: ["Daun", "Batang", "Akar", "Bunga"], correct: 2 },
-                    { q: "Bumi yang kita tempati berbentuk...", answers: ["Kotak", "Bulat/Bola", "Segitiga", "Tabung"], correct: 1 },
-                    { q: "Bulan bersinar pada malam...", answers: ["Hari", "Terang", "Gelap", "Pagi"], correct: 2 },
-                    { q: "Angin adalah udara yang...", answers: ["Diam", "Bergerak", "Panas", "Kering"], correct: 1 },
-                    { q: "Es batu jika dibiarkan di tempat panas akan...", answers: ["Membeku", "Mencair", "Menguap", "Menyublim"], correct: 1 },
-                    { q: "Api bersuhu sangat...", answers: ["Dingin", "Panas", "Sejuk", "Hangat"], correct: 1 },
-                    { q: "Alat indra untuk mengecap rasa makanan adalah...", answers: ["Lidah", "Mata", "Telinga", "Kulit"], correct: 0 },
-                    { q: "Alat indra untuk mencium bau adalah...", answers: ["Hidung", "Lidah", "Mata", "Tangan"], correct: 0 },
-                    { q: "Binatang yang bisa terbang di udara adalah...", answers: ["Kucing", "Burung", "Sapi", "Kelinci"], correct: 1 },
-                    { q: "Musim hujan ditandai dengan turunnya...", answers: ["Salju", "Air hujan", "Pasir", "Batu"], correct: 1 },
-                    { q: "Kelinci bergerak dengan cara...", answers: ["Berjalan", "Melompat", "Merayap", "Berenang"], correct: 1 },
-                    { q: "Ikan berenang di dalam...", answers: ["Tanah", "Udara", "Air", "Api"], correct: 2 },
-                    { q: "Susu berasal dari hewan...", answers: ["Sapi", "Ayam", "Bebek", "Kucing"], correct: 0 },
-                    { q: "Baju tebal biasa dipakai saat cuaca...", answers: ["Panas", "Dingin", "Terik", "Cerah"], correct: 1 },
-                    { q: "Tanaman memerlukan ... untuk tumbuh subur.", answers: ["Air", "Batu", "Plastik", "Minyak"], correct: 0 },
-                    { q: "Batu adalah benda berwujud...", answers: ["Cair", "Padat", "Gas", "Asap"], correct: 1 }
+                    { q: "Tumbuhan hijau membuat makanannya sendiri (fotosintesis) dengan bantuan utama dari...", answers: ["Sinar matahari", "Lampu kamar", "Air es", "Angin malam"], correct: 0 },
+                    { q: "Es batu yang diletakkan di tempat terbuka lama-kelamaan akan menjadi air. Peristiwa ini disebut...", answers: ["Membeku", "Mencair", "Menguap", "Menyublim"], correct: 1 },
+                    { q: "Bagian tubuh tumbuhan yang menancap di tanah untuk menyerap air adalah...", answers: ["Daun", "Batang", "Akar", "Bunga"], correct: 2 },
+                    { q: "Gaya yang menyebabkan buah mangga jatuh ke bawah menuju tanah adalah...", answers: ["Gaya gesek", "Gaya gravitasi", "Gaya magnet", "Gaya pegas"], correct: 1 },
+                    { q: "Alat pernapasan ikan di dalam air adalah...", answers: ["Paru-paru", "Insang", "Trakea", "Kulit"], correct: 1 },
+                    { q: "Planet tempat manusia hidup yang permukaannya sebagian besar tertutup air adalah...", answers: ["Venus", "Bumi", "Mars", "Jupiter"], correct: 1 },
+                    { q: "Hewan yang memakan tumbuhan seperti sapi dan kambing dikelompokkan sebagai...", answers: ["Karnivora", "Herbivora", "Omnivora", "Insektivora"], correct: 1 },
+                    { q: "Matahari selalu terbit pada pagi hari dari sebelah...", answers: ["Barat", "Timur", "Utara", "Selatan"], correct: 1 },
+                    { q: "Benda yang bisa menempel pada pintu kulkas karena tarikan khusus disebut...", answers: ["Kaca", "Kayu", "Magnet", "Plastik"], correct: 2 },
+                    { q: "Udara yang bergerak dan bisa kita rasakan hembusannya disebut...", answers: ["Awan", "Asap", "Angin", "Hujan"], correct: 2 }
                 ],
                 pancasila: [
-                    { q: "Apa nama dasar negara Republik Indonesia?", answers: ["Pancasila", "UUD 1945", "Garuda", "Bhinneka"], correct: 0 },
-                    { q: "Warna bendera negara Indonesia adalah...", answers: ["Merah Putih", "Merah Biru", "Putih Hijau", "Merah Kuning"], correct: 0 },
-                    { q: "Jumlah sila dalam Pancasila adalah...", answers: ["3", "4", "5", "6"], correct: 2 },
-                    { q: "Lambang negara Indonesia adalah...", answers: ["Garuda Pancasila", "Banteng", "Pohon Beringin", "Bintang"], correct: 0 },
-                    { q: "Bunyi sila pertama Pancasila berkaitan dengan...", answers: ["Ketuhanan", "Kemanusiaan", "Persatuan", "Keadilan"], correct: 0 },
-                    { q: "Semboyan negara Indonesia adalah...", answers: ["Tut Wuri Handayani", "Bhinneka Tunggal Ika", "Merdeka", "Pancasila Jaya"], correct: 1 },
-                    { q: "Sila kedua Pancasila dilambangkan dengan...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Padi dan Kapas"], correct: 1 },
-                    { q: "Gotong royong adalah contoh pengamalan sila ke...", answers: ["Satu", "Tiga", "Empat", "Lima"], correct: 1 },
-                    { q: "Presiden pertama Republik Indonesia adalah...", answers: ["Soeharto", "Ir. Soekarno", "Joko Widodo", "B.J. Habibie"], correct: 1 },
-                    { q: "Lagu kebangsaan Indonesia adalah...", answers: ["Garuda Pancasila", "Indonesia Raya", "Bagimu Negeri", "Halo Bandung"], correct: 1 },
-                    { q: "Menghormati teman yang berbeda agama sesuai sila...", answers: ["Pertama", "Kedua", "Ketiga", "Kelima"], correct: 0 },
-                    { q: "Kepala banteng adalah lambang sila ke...", answers: ["Dua", "Tiga", "Empat", "Lima"], correct: 2 },
-                    { q: "Padi dan kapas melambangkan sila...", answers: ["Kelima", "Keempat", "Ketiga", "Kedua"], correct: 0 },
-                    { q: "Bhinneka Tunggal Ika artinya berbeda-beda tetapi...", answers: ["Tetap sama", "Tetap satu jua", "Terpisah", "Bermusuhan"], correct: 1 },
-                    { q: "Sikap saling membantu antarteman wujud nilai...", answers: ["Pancasila", "Kecurangan", "Kecemburuan", "Kemalasan"], correct: 0 },
-                    { q: "Hari Kemerdekaan Indonesia diperingati setiap tanggal...", answers: ["17 Agustus", "1 Juni", "28 Oktober", "10 November"], correct: 0 },
-                    { q: "Musyawarah untuk mufakat sesuai sila ke...", answers: ["Tiga", "Empat", "Lima", "Dua"], correct: 1 },
-                    { q: "Menjaga kebersihan sekolah adalah kewajiban...", answers: ["Guru saja", "Kepala sekolah", "Semua warga sekolah", "Petugas kebersihan"], correct: 2 },
-                    { q: "Sikap cinta tanah air disebut juga...", answers: ["Nasionalisme", "Individualisme", "Egotisme", "Pasadena"], correct: 0 },
-                    { q: "Menolong orang lain harus dilandasi hati yang...", answers: ["Ikhlas", "Terpaksa", "Pamrih", "Marah"], correct: 0 }
+                    { q: "Sila yang berbunyi 'Persatuan Indonesia' dilambangkan oleh...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Kepala Banteng"], correct: 2 },
+                    { q: "Sikap saling menghormati teman yang sedang beribadah sesuai dengan pengamalan sila ke-...", answers: ["1 (Satu)", "2 (Dua)", "3 (Tiga)", "4 (Empat)"], correct: 0 },
+                    { q: "Semboyan 'Bhinneka Tunggal Ika' pada pita Garuda Pancasila memiliki arti...", answers: ["Berbeda-beda tetapi tetap satu jua", "Bersatu kita teguh bercerai kita runtuh", "Pancasila dasar negara", "Indonesia tanah airku"], correct: 0 },
+                    { q: "Bendera Negara Kesatuan Republik Indonesia berwarna...", answers: ["Merah Putih", "Merah Biru", "Putih Hijau", "Merah Kuning"], correct: 0 },
+                    { q: "Dasar negara Indonesia yang digunakan sebagai pedoman hidup berbangsa adalah...", answers: ["UUD 1945", "Pancasila", "Proklamasi", "TAP MPR"], correct: 1 },
+                    { q: "Kegiatan membersihkan kelas bersama-sama merupakan bentuk dari...", answers: ["Egoisme", "Gotong royong", "Individualisme", "Pemaksaan"], correct: 1 },
+                    { q: "Lagu kebangsaan 'Indonesia Raya' diciptakan oleh...", answers: ["Ibu Sud", "W.R. Supratman", "Ismail Marzuki", "C. Simanjuntak"], correct: 1 },
+                    { q: "Burung Garuda yang menjadi lambang negara menengok ke arah...", answers: ["Kiri", "Kanan", "Atas", "Bawah"], correct: 1 },
+                    { q: "Jika teman kita jatuh dari sepeda, sikap kita yang sesuai nilai Pancasila adalah...", answers: ["Menertawakan", "Menolongnya", "Meninggalkannya", "Memarahinya"], correct: 1 },
+                    { q: "Sila kedua 'Kemanusiaan yang adil dan beradab' dilambangkan dengan...", answers: ["Bintang", "Rantai emas", "Pohon beringin", "Padi dan kapas"], correct: 1 }
                 ],
                 seni: [
-                    { q: "Alat tulis untuk menggambar di buku adalah...", answers: ["Pensil", "Sendok", "Sapu", "Gunting"], correct: 0 },
-                    { q: "Kegiatan mengeluarkan suara berirama disebut...", answers: ["Berbicara", "Bernyanyi", "Berteriak", "Berbisik"], correct: 1 },
-                    { q: "Warna dasar merah jika dicampur kuning jadi...", answers: ["Hijau", "Oranye", "Ungu", "Biru"], correct: 1 },
-                    { q: "Alat musik ritmis contohnya adalah...", answers: ["Gitar", "Drum/Kendang", "Piano", "Suling"], correct: 1 },
-                    { q: "Karya seni rupa yang memiliki dua sisi disebut...", answers: ["2 Dimensi", "3 Dimensi", "Patung", "Relief"], correct: 0 },
-                    { q: "Plastisin atau tanah liat biasa dipakai untuk...", answers: ["Membaca", "Membentuk/Modeling", "Menulis", "Menyanyi"], correct: 1 },
-                    { q: "Garis yang mendatar disebut garis...", answers: ["Tegak", "Lurus/Horizontal", "Miring", "Zig-zag"], correct: 1 },
-                    { q: "Alat untuk memotong kertas dalam prakarya adalah...", answers: ["Gunting", "Paku", "Obeng", "Kuas"], correct: 0 },
-                    { q: "Kuas dipakai saat kegiatan...", answers: ["Melukis/Mengecat", "Memahat", "Menjahit", "Mengetik"], correct: 0 },
-                    { q: "Lagu anak-anak bertema bintang ciptaan...", answers: ["A. T. Mahmud", "Ibu Sud", "W.R. Supratman", "Ismail Marzuki"], correct: 0 },
-                    { q: "Boneka wayang kulit dimainkan oleh...", answers: ["Dalang", "Sutradara", "Pemain", "Penyanyi"], correct: 0 },
-                    { q: "Menari adalah seni gerak tubuh yang diiringi...", answers: ["Musik", "Diam", "Hujan", "Angin"], correct: 0 },
-                    { q: "Origami adalah seni melipat...", answers: ["Kain", "Kertas", "Plastik", "Besi"], correct: 1 },
-                    { q: "Warna daun yang masih muda biasanya...", answers: ["Hijau tua", "Hijau muda/Kuning", "Merah pekat", "Hitam"], correct: 1 },
-                    { q: "Patung adalah contoh karya seni...", answers: ["2 Dimensi", "3 Dimensi", "Suara", "Tulis"], correct: 1 },
-                    { q: "Alat musik peniup tradisional dari bambu adalah...", answers: ["Suling", "Gendang", "Rebana", "Gong"], correct: 0 },
-                    { q: "Mewarnai gambar menggunakan...", answers: ["Krayon/Pensil warna", "Palu", "Gunting", "Lem"], correct: 0 },
-                    { q: "Kain tenun tradisional merupakan karya seni...", answers: ["Kriya", "Lukis murni", "Musik", "Teater"], correct: 0 },
-                    { q: "Ekspresi wajah gembira saat menyanyi bersifat...", answers: ["Sedih", "Cerah/Ceria", "Marah", "Kecewa"], correct: 1 },
-                    { q: "Kolase dibuat dengan cara...", answers: ["Menempel potongan", "Mencat", "Memahat", "Menjahit"], correct: 0 }
+                    { q: "Warna yang dihasilkan jika kita mencampur cat merah dan kuning adalah...", answers: ["Hijau", "Oranye", "Ungu", "Cokelat"], correct: 1 },
+                    { q: "Alat musik angklung khas Jawa Barat dimainkan dengan cara...", answers: ["Dipetik", "Ditiup", "Digoyangkan", "Dipukul"], correct: 2 },
+                    { q: "Karya seni melipat kertas dari Jepang yang populer dipelajari di sekolah disebut...", answers: ["Kolase", "Mozaik", "Origami", "Montase"], correct: 2 },
+                    { q: "Tari Kecak yang dimainkan puluhan laki-laki duduk melingkar berasal dari daerah...", answers: ["Jawa Tengah", "Jawa Barat", "Sumatera Barat", "Bali"], correct: 3 },
+                    { q: "Seni menempelkan biji-bijian pada gambar pola disebut karya seni...", answers: ["Lukisan", "Kolase", "Patung", "Anyaman"], correct: 1 },
+                    { q: "Alat musik ritmis yang tidak memiliki nada (do-re-mi) contohnya adalah...", answers: ["Gitar", "Gendang", "Piano", "Suling"], correct: 1 },
+                    { q: "Seni rupa yang hanya memiliki panjang dan lebar seperti lukisan disebut seni...", answers: ["2 Dimensi", "3 Dimensi", "4 Dimensi", "Terapan"], correct: 0 },
+                    { q: "Kain tradisional Indonesia yang dilukis menggunakan canting dan malam disebut...", answers: ["Tenun", "Batik", "Songket", "Ulos"], correct: 1 },
+                    { q: "Menyanyi yang dilakukan oleh banyak orang secara bersama-sama disebut...", answers: ["Solo", "Duet", "Paduan Suara", "Trio"], correct: 2 },
+                    { q: "Lagu 'Ampar-Ampar Pisang' menceritakan makanan khas dari daerah...", answers: ["Kalimantan Selatan", "Sumatera Utara", "Papua", "Maluku"], correct: 0 }
                 ],
                 pjok: [
-                    { q: "Sebelum berolahraga inti kita wajib...", answers: ["Tidur", "Pemanasan", "Makan berat", "Mandi"], correct: 1 },
-                    { q: "Permainan sepak bola dimainkan menggunakan...", answers: ["Tangan", "Kaki", "Kepala", "Tongkat"], correct: 1 },
-                    { q: "Olahraga lari cepat jarak pendek disebut...", answers: ["Maraton", "Sprint/Lari cepat", "Jogging", "Jalan santai"], correct: 1 },
-                    { q: "Jumlah pemain dalam satu tim sepak bola adalah...", answers: ["9 orang", "10 orang", "11 orang", "12 orang"], correct: 2 },
-                    { q: "Alat pemukul dalam permainan bulu tangkis adalah...", answers: ["Raket", "Bat", "Pemukul kayu", "Tongkat"], correct: 0 },
-                    { q: "Gerakan melompat di tempat berguna melatih...", answers: ["Kekuatan otot kaki", "Kekuatan tangan", "Pernapasan", "Kelenturan leher"], correct: 0 },
-                    { q: "Permainan bola basket memasukkan bola ke...", answers: ["Gawang", "Keranjang/Ring", "Lubang tanah", "Kotak"], correct: 1 },
-                    { q: "Berenang adalah olahraga di dalam...", answers: ["Air", "Udara", "Daratan", "Api"], correct: 0 },
-                    { q: "Sikap awal saat akan berlari adalah...", answers: ["Berdiri tegak/Bersedia", "Tidur", "Duduk", "Berbaring"], correct: 0 },
-                    { q: "Kasti adalah permainan bola...", answers: ["Besar", "Kecil", "Keranjang", "Tangan"], correct: 1 },
-                    { q: "Menangkap bola melatih koordinasi...", answers: ["Mata dan tangan", "Kaki dan kepala", "Telinga", "Kaki saja"], correct: 0 },
-                    { q: "Senam lantai dilakukan di atas...", answers: ["Matras", "Rumput tajam", "Pasir", "Semen kasar"], correct: 0 },
-                    { q: "Pendinginan dilakukan pada saat ... olahraga.", answers: ["Awal", "Akhir", "Tengah", "Sebelum"], correct: 1 },
-                    { q: "Olahraga membuat badan menjadi...", answers: ["Sehat dan bugar", "Sakit", "Lelah sekali", "Lemah"], correct: 0 },
-                    { q: "Permainan kasti menggunakan alat pemukul dari...", answers: ["Besi baja", "Kayu", "Karet", "Kaca"], correct: 1 },
-                    { q: "Gerakan guling ke depan disebut juga...", answers: ["Roll depan", "Handstand", "Sikap kapal", "Loncat harimau"], correct: 0 },
-                    { q: "Supaya tidak haus saat olahraga, kita bawa...", answers: ["Air minum", "Buku", "Mainan", "Tas sekolah"], correct: 0 },
-                    { q: "Olahraga jalan kaki sangat baik untuk...", answers: ["Kesehatan jantung", "Kuku", "Rambut", "Gigi"], correct: 0 },
-                    { q: "Permainan bola voli menggunakan...", answers: ["Tangan", "Kaki", "Kepala", "Siku"], correct: 0 },
-                    { q: "Waktu istirahat yang baik setelah lelah adalah...", answers: ["Tidur/Tidur cukup", "Berlari", "Bekerja", "Makan berat"], correct: 0 }
+                    { q: "Pemanasan sebelum olahraga sangat penting dilakukan untuk...", answers: ["Mencegah cedera otot", "Membuat lelah", "Menghabiskan waktu", "Membuat mengantuk"], correct: 0 },
+                    { q: "Berapa jumlah pemain dalam satu regu sepak bola saat bertanding?", answers: ["5 orang", "6 orang", "11 orang", "12 orang"], correct: 2 },
+                    { q: "Alat pemukul dalam permainan bola kasti biasanya terbuat dari...", answers: ["Besi", "Kayu", "Plastik", "Karet"], correct: 1 },
+                    { q: "Lari secepat-cepatnya pada jarak yang pendek (100 meter) disebut lari...", answers: ["Maraton", "Estafet", "Sprint", "Jogging"], correct: 2 },
+                    { q: "Gerakan berdiri dengan kepala di bawah dan kaki di atas pada senam lantai disebut...", answers: ["Guling depan", "Handstand / Headstand", "Sikap lilin", "Kayang"], correct: 1 },
+                    { q: "Saat bermain bola basket, tindakan memantul-mantulkan bola ke lantai disebut...", answers: ["Passing", "Shooting", "Dribbling", "Jumping"], correct: 2 },
+                    { q: "Gaya renang yang gerakannya menyerupai gerakan katak berenang adalah gaya...", answers: ["Dada", "Bebas", "Punggung", "Kupu-kupu"], correct: 0 },
+                    { q: "Tidur atau istirahat yang cukup setelah berolahraga berfungsi untuk...", answers: ["Melemahkan otot", "Mengembalikan tenaga", "Membuat sakit", "Mengurangi berat"], correct: 1 },
+                    { q: "Induk organisasi bulu tangkis (badminton) di Indonesia adalah...", answers: ["PSSI", "PBSI", "PBVSI", "PERBASI"], correct: 1 },
+                    { q: "Sikap akhir setelah melakukan gerakan guling ke depan (roll depan) adalah...", answers: ["Berdiri tegak", "Tidur terlentang", "Duduk jongkok", "Tengkurap"], correct: 2 }
                 ],
                 inggris: [
-                    { q: "Apa bahasa Inggris dari 'Merah'?", answers: ["Blue", "Red", "Green", "Yellow"], correct: 1 },
-                    { q: "Apa bahasa Inggris dari 'Kucing'?", answers: ["Cat", "Dog", "Fish", "Bird"], correct: 0 },
-                    { q: "Bahasa Inggris dari angka '10' adalah...", answers: ["Seven", "Eight", "Nine", "Ten"], correct: 3 },
-                    { q: "What color is the sky?", answers: ["Red", "Green", "Blue", "Yellow"], correct: 2 },
-                    { q: "Bahasa Inggris dari 'Buku' adalah...", answers: ["Pen", "Book", "Pencil", "Bag"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Meja' adalah...", answers: ["Chair", "Table", "Door", "Window"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Apel' adalah...", answers: ["Apple", "Banana", "Orange", "Grape"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Air' adalah...", answers: ["Milk", "Water", "Tea", "Coffee"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Matahari' adalah...", answers: ["Moon", "Sun", "Star", "Cloud"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Sekolah' adalah...", answers: ["School", "House", "Market", "Hospital"], correct: 0 },
-                    { q: "Bahasa Inggris dari warna 'Hijau' adalah...", answers: ["Red", "Blue", "Green", "Black"], correct: 2 },
-                    { q: "Bahasa Inggris dari 'Anjing' adalah...", answers: ["Cat", "Dog", "Bird", "Fish"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Satu' adalah...", answers: ["One", "Two", "Three", "Four"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Terima kasih' adalah...", answers: ["Hello", "Thank you", "Goodbye", "Sorry"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Selamat pagi' adalah...", answers: ["Good morning", "Good night", "Good afternoon", "Goodbye"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Ibu' adalah...", answers: ["Father", "Mother", "Sister", "Brother"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Ayah' adalah...", answers: ["Father", "Mother", "Uncle", "Aunt"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Ikan' adalah...", answers: ["Bird", "Fish", "Cat", "Dog"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Tas' adalah...", answers: ["Book", "Bag", "Pencil", "Hat"], correct: 1 },
-                    { q: "Bahasa Inggris dari warna 'Kuning' adalah...", answers: ["Yellow", "Red", "Blue", "Green"], correct: 0 }
+                    { q: "The place in the school where you can borrow and read books is the...", answers: ["Laboratory", "Library", "Canteen", "Classroom"], correct: 1 },
+                    { q: "What day comes after Monday?", answers: ["Sunday", "Tuesday", "Wednesday", "Friday"], correct: 1 },
+                    { q: "What is the color of the clear sky during the day?", answers: ["Red", "Green", "Blue", "Yellow"], correct: 2 },
+                    { q: "How do you say 'Selamat pagi' in English?", answers: ["Good morning", "Good afternoon", "Good night", "Goodbye"], correct: 0 },
+                    { q: "My mother's husband is my...", answers: ["Brother", "Uncle", "Father", "Grandfather"], correct: 2 },
+                    { q: "The English word for 'Sepatu' is...", answers: ["Shirt", "Shoes", "Pants", "Hat"], correct: 1 },
+                    { q: "What animal says 'meow' and catches mice?", answers: ["Dog", "Cat", "Bird", "Rabbit"], correct: 1 },
+                    { q: "The number 10 in English is...", answers: ["Seven", "Eight", "Nine", "Ten"], correct: 3 },
+                    { q: "If you want to drink, you need...", answers: ["Food", "Water", "Book", "Pen"], correct: 1 },
+                    { q: "The opposite of 'Big' is...", answers: ["Small", "Tall", "Long", "Fast"], correct: 0 }
                 ],
                 pai: [
-                    { q: "Nabi Muhammad SAW adalah nabi ke...", answers: ["Ke-1", "Ke-10", "Ke-25", "Ke-30"], correct: 2 },
-                    { q: "Kitab suci umat Islam adalah...", answers: ["Al-Qur'an", "Injil", "Taurat", "Zabur"], correct: 0 },
-                    { q: "Rukun Islam yang pertama adalah...", answers: ["Shalat", "Syahadat", "Zakat", "Haji"], correct: 1 },
-                    { q: "Malaikat yang menyampaikan wahyu adalah...", answers: ["Mikail", "Israfil", "Jibril", "Malik"], correct: 2 },
-                    { q: "Jumlah rukun iman ada...", answers: ["4", "5", "6", "7"], correct: 2 },
-                    { q: "Shalat fardhu dalam sehari semalam dikerjakan sebanyak...", answers: ["3 waktu", "4 waktu", "5 waktu", "6 waktu"], correct: 2 },
-                    { q: "Kitab suci Injil diturunkan kepada Nabi...", answers: ["Musa AS", "Daud AS", "Isa AS", "Muhammad SAW"], correct: 2 },
-                    { q: "Bulan suci tempat umat Islam berpuasa adalah...", answers: ["Syawal", "Ramadhan", "Rajab", "Muharram"], correct: 1 },
-                    { q: "Haji adalah rukun Islam yang ke...", answers: ["Ketiga", "Keempat", "Kelima", "Kedua"], correct: 2 },
-                    { q: "Kiblat umat Islam saat melaksanakan shalat menghadap ke...", answers: ["Ka'bah/Mekkah", "Masjid Nabawi", "Yerusalem", "Timur"], correct: 0 },
-                    { q: "Malaikat pencabut nyawa adalah...", answers: ["Jibril", "Mikail", "Izrail", "Israfil"], correct: 2 },
-                    { q: "Surat pertama dalam Al-Qur'an adalah...", answers: ["Al-Fatihah", "An-Nas", "Al-Ikhlas", "Al-Falaq"], correct: 0 },
-                    { q: "Nabi penutup (akhir zaman) adalah...", answers: ["Nabi Adam AS", "Nabi Isa AS", "Nabi Muhammad SAW", "Nabi Ibrahim AS"], correct: 2 },
-                    { q: "Sifat wajib bagi Allah SWT yang artinya Maha Esa adalah...", answers: ["Wujud", "Qidam", "Wahdaniyah", "Qudrat"], correct: 2 },
-                    { q: "Membersihkan diri dari najis sebelum shalat dinamakan...", answers: ["Wudhu", "Tayamum", "Mandi", "Berdoa"], correct: 0 },
-                    { q: "Malaikat peniup sangkakala hari kiamat adalah...", answers: ["Israfil", "Izrail", "Munkar", "Nakir"], correct: 0 },
-                    { q: "Nabi yang membangun perahu besar saat banjir besar adalah...", answers: ["Nabi Nuh AS", "Nabi Musa AS", "Nabi Yusuf AS", "Nabi Ibrahim AS"], correct: 0 },
-                    { q: "Zakat fitrah dikeluarkan pada bulan...", answers: ["Ramadhan", "Dzulhijjah", "Safar", "Rabiul Awal"], correct: 0 },
-                    { q: "Ayat suci Al-Qur'an pendek disebut juga...", answers: ["Juz amma / surat pendek", "Doa harian", "Hadits", "Tafsir"], correct: 0 },
-                    { q: "Perilaku jujur dalam agama Islam disebut sifat...", answers: ["Shiddiq", "Amanah", "Tabligh", "Fathonah"], correct: 0 }
+                    { q: "Rukun Islam yang ketiga yang diwajibkan setahun sekali pada bulan Ramadhan adalah...", answers: ["Syahadat", "Shalat", "Puasa", "Zakat"], correct: 2 },
+                    { q: "Nabi terakhir yang menjadi penutup para nabi (Khatamul Anbiya) adalah...", answers: ["Nabi Musa AS", "Nabi Isa AS", "Nabi Ibrahim AS", "Nabi Muhammad SAW"], correct: 3 },
+                    { q: "Malaikat yang bertugas membagi rezeki dan menurunkan hujan adalah...", answers: ["Jibril", "Mikail", "Israfil", "Izrail"], correct: 1 },
+                    { q: "Kitab suci Al-Qur'an diturunkan Allah kepada umat manusia melalui malaikat...", answers: ["Jibril", "Ridwan", "Malik", "Munkar"], correct: 0 },
+                    { q: "Gerakan pertama dalam shalat setelah niat yang diiringi mengangkat tangan adalah...", answers: ["Ruku'", "Sujud", "Takbiratul Ihram", "Salam"], correct: 2 },
+                    { q: "Sifat wajib bagi Allah yang artinya 'Maha Mengetahui' segala sesuatu adalah...", answers: ["Qudrat", "Iradat", "'Ilmun", "Hayat"], correct: 2 },
+                    { q: "Umat Islam melaksanakan shalat wajib menghadap ke arah...", answers: ["Timur", "Ka'bah di Mekkah", "Masjid Nabawi", "Yerusalem"], correct: 1 },
+                    { q: "Nabi yang diperintah oleh Allah membuat bahtera (kapal besar) saat akan terjadi banjir besar adalah...", answers: ["Nabi Nuh AS", "Nabi Yunus AS", "Nabi Yusuf AS", "Nabi Daud AS"], correct: 0 },
+                    { q: "Sifat Rasul 'Amanah' memiliki arti...", answers: ["Bisa dipercaya", "Selalu jujur", "Menyampaikan", "Cerdas"], correct: 0 },
+                    { q: "Surat pertama di dalam susunan mushaf Al-Qur'an adalah surat...", answers: ["Al-Ikhlas", "An-Nas", "Al-Fatihah", "Al-Baqarah"], correct: 2 }
                 ]
             },
             sedang: {
                 matematika: [
-                    { q: "Berapa hasil dari 15 + 8?", answers: ["21", "23", "25", "22"], correct: 1 },
-                    { q: "Berapa hasil dari 50 - 17?", answers: ["33", "35", "23", "32"], correct: 0 },
-                    { q: "Berapa hasil dari 7 x 6?", answers: ["48", "42", "56", "36"], correct: 1 },
-                    { q: "Berapa hasil dari 72 : 8?", answers: ["7", "8", "9", "6"], correct: 2 },
-                    { q: "Berapa hasil dari 12 + (6 x 3)?", answers: ["54", "30", "36", "42"], correct: 1 },
-                    { q: "Berapa 1/2 dari 100?", answers: ["25", "40", "50", "60"], correct: 2 },
-                    { q: "Berapa hasil dari 45 + 25?", answers: ["60", "70", "75", "80"], correct: 1 },
-                    { q: "Berapa hasil dari 90 - 35?", answers: ["55", "65", "45", "60"], correct: 0 },
-                    { q: "Berapa hasil dari 8 x 8?", answers: ["56", "64", "72", "48"], correct: 1 },
-                    { q: "Berapa hasil dari 81 : 9?", answers: ["7", "8", "9", "6"], correct: 2 },
-                    { q: "Berapa hasil dari 25 + 25 - 10?", answers: ["30", "40", "50", "60"], correct: 1 },
-                    { q: "Berapa hasil dari 11 x 5?", answers: ["45", "50", "55", "60"], correct: 2 },
-                    { q: "Berapa hasil dari 64 : 8?", answers: ["6", "7", "8", "9"], correct: 2 },
-                    { q: "Berapa 1/4 dari 100?", answers: ["20", "25", "50", "75"], correct: 1 },
-                    { q: "Berapa hasil dari 35 + 15 x 2?", answers: ["100", "65", "70", "80"], correct: 1 },
-                    { q: "Berapa hasil dari 100 - 45?", answers: ["45", "55", "65", "50"], correct: 1 },
-                    { q: "Berapa hasil dari 9 x 7?", answers: ["56", "63", "72", "81"], correct: 1 },
-                    { q: "Berapa hasil dari 56 : 7?", answers: ["6", "7", "8", "9"], correct: 2 },
-                    { q: "Berapa hasil dari 18 + 24?", answers: ["32", "42", "44", "38"], correct: 1 },
-                    { q: "Berapa hasil dari 60 - 28?", answers: ["32", "38", "42", "28"], correct: 0 }
+                    { q: "Sebuah taman sekolah berbentuk persegi panjang dengan ukuran panjang 12 m dan lebar 8 m. Luas taman tersebut adalah...", answers: ["40 m²", "96 m²", "80 m²", "48 m²"], correct: 1 },
+                    { q: "Ibu membeli 2,5 kg gula pasir dan 1,5 kg tepung. Berat total belanjaan ibu adalah...", answers: ["3,5 kg", "4,0 kg", "4,5 kg", "5,0 kg"], correct: 1 },
+                    { q: "Siswa kelas 4 mengumpulkan sumbangan Rp 150.000, lalu kelas 5 menyumbang Rp 175.000. Selisih sumbangan mereka adalah...", answers: ["Rp 15.000", "Rp 20.000", "Rp 25.000", "Rp 35.000"], correct: 2 },
+                    { q: "Berapakah Kelipatan Persekutuan Terkecil (KPK) dari bilangan 6 dan 8?", answers: ["12", "16", "24", "48"], correct: 2 },
+                    { q: "Faktor Persekutuan Terbesar (FPB) dari 18 dan 24 adalah...", answers: ["3", "6", "9", "12"], correct: 1 },
+                    { q: "Pecahan desimal yang nilainya sama dengan pecahan 3/5 adalah...", answers: ["0,3", "0,5", "0,6", "0,75"], correct: 2 },
+                    { q: "Andi mulai belajar pukul 18.30 dan selesai pukul 20.15. Berapa lama Andi belajar?", answers: ["1 jam 15 menit", "1 jam 30 menit", "1 jam 45 menit", "2 jam"], correct: 2 },
+                    { q: "Hasil dari operasi hitung campuran 25 + 15 x 2 adalah...", answers: ["80", "55", "70", "100"], correct: 1 },
+                    { q: "Sebuah segitiga sama sisi memiliki keliling 36 cm. Berapa panjang salah satu sisinya?", answers: ["9 cm", "12 cm", "18 cm", "24 cm"], correct: 1 },
+                    { q: "Jika 1 liter susu dibagi ke dalam gelas yang masing-masing berkapasitas 250 ml, berapa gelas yang didapat?", answers: ["2 gelas", "3 gelas", "4 gelas", "5 gelas"], correct: 2 }
                 ],
                 bahasaIndonesia: [
-                    { q: "Persamaan kata (sinonim) dari 'Rajin' adalah...", answers: ["Malas", "Giat", "Lambat", "Bodoh"], correct: 1 },
-                    { q: "Lawan kata (antonim) dari 'Besar' adalah...", answers: ["Luas", "Tinggi", "Kecil", "Panjang"], correct: 2 },
-                    { q: "Tempat jual beli di pasar tradisional disebut...", answers: ["Kios", "Klinik", "Kantor", "Terminal"], correct: 0 },
-                    { q: "Arti ungkapan 'Buah Tangan' adalah...", answers: ["Buah mangga", "Oleh-oleh", "Dompet", "Tas belanja"], correct: 1 },
-                    { q: "Kalimat tanya biasanya diawali kata...", answers: ["Wah", "Tolong", "Mengapa", "Silakan"], correct: 2 },
-                    { q: "Sinonim dari kata 'Cepat' adalah...", answers: ["Lambat", "Kilat/Kencang", "Pelan", "Berat"], correct: 1 },
-                    { q: "Antonim dari kata 'Tinggi' adalah...", answers: ["Panjang", "Pendek/Rendah", "Luas", "Kecil"], correct: 1 },
-                    { q: "Arti ungkapan 'Keras Kepala' adalah...", answers: ["Sakit kepala", "Anak pemberani", "Tidak mau mendengar nasihat", "Suka belajar"], correct: 2 },
-                    { q: "Bagian awal sebuah cerita disebut...", answers: ["Pendahuluan/Prolog", "Penutup", "Kesimpulan", "Pesan"], correct: 0 },
-                    { q: "Lawan kata dari 'Bersih' adalah...", answers: ["Kotor", "Rapi", "Indah", "Wangi"], correct: 0 },
-                    { q: "Sinonim kata 'Pintar' adalah...", answers: ["Bodoh", "Cerdas", "Malas", "Lambat"], correct: 1 },
-                    { q: "Penulisan huruf kapital yang benar untuk nama orang adalah...", answers: ["budi", "Budi", "BUDI", "bUDI"], correct: 1 },
-                    { q: "Tanda baca di akhir kalimat tanya adalah...", answers: ["Titik (.)", "Tanya (?)", "Seru (!)", "Koma (,)"], correct: 1 },
-                    { q: "Cerita fabel adalah cerita yang tokoh utamanya...", answers: ["Hewan", "Manusia", "Robot", "Tanaman"], correct: 0 },
-                    { q: "Sinonim kata 'Jujur' adalah...", answers: ["Bohong", "Terpercaya/Lurus hati", "Curang", "Licik"], correct: 1 },
-                    { q: "Arti ungkapan 'Panjang Tangan' adalah...", answers: ["Suka mencuri", "Suka menolong", "Tangan panjang", "Dermawan"], correct: 0 },
-                    { q: "Gelar pahlawan bagi tokoh pendidikan Indonesia adalah...", answers: ["Ki Hajar Dewantara", "Soekarno", "Sudirman", "Hatta"], correct: 0 },
-                    { q: "Lawan kata dari 'Hemat' adalah...", answers: ["Boros", "Kikir", "Miskin", "Rajin"], correct: 0 },
-                    { q: "Pesan moral yang terdapat dalam cerita disebut...", answers: ["Amanat", "Judul", "Tokoh", "Latar"], correct: 0 },
-                    { q: "Tempat dan waktu terjadinya cerita disebut...", answers: ["Latar/Setting", "Alur", "Tema", "Tokoh"], correct: 0 }
+                    { q: "Ungkapan 'panjang tangan' memiliki arti kiasan...", answers: ["Suka memberi", "Suka mencuri", "Suka menolong", "Orang yang tinggi"], correct: 1 },
+                    { q: "Penulisan kalimat berikut yang menggunakan ejaan dan tanda baca baku yang benar adalah...", answers: ["Apotik itu tutup jam delapan.", "Apotek itu tutup pukul 20.00.", "Apotik itu tutup pukul 8.", "Apotek tutup jam 8."], correct: 1 },
+                    { q: "Sinonim (persamaan makna) dari kata 'Hemat' adalah...", answers: ["Kikir", "Irit", "Boros", "Cermat"], correct: 1 },
+                    { q: "Teks yang menceritakan urutan kejadian secara kronologis (berdasarkan waktu) disebut teks...", answers: ["Deskripsi", "Narasi", "Persuasi", "Argumentasi"], correct: 1 },
+                    { q: "Kata berimbuhan yang penulisannya benar jika kata dasar 'sapu' mendapat awalan me- adalah...", answers: ["Mesapu", "Mensapu", "Menyapu", "Mengsapu"], correct: 2 },
+                    { q: "Puisi lama yang setiap baitnya terdiri dari empat baris bersajak a-b-a-b disebut...", answers: ["Gurindam", "Pantun", "Syair", "Mantra"], correct: 1 },
+                    { q: "Tokoh cerita yang memiliki sifat baik dan sering membela kebenaran disebut tokoh...", answers: ["Antagonis", "Protagonis", "Tritagonis", "Figuran"], correct: 1 },
+                    { q: "Kalimat yang bertujuan membujuk atau mengajak pembaca melakukan sesuatu disebut kalimat...", answers: ["Perintah", "Tanya", "Berita", "Persuasif"], correct: 3 },
+                    { q: "Antonim (lawan kata) dari kata 'Optimistis' adalah...", answers: ["Pencemas", "Pessimistis", "Ragu-ragu", "Penakut"], correct: 1 },
+                    { q: "Penggunaan huruf kapital yang tepat terdapat pada kalimat...", answers: ["kami pergi ke danau toba.", "Kami pergi ke Danau Toba.", "Kami Pergi ke Danau toba.", "Kami pergi Ke danau Toba."], correct: 1 }
                 ],
                 ipas: [
-                    { q: "Hewan yang memakan daging disebut...", answers: ["Herbivora", "Karnivora", "Omnivora", "Insektivora"], correct: 1 },
-                    { q: "Bagian tumbuhan yang menyerap air adalah...", answers: ["Daun", "Batang", "Akar", "Bunga"], correct: 2 },
-                    { q: "Perubahan wujud cair menjadi padat disebut...", answers: ["Mencair", "Membeku", "Menguap", "Menyublim"], correct: 1 },
-                    { q: "Hewan pemakan tumbuhan disebut...", answers: ["Karnivora", "Herbivora", "Omnivora", "Insektivora"], correct: 1 },
-                    { q: "Alat pernapasan utama pada manusia adalah...", answers: ["Paru-paru", "Jantung", "Hati", "Lambung"], correct: 0 },
-                    { q: "Proses perubahan wujud dari cair menjadi gas disebut...", answers: ["Membeku", "Menguap", "Mencair", "Mengembun"], correct: 1 },
-                    { q: "Bagian bunga yang berfungsi sebagai alat perkembangbiakan adalah...", answers: ["Mahkota", "Putik dan Benang sari", "Kelopak", "Tangkai"], correct: 1 },
-                    { q: "Penyakit akibat kurang vitamin C disebut...", answers: ["Sariawan", "Flu", "Demam", "Anemia"], correct: 0 },
-                    { q: "Sumber energi terbesar di bumi adalah...", answers: ["Batu bara", "Matahari", "Listrik", "Air"], correct: 1 },
-                    { q: "Hewan yang hidup di dua alam disebut...", answers: ["Amfibi", "Reptil", "Mamalia", "Pisces"], correct: 0 },
-                    { q: "Contoh sumber daya alam yang dapat diperbaharui adalah...", answers: ["Minyak bumi", "Tumbuhan/Hewan", "Batu bara", "Emas"], correct: 1 },
-                    { q: "Gaya yang menyebabkan benda jatuh ke bumi adalah gaya...", answers: ["Gesek", "Gravitasi", "Pegas", "Magnet"], correct: 1 },
-                    { q: "Benda yang dapat ditarik oleh magnet disebut...", answers: ["Magnetis", "Non-magnetis", "Isolator", "Konduktor"], correct: 0 },
-                    { q: "Kerangka tubuh manusia berfungsi untuk...", answers: ["Melindungi organ dalam", "Memompa darah", "Mencerna makanan", "Bernapas"], correct: 0 },
-                    { q: "Planet yang dijuluki planet merah adalah...", answers: ["Venus", "Mars", "Saturnus", "Jupiter"], correct: 1 },
-                    { q: "Sendi yang dapat bergerak ke segala arah terdapat pada...", answers: ["Lutut", "Siku", "Bahu/Panggul", "Jari"], correct: 2 },
-                    { q: "Tumbuhan hijau membuat makanan sendiri melalui...", answers: ["Fotosintesis", "Respirasi", "Ekskresi", "Digesti"], correct: 0 },
-                    { q: "Lapisan pelindung bumi dari sinar ultraviolet adalah...", answers: ["Ozon", "Oksigen", "Nitrogen", "Karbon"], correct: 0 },
-                    { q: "Hewan pemakan segalanya disebut...", answers: ["Herbivora", "Karnivora", "Omnivora", "Insektivora"], correct: 2 },
-                    { q: "Sendi pelana terdapat pada bagian tubuh...", answers: ["Pangkal ibu jari", "Lutut", "Leher", "Siku"], correct: 0 }
+                    { q: "Dalam siklus air, proses penguapan air laut atau danau akibat panas matahari disebut...", answers: ["Kondensasi", "Evaporasi", "Presipitasi", "Infiltrasi"], correct: 1 },
+                    { q: "Sendi yang memungkinkan tulang bergerak ke segala arah, contohnya pada pangkal lengan bahu, disebut sendi...", answers: ["Engsel", "Peluru", "Putar", "Pelana"], correct: 1 },
+                    { q: "Urutan rantai makanan yang paling logis di ekosistem sawah adalah...", answers: ["Padi -> Ular -> Tikus -> Elang", "Padi -> Tikus -> Ular -> Elang", "Tikus -> Padi -> Elang -> Ular", "Elang -> Ular -> Tikus -> Padi"], correct: 1 },
+                    { q: "Penyakit kekurangan darah merah yang membuat penderita sering merasa lelah disebut...", answers: ["Leukemia", "Anemia", "Hipertensi", "Hemofilia"], correct: 1 },
+                    { q: "Lapisan udara yang menyelimuti planet bumi dan melindunginya dari radiasi disebut...", answers: ["Litosfer", "Atmosfer", "Hidrosfer", "Biosfer"], correct: 1 },
+                    { q: "Tumbuhan bernapas menghirup udara dari lingkungan melalui celah pada daun yang disebut...", answers: ["Lentisel", "Stomata", "Klorofil", "Epidermis"], correct: 1 },
+                    { q: "Benda yang tidak dapat menghantarkan arus listrik atau panas dengan baik disebut...", answers: ["Konduktor", "Radiator", "Isolator", "Generator"], correct: 2 },
+                    { q: "Sumber energi listrik alternatif yang memanfaatkan kotoran hewan ternak disebut energi...", answers: ["Geotermal", "Biogas", "Biodiesel", "Surya"], correct: 1 },
+                    { q: "Bunyi dapat merambat paling cepat melalui medium zat...", answers: ["Padat", "Cair", "Gas", "Ruang hampa"], correct: 0 },
+                    { q: "Peristiwa alam berputarnya bumi pada porosnya (Rotasi Bumi) mengakibatkan terjadinya...", answers: ["Pergantian musim", "Siang dan malam", "Gerhana bulan", "Pasang surut air laut"], correct: 1 }
                 ],
                 pancasila: [
-                    { q: "Lambang sila pertama Pancasila adalah...", answers: ["Rantai", "Pohon Beringin", "Bintang", "Banteng"], correct: 2 },
-                    { q: "Bunyi sila ke-3 Pancasila adalah...", answers: ["Keadilan sosial...", "Persatuan Indonesia", "Ketuhanan YME", "Kemanusiaan..."], correct: 1 },
-                    { q: "Sidang PPKI mengesahkan UUD 1945 pada tanggal...", answers: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "29 Mei 1945"], correct: 1 },
-                    { q: "Sikap mementingkan kepentingan bersama disebut...", answers: ["Egois", "Gotong royong", "Individualis", "Sombong"], correct: 1 },
-                    { q: "Pancasila sebagai pandangan hidup tercantum dalam...", answers: ["Pembukaan UUD 1945", "Majalah", "Peraturan desa", "Buku cerita"], correct: 0 },
-                    { q: "Keputusan musyawarah sebaiknya diambil berdasarkan...", answers: ["Mufakat", "Paksaan", "Suara sendiri", "Kecurangan"], correct: 0 },
-                    { q: "Sila keempat Pancasila dilambangkan dengan...", answers: ["Bintang", "Pohon Beringin", "Kepala Banteng", "Padi Kapas"], correct: 2 },
-                    { q: "Contoh pengamalan sila kelima adalah...", answers: ["Bersikap adil kepada sesama", "Beribadah", "Bermusyawarah", "Berteman"], correct: 0 },
-                    { q: "Nilai luhur sila kedua berhubungan dengan...", answers: ["Kemanusiaan yang adil dan beradab", "Ketuhanan", "Persatuan", "Kerakyatan"], correct: 0 },
-                    { q: "Badan yang merumuskan dasar negara adalah...", answers: ["BPUPKI", "PPKI", "KONI", "DPR"], correct: 0 },
-                    { q: "Ketua BPUPKI adalah...", answers: ["Dr. Radjiman Wedyodiningrat", "Ir. Soekarno", "Moh. Hatta", "Soepomo"], correct: 0 },
-                    { q: "Semboyan bangsa Indonesia dicantumkan pada...", answers: ["Pita kaki Garuda", "Sayap", "Ekor", "Paruh"], correct: 0 },
-                    { q: "Menghargai hasil karya orang lain merupakan sila...", answers: ["Kelima", "Pertama", "Kedua", "Ketiga"], correct: 0 },
-                    { q: "Perilaku tidak membeda-bedakan teman sesuai sila...", answers: ["Satu", "Dua", "Tiga", "Empat"], correct: 1 },
-                    { q: "Sikap rela berkorban untuk bangsa dinamakan...", answers: ["Patriotisme", "Egoisme", "Konsumerisme", "Hedonisme"], correct: 0 },
-                    { q: "Hak dan kewajiban warga negara harus dilaksanakan...", answers: ["Seimbang", "Semaunya", "Dipaksa", "Diabaikan"], correct: 0 },
-                    { q: "Menaati peraturan lalu lintas adalah wujud warga yang...", answers: ["Disiplin", "Bebas", "Acuh", "Melanggar"], correct: 0 },
-                    { q: "Keputusan bersama yang mufakat harus ditaati dengan...", answers: ["Penuh tanggung jawab", "Terpaksa", "Gerutu", "Benci"], correct: 0 },
-                    { q: "Sikap toleransi beragama sesuai sila...", answers: ["Pertama", "Kedua", "Ketiga", "Kelima"], correct: 0 },
-                    { q: "Menjaga persatuan bangsa adalah pengamalan sila...", answers: ["Ketiga", "Pertama", "Kedua", "Keempat"], correct: 0 }
+                    { q: "Pengambilan keputusan bersama melalui musyawarah untuk mencapai mufakat adalah cerminan sila ke-...", answers: ["2 (Dua)", "3 (Tiga)", "4 (Empat)", "5 (Lima)"], correct: 2 },
+                    { q: "Mendapat kasih sayang dari orang tua adalah ... anak, sedangkan membantu orang tua adalah ... anak.", answers: ["Hak ; Kewajiban", "Kewajiban ; Hak", "Beban ; Tugas", "Hak ; Hadiah"], correct: 0 },
+                    { q: "Sikap bangga menggunakan produk buatan dalam negeri merupakan pengamalan sila yang berlambang...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Padi dan Kapas"], correct: 2 },
+                    { q: "Aturan atau ketentuan yang mengikat warga kelompok dalam masyarakat disebut...", answers: ["Norma", "Sanksi", "Saran", "Nasihat"], correct: 0 },
+                    { q: "Pancasila disahkan sebagai dasar negara Republik Indonesia pada tanggal...", answers: ["1 Juni 1945", "17 Agustus 1945", "18 Agustus 1945", "28 Oktober 1928"], correct: 2 },
+                    { q: "BPUPKI dibentuk untuk mempersiapkan kemerdekaan Indonesia. Ketua BPUPKI adalah...", answers: ["Ir. Soekarno", "Moh. Hatta", "Dr. Radjiman Wedyodiningrat", "Soepomo"], correct: 2 },
+                    { q: "Contoh sikap yang bertentangan dengan nilai keadilan sosial (Sila ke-5) adalah...", answers: ["Suka menabung", "Bergaya hidup mewah/boros", "Bekerja keras", "Menghargai karya orang"], correct: 1 },
+                    { q: "Rumusan Pancasila yang sah dan resmi terdapat dalam dokumen...", answers: ["Piagam Jakarta", "Pembukaan UUD 1945", "Teks Proklamasi", "Dekrit Presiden"], correct: 1 },
+                    { q: "Sebagai makhluk sosial, manusia tidak dapat hidup tanpa...", answers: ["Bantuan orang lain", "Harta melimpah", "Kendaraan pribadi", "Teknologi modern"], correct: 0 },
+                    { q: "Sikap toleransi antarumat beragama sangat penting dijaga agar mencegah terjadinya...", answers: ["Kerukunan", "Perpecahan/Konflik", "Kemajuan", "Keadilan"], correct: 1 }
                 ],
                 seni: [
-                    { q: "Alat musik tradisional angklung berasal dari...", answers: ["Jawa Tengah", "Jawa Barat", "Sumatera Barat", "Bali"], correct: 1 },
-                    { q: "Lagu 'Halo-Halo Bandung' diciptakan oleh...", answers: ["Ibu Sud", "W.R. Supratman", "Ismail Marzuki", "C. Simanjuntak"], correct: 2 },
-                    { q: "Karya seni rupa yang memiliki panjang dan lebar disebut...", answers: ["Seni 2 dimensi", "Seni 3 dimensi", "Seni patung", "Seni arsitektur"], correct: 0 },
-                    { q: "Alat musik sasando berasal dari pulau...", answers: ["Rote (NTT)", "Bali", "Jawa", "Sumatera"], correct: 0 },
-                    { q: "Tari saman dari Aceh terkenal dengan gerakan...", answers: ["Kompak dan cepat tepuk tangan", "Lemah gemulai", "Loncat-loncat", "Memegang tombak"], correct: 0 },
-                    { q: "Warna sekunder dari campuran merah dan kuning adalah...", answers: ["Ungu", "Hijau", "Oranye", "Biru"], correct: 2 },
-                    { q: "Contoh alat musik melodis adalah...", answers: ["Gendang", "Pianika/Recorder", "Drum", "Tamborin"], correct: 1 },
-                    { q: "Karya seni ukir kayu banyak dijumpai di...", answers: ["Jepara", "Bandung", "Medan", "Surabaya"], correct: 0 },
-                    { q: "Batik tulis dibuat menggunakan...", answers: ["Kuas", "Canting", "Pahat", "Spon"], correct: 1 },
-                    { q: "Pencipta lagu Indonesia Raya adalah...", answers: ["W.R. Supratman", "Ibu Sud", "C. Simanjuntak", "Ismail Marzuki"], correct: 0 },
-                    { q: "Patung Nusantara dari tanah liat dipusatkan di...", answers: ["Kasongan (Yogyakarta)", "Jakarta", "Medan", "Malang"], correct: 0 },
-                    { q: "Properti tari pendet dari Bali adalah...", answers: ["Piring", "Bunga/Bokor", "Kipas", "Topeng"], correct: 1 },
-                    { q: "Garis lengkung pada gambar memberi kesan...", answers: ["Kaku", "Luwes/Dinamis", "Tegak", "Bahaya"], correct: 1 },
-                    { q: "Seni melipat kertas disebut...", answers: ["Origami", "Batik", "Meronce", "Pahat"], correct: 0 },
-                    { q: "Alat musik tradisional yang dipetik adalah...", answers: ["Kecapi", "Suling", "Kendang", "Tifa"], correct: 0 },
-                    { q: "Topeng Malangan berasal dari...", answers: ["Malang, Jawa Timur", "Surakarta", "Cirebon", "Bali"], correct: 0 },
-                    { q: "Lagu daerah 'Ampar-Ampar Pisang' berasal dari...", answers: ["Kalimantan Selatan", "Sumatera Barat", "Maluku", "Papua"], correct: 0 },
-                    { q: "Ciri khas karya seni tiga dimensi adalah...", answers: ["Volume/Ruang", "Hanya warna", "Hanya garis", "Datar"], correct: 0 },
-                    { q: "Bahan alam untuk kerajinan adalah...", answers: ["Plastik", "Kayu dan Rotan", "Besi", "Nilon"], correct: 1 },
-                    { q: "Gambar ilustrasi lucu dan menyindir disebut...", answers: ["Karikatur", "Komik", "Vinyet", "Poster"], correct: 0 }
+                    { q: "Tangga nada yang susunan nadanya memberikan kesan ceria, riang, dan bersemangat adalah tangga nada...", answers: ["Diatonis Mayor", "Diatonis Minor", "Pentatonis Slendro", "Pentatonis Pelog"], correct: 0 },
+                    { q: "Tari daerah yang gerakannya sangat cepat dan kompak sambil bertepuk tangan dari Aceh adalah tari...", answers: ["Pendet", "Saman", "Jaipong", "Piring"], correct: 1 },
+                    { q: "Teknik membuat karya seni rupa dua dimensi dengan menempelkan kepingan pecahan kaca/keramik disebut...", answers: ["Kolase", "Montase", "Mozaik", "Aplikasi"], correct: 2 },
+                    { q: "Seni pertunjukan boneka kayu khas Jawa Barat yang digerakkan menggunakan tongkat disebut...", answers: ["Wayang Kulit", "Wayang Golek", "Ketoprak", "Ludruk"], correct: 1 },
+                    { q: "Pencipta lagu nasional 'Indonesia Pusaka' adalah...", answers: ["W.R. Supratman", "Ismail Marzuki", "Ibu Sud", "Kusbini"], correct: 1 },
+                    { q: "Unsur paling dasar dalam seni rupa dua dimensi yang menjadi awal sebuah goresan adalah...", answers: ["Garis", "Warna", "Titik", "Bidang"], correct: 2 },
+                    { q: "Bahan keras alam yang sering diukir untuk membuat karya kriya patung atau mebel adalah...", answers: ["Plastisin", "Gips", "Kayu", "Sabun"], correct: 2 },
+                    { q: "Lagu anak 'Desaku yang Kucinta' memiliki tempo Moderato, yang artinya dinyanyikan secara...", answers: ["Sangat cepat", "Sedang", "Lambat sekali", "Mengayun"], correct: 1 },
+                    { q: "Garis lengkung dan bergelombang pada sebuah lukisan umumnya memberikan kesan...", answers: ["Kaku dan tegas", "Luwes dan dinamis", "Bersudut tajam", "Berhenti"], correct: 1 },
+                    { q: "Kesenian membatik kain dengan alat cap stempel tembaga disebut...", answers: ["Batik tulis", "Batik celup", "Batik cap", "Batik lukis"], correct: 2 }
                 ],
                 pjok: [
-                    { q: "Lari bolak-balik melatih unsur kebugaran...", answers: ["Kelenturan", "Kelincahan", "Kekuatan", "Daya tahan"], correct: 1 },
-                    { q: "Induk organisasi sepak bola di Indonesia adalah...", answers: ["PBSI", "PRSI", "PSSI", "PERBASI"], correct: 2 },
-                    { q: "Teknik menendang bola dalam sepak bola menggunakan...", answers: ["Kaki bagian dalam/luar", "Tangan", "Kepala", "Dada"], correct: 0 },
-                    { q: "Jumlah pemain bola voli dalam satu regu adalah...", answers: ["5 orang", "6 orang", "7 orang", "11 orang"], correct: 1 },
-                    { q: "Gaya renang dengan dada menghadap ke air adalah...", answers: ["Gaya dada", "Gaya punggung", "Gaya bebas", "Gaya batu"], correct: 0 },
-                    { q: "Permainan bola basket diciptakan oleh...", answers: ["Dr. James Naismith", "William G. Morgan", "Gs. Mendel", "Thomas"], correct: 0 },
-                    { q: "Sikap pasang dalam pencak silat memadukan...", answers: ["Kuda-kuda dan tubuh", "Lari", "Loncat", "Berenang"], correct: 0 },
-                    { q: "Pemanasan sebelum olahraga bertujuan mencegah...", answers: ["Cedera", "Kemenangan", "Haus", "Mengantuk"], correct: 0 },
-                    { q: "Teknik memegang raket bulu tangkis disebut...", answers: ["Grip", "Passing", "Smash", "Dribble"], correct: 0 },
-                    { q: "Induk organisasi bulu tangkis adalah...", answers: ["PBSI", "PSSI", "PRSI", "PBVSI"], correct: 0 },
-                    { q: "Lemparan ke dalam sepak bola disebut...", answers: ["Corner kick", "Throw in", "Offside", "Penalty"], correct: 1 },
-                    { q: "Pencak silat adalah bela diri asli dari...", answers: ["Indonesia", "Jepang", "Korea", "China"], correct: 0 },
-                    { q: "Lari maraton termasuk lari...", answers: ["Pendek", "Menengah", "Jauh", "Estafet"], correct: 2 },
-                    { q: "Alat senam lantai selain matras adalah...", answers: ["Peti lompat", "Raket", "Bola basket", "Bat kasti"], correct: 0 },
-                    { q: "Manfaat istirahat yang cukup adalah...", answers: ["Pemulihan tenaga", "Menambah beban", "Sakit", "Melemahkan otot"], correct: 0 },
-                    { q: "Gerakan melompati peti lompat memerlukan...", answers: ["Tolakan kaki yang kuat", "Tangan longgar", "Mata terpejam", "Duduk santai"], correct: 0 },
-                    { q: "Posisi badan saat meluncur di air adalah...", answers: ["Tegak", "Lurus horizontal", "Membungkuk", "Duduk"], correct: 1 },
-                    { q: "Tujuan utama permainan sepak bola adalah...", answers: ["Memasukkan bola ke gawang", "Menjaga lapangan", "Mengelabui wasit", "Lari keliling"], correct: 0 },
-                    { q: "Menghentikan bola dalam sepak bola kecuali dengan...", answers: ["Tangan", "Kaki", "Dada", "Paha"], correct: 0 },
-                    { q: "Sikap akhir guling ke depan adalah...", answers: ["Berdiri tegak", "Tidur", "Duduk bersila", "Jongkok lalu berdiri"], correct: 3 }
+                    { q: "Induk organisasi yang menaungi olahraga bola voli di Indonesia adalah...", answers: ["PSSI", "PBVSI", "PERBASI", "PBSI"], correct: 1 },
+                    { q: "Teknik mengoper bola setinggi dada kepada teman satu tim dalam bola basket disebut...", answers: ["Bounce pass", "Overhead pass", "Chest pass", "Jump pass"], correct: 2 },
+                    { q: "Pada lari estafet, perpindahan dari pelari satu ke pelari berikutnya dilakukan dengan memberikan...", answers: ["Bendera", "Bola kecil", "Tongkat", "Gelang"], correct: 2 },
+                    { q: "Kemampuan otot tubuh untuk melakukan kontraksi atau bekerja dalam waktu yang lama disebut...", answers: ["Kecepatan", "Kelincahan", "Daya tahan (Endurance)", "Kelenturan"], correct: 2 },
+                    { q: "Start yang digunakan oleh pelari jarak pendek (sprint) pada lintasan lari adalah start...", answers: ["Berdiri", "Melayang", "Jongkok", "Duduk"], correct: 2 },
+                    { q: "Gaya renang di mana posisi dada menghadap ke permukaan air dan gerakan tangan mengayuh bergantian ke depan (freestyle) disebut gaya...", answers: ["Dada", "Punggung", "Bebas", "Kupu-kupu"], correct: 2 },
+                    { q: "Gerakan latihan fisik *sit-up* paling utama bertujuan untuk melatih kekuatan otot...", answers: ["Lengan", "Perut", "Kaki", "Leher"], correct: 1 },
+                    { q: "Pelanggaran dalam sepak bola di mana pemain selain kiper menyentuh bola dengan tangan secara sengaja disebut...", answers: ["Offside", "Corner kick", "Handball", "Throw in"], correct: 2 },
+                    { q: "Sikap berdiri tegak menumpu pada kedua tangan dengan kaki lurus ke atas pada senam lantai disebut...", answers: ["Kayang", "Handstand", "Sikap lilin", "Meroda"], correct: 1 },
+                    { q: "Waktu normal permainan sepak bola dalam satu pertandingan (tanpa tambahan waktu) adalah...", answers: ["2 x 30 menit", "2 x 45 menit", "4 x 10 menit", "2 x 20 menit"], correct: 1 }
                 ],
                 inggris: [
-                    { q: "What color is the sky?", answers: ["Red", "Green", "Blue", "Yellow"], correct: 2 },
-                    { q: "Angka 10 dalam bahasa Inggris adalah...", answers: ["Seven", "Eight", "Nine", "Ten"], correct: 3 },
-                    { q: "Bahasa Inggris dari 'Kucing' adalah...", answers: ["Dog", "Cat", "Bird", "Fish"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Buku' adalah...", answers: ["Book", "Pen", "Pencil", "Ruler"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Sekolah' adalah...", answers: ["House", "School", "Market", "Hospital"], correct: 1 },
-                    { q: "Bahasa Inggris dari warna 'Merah' adalah...", answers: ["Red", "Blue", "Green", "White"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Terima kasih' adalah...", answers: ["Thank you", "Goodbye", "Hello", "Sorry"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Ibu' adalah...", answers: ["Father", "Mother", "Sister", "Brother"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Air' adalah...", answers: ["Milk", "Water", "Tea", "Juice"], correct: 1 },
-                    { q: "Bahasa Inggris dari angka '5' adalah...", answers: ["Three", "Four", "Five", "Six"], correct: 2 },
-                    { q: "Bahasa Inggris dari 'Meja' adalah...", answers: ["Table", "Chair", "Door", "Window"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Apel' adalah...", answers: ["Apple", "Banana", "Orange", "Grape"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Selamat pagi' adalah...", answers: ["Good morning", "Good night", "Good afternoon", "Goodbye"], correct: 0 },
-                    { q: "Bahasa Inggris dari 'Anjing' adalah...", answers: ["Cat", "Dog", "Cow", "Horse"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Tas' adalah...", answers: ["Bag", "Hat", "Shoe", "Book"], correct: 0 },
-                    { q: "Bahasa Inggris dari warna 'Putih' adalah...", answers: ["Black", "White", "Red", "Blue"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Matahari' adalah...", answers: ["Moon", "Sun", "Star", "Cloud"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Pensil' adalah...", answers: ["Pen", "Pencil", "Book", "Eraser"], correct: 1 },
-                    { q: "Bahasa Inggris dari 'Ikan' adalah...", answers: ["Fish", "Bird", "Cat", "Dog"], correct: 0 },
-                    { q: "Bahasa Inggris dari angka '1' adalah...", answers: ["One", "Two", "Three", "Four"], correct: 0 }
+                    { q: "My mother's sister is my...", answers: ["Uncle", "Aunt", "Cousin", "Grandmother"], correct: 1 },
+                    { q: "Complete the sentence: 'She ... a book in the library right now.'", answers: ["read", "reads", "is reading", "reading"], correct: 2 },
+                    { q: "The comparative degree of 'Good' is...", answers: ["Gooder", "Best", "Better", "More good"], correct: 2 },
+                    { q: "Translate to English: 'Saya sedang bermain sepak bola.'", answers: ["I play football.", "I played football.", "I am playing football.", "I will play football."], correct: 2 },
+                    { q: "Which of the following is a vegetable?", answers: ["Apple", "Spinach", "Banana", "Grape"], correct: 1 },
+                    { q: "What time is it if the long hand is on 12 and the short hand is on 8?", answers: ["Seven o'clock", "Eight o'clock", "Nine o'clock", "Twelve o'clock"], correct: 1 },
+                    { q: "The plural form of the word 'Child' is...", answers: ["Childs", "Children", "Childes", "Childrens"], correct: 1 },
+                    { q: "Complete: 'My father drives a car. He is a ...'", answers: ["Teacher", "Doctor", "Driver", "Farmer"], correct: 2 },
+                    { q: "If today is Wednesday, tomorrow will be...", answers: ["Tuesday", "Thursday", "Friday", "Monday"], correct: 1 },
+                    { q: "The opposite meaning of 'Expensive' (Mahal) is...", answers: ["Cheap", "Big", "Fast", "Beautiful"], correct: 0 }
                 ],
                 pai: [
-                    { q: "Rukun Islam yang pertama adalah...", answers: ["Shalat", "Syahadat", "Zakat", "Haji"], correct: 1 },
-                    { q: "Malaikat yang bertugas menyampaikan wahyu adalah...", answers: ["Mikail", "Israfil", "Jibril", "Malik"], correct: 2 },
-                    { q: "Nabi Muhammad SAW adalah Nabi yang ke...", answers: ["Ke-10", "Ke-20", "Ke-25", "Ke-30"], correct: 2 },
-                    { q: "Kitab suci umat Islam adalah...", answers: ["Injil", "Taurat", "Zabur", "Al-Qur'an"], correct: 3 },
-                    { q: "Jumlah rukun iman ada...", answers: ["4", "5", "6", "7"], correct: 2 },
-                    { q: "Shalat fardhu sehari semalam dikerjakan sebanyak...", answers: ["3 waktu", "4 waktu", "5 waktu", "6 waktu"], correct: 2 },
-                    { q: "Malaikat pencabut nyawa adalah...", answers: ["Jibril", "Mikail", "Izrail", "Israfil"], correct: 2 },
-                    { q: "Surat pertama di dalam Al-Qur'an adalah...", answers: ["Al-Fatihah", "An-Nas", "Al-Ikhlas", "Al-Falaq"], correct: 0 },
-                    { q: "Bulan puasa bagi umat Islam adalah...", answers: ["Syawal", "Ramadhan", "Rajab", "Muharram"], correct: 1 },
-                    { q: "Sifat wajib bagi Allah SWT yang artinya Maha Esa adalah...", answers: ["Wujud", "Qidam", "Wahdaniyah", "Baqa"], correct: 2 },
-                    { q: "Nabi yang diberi mukjizat berupa perahu besar adalah...", answers: ["Nabi Nuh AS", "Nabi Musa AS", "Nabi Isa AS", "Nabi Ibrahim AS"], correct: 0 },
-                    { q: "Malaikat peniup sangkakala hari kiamat adalah...", answers: ["Israfil", "Izrail", "Munkar", "Nakir"], correct: 0 },
-                    { q: "Kiblat umat Islam saat shalat menghadap ke...", answers: ["Ka'bah", "Masjid Nabawi", "Yerusalem", "Timur"], correct: 0 },
-                    { q: "Hari raya Idul Adha dirayakan pada tanggal...", answers: ["1 Syawal", "10 Dzulhijjah", "1 Muharram", "12 Rabiul Awal"], correct: 1 },
-                    { q: "Zakat fitrah wajib dikeluarkan pada bulan...", answers: ["Ramadhan", "Safar", "Rajab", "Syawal"], correct: 0 },
-                    { q: "Sifat jujur Nabi Muhammad SAW digelari dengan...", answers: ["Al-Amin", "As-Siddiq", "Al-Faruq", "Al-Kamil"], correct: 0 },
-                    { q: "Mandi wajib setelah haid atau junub disebut mandi...", answers: ["Janabat", "Biasa", "Sunnah", "Wudhu"], correct: 0 },
-                    { q: "Ayat pendek dalam Al-Qur'an dinamakan...", answers: ["Juz Amma", "Doa harian", "Hadits", "Tafsir"], correct: 0 },
-                    { q: "Kitab suci Taurat diturunkan kepada Nabi...", answers: ["Musa AS", "Isa AS", "Daud AS", "Muhammad SAW"], correct: 0 },
-                    { q: "Umat Islam wajib mempercayai qada dan qadar termasuk rukun iman ke...", answers: ["Ke-6", "Ke-5", "Ke-4", "Ke-3"], correct: 0 }
+                    { q: "Nabi yang memiliki mukjizat tongkatnya dapat berubah menjadi ular dan membelah Laut Merah adalah...", answers: ["Nabi Ibrahim AS", "Nabi Musa AS", "Nabi Isa AS", "Nabi Nuh AS"], correct: 1 },
+                    { q: "Mandi wajib yang dilakukan untuk menyucikan diri dari hadas besar disebut mandi...", answers: ["Sunnah", "Biasa", "Janabat / Junub", "Wudhu"], correct: 2 },
+                    { q: "Zakat yang wajib dikeluarkan berupa makanan pokok pada bulan Ramadhan sebelum shalat Idul Fitri adalah...", answers: ["Zakat Maal", "Zakat Fitrah", "Sedekah", "Infaq"], correct: 1 },
+                    { q: "Khulafaur Rasyidin yang pertama menggantikan kepemimpinan setelah wafatnya Rasulullah adalah...", answers: ["Umar bin Khattab", "Utsman bin Affan", "Ali bin Abi Thalib", "Abu Bakar As-Siddiq"], correct: 3 },
+                    { q: "Sifat mustahil bagi Rasul yang berarti 'Berbohong' adalah...", answers: ["Kizib", "Khianat", "Kitman", "Baladah"], correct: 0 },
+                    { q: "Hukum membaca Al-Qur'an dengan menggunakan ilmu Tajwid yang benar bagi setiap muslim adalah...", answers: ["Sunnah", "Fardhu 'Ain (Wajib)", "Makruh", "Mubah"], correct: 1 },
+                    { q: "Surat dalam Al-Qur'an yang menceritakan pasukan gajah yang hendak menghancurkan Ka'bah adalah surat...", answers: ["Al-Falaq", "An-Nasr", "Al-Fil", "Al-Ma'un"], correct: 2 },
+                    { q: "Perjalanan malam Nabi Muhammad SAW dari Masjidil Haram ke Masjidil Aqsa lalu naik ke Sidratul Muntaha disebut peristiwa...", answers: ["Nuzulul Qur'an", "Hijrah", "Isra' Mi'raj", "Fathu Makkah"], correct: 2 },
+                    { q: "Malaikat penanya roh di dalam alam kubur adalah malaikat...", answers: ["Rakib dan Atid", "Jibril dan Mikail", "Munkar dan Nakir", "Malik dan Ridwan"], correct: 2 },
+                    { q: "Asmaul Husna 'Al-Wahhab' memiliki arti bahwa Allah adalah Maha...", answers: ["Mendengar", "Melihat", "Pemberi Karunia", "Pengampun"], correct: 2 }
                 ]
             },
             sulit: {
                 matematika: [
-                    { q: "Berapa hasil dari 125 + 75 - 50?", answers: ["140", "150", "160", "170"], correct: 1 },
-                    { q: "Berapa hasil dari 14 x 15?", answers: ["190", "200", "210", "220"], correct: 2 },
-                    { q: "Berapa hasil dari 144 : 12 + 8?", answers: ["18", "20", "22", "24"], correct: 0 },
-                    { q: "Berapa 3/4 dari 200?", answers: ["120", "140", "150", "160"], correct: 2 },
-                    { q: "Berapa hasil dari 25 x 4 - 50?", answers: ["20", "50", "100", "150"], correct: 1 },
-                    { q: "Berapa hasil dari 225 : 15 + 35?", answers: ["45", "50", "55", "60"], correct: 1 },
-                    { q: "Berapa hasil dari 12 kuadrat (12 x 12)?", answers: ["124", "134", "144", "154"], correct: 2 },
-                    { q: "Berapa akar kuadrat dari 196?", answers: ["12", "13", "14", "15"], correct: 2 },
-                    { q: "Berapa hasil dari 3,5 + 2,75?", answers: ["5,25", "6,15", "6,25", "5,75"], correct: 2 },
-                    { q: "Berapa 75% dari 400?", answers: ["250", "300", "350", "200"], correct: 1 },
-                    { q: "Berapa hasil dari (50 + 25) x 2 - 50?", answers: ["100", "120", "150", "200"], correct: 0 },
-                    { q: "Berapa hasil dari 17 x 17?", answers: ["279", "289", "299", "309"], correct: 1 },
-                    { q: "Berapa hasil dari 1.000 - 375 + 125?", answers: ["700", "750", "800", "650"], correct: 1 },
-                    { q: "Berapa hasil dari 15 kuadrat (15 x 15)?", answers: ["215", "225", "235", "245"], correct: 1 },
-                    { q: "Berapa bentuk sederhana dari 5/8 + 1/8?", answers: ["3/4", "1/2", "5/4", "7/8"], correct: 0 },
-                    { q: "Berapa hasil dari 450 : (5 x 3)?", answers: ["20", "30", "40", "50"], correct: 1 },
-                    { q: "Berapa hasil dari 2,5 x 4?", answers: ["8", "10", "12", "15"], correct: 1 },
-                    { q: "Berapa FPB dari 24 dan 36?", answers: ["6", "8", "12", "18"], correct: 2 },
-                    { q: "Berapa KPK dari 6 dan 8?", answers: ["16", "24", "32", "48"], correct: 1 },
-                    { q: "Berapa hasil dari -15 + 25 - 10?", answers: ["0", "10", "-10", "5"], correct: 0 }
+                    { q: "Sebuah bak mandi berbentuk kubus penuh air memiliki volume 512.000 cm³. Berapa cm panjang rusuk bak tersebut?", answers: ["60 cm", "70 cm", "80 cm", "90 cm"], correct: 2 },
+                    { q: "Rata-rata nilai ulangan 5 siswa adalah 80. Setelah nilai Ani dimasukkan, rata-ratanya menjadi 82. Berapa nilai ulangan Ani?", answers: ["85", "90", "92", "95"], correct: 2 },
+                    { q: "Jarak kota A ke B pada peta adalah 5 cm. Jika peta menggunakan skala 1 : 2.000.000, berapa jarak sebenarnya?", answers: ["10 km", "100 km", "50 km", "20 km"], correct: 1 },
+                    { q: "Hasil pengerjaan dari -15 + (8 x -3) - (-20) menggunakan aturan operasi hitung campuran adalah...", answers: ["-19", "-29", "19", "-59"], correct: 0 },
+                    { q: "Pak RT akan membagikan 48 buku dan 72 pensil ke panti asuhan. Setiap paket berisi buku dan pensil sama banyak. Paling banyak ada berapa paket yang bisa dibuat?", answers: ["12 paket", "16 paket", "24 paket", "36 paket"], correct: 2 },
+                    { q: "Sebuah tabung memiliki jari-jari alas 7 cm dan tinggi 10 cm. Volume tabung tersebut adalah... (π = 22/7)", answers: ["1.540 cm³", "770 cm³", "154 cm³", "2.200 cm³"], correct: 0 },
+                    { q: "Harga sepotong baju diskon 25% menjadi Rp 150.000. Berapa harga baju sebelum didiskon?", answers: ["Rp 175.000", "Rp 187.500", "Rp 200.000", "Rp 225.000"], correct: 2 },
+                    { q: "Perbandingan uang Andi dan Budi adalah 3 : 5. Jika selisih uang mereka Rp 20.000, maka jumlah uang mereka berdua adalah...", answers: ["Rp 40.000", "Rp 60.000", "Rp 80.000", "Rp 100.000"], correct: 2 },
+                    { q: "Berapa hasil dari 3 1/2 + 2 1/3 - 1 1/4?", answers: ["4 7/12", "4 5/12", "5 1/12", "5 7/12"], correct: 0 },
+                    { q: "Berapa akar pangkat tiga (∛) dari bilangan 13.824?", answers: ["22", "24", "26", "28"], correct: 1 }
                 ],
                 bahasaIndonesia: [
-                    { q: "Majas yang membandingkan dua hal secara langsung adalah...", answers: ["Personifikasi", "Metafora", "Hiperbola", "Litotes"], correct: 1 },
-                    { q: "Penulisan huruf kapital yang benar adalah...", answers: ["bibi pergi ke jakarta", "Bibi pergi ke Jakarta", "Bibi Pergi ke jakarta", "bibi Pergi Ke Jakarta"], correct: 1 },
-                    { q: "Arti dari ungkapan 'Kutu Buku' adalah...", answers: ["Pencuri buku", "Rajin membaca", "Pendiam", "Pemalas"], correct: 1 },
-                    { q: "Majas yang melukiskan sesuatu dengan melebih-lebihkan...", answers: ["Hiperbola", "Personifikasi", "Metafora", "Ironi"], correct: 0 },
-                    { q: "Kalimat yang subjeknya melakukan pekerjaan disebut...", answers: ["Aktif", "Pasif", "Tanya", "Perintah"], correct: 0 },
-                    { q: "Pesan moral dalam cerita disebut...", answers: ["Amanat", "Alur", "Tema", "Latar"], correct: 0 },
-                    { q: "Penulisan gabungan kata 'tanggung jawab' yang tepat...", answers: ["Tanggungjawab", "Tanggung jawab", "Tanggung-jawab", "Tanggung Jawab"], correct: 1 },
-                    { q: "Imbuhan ber-an pada 'bertebaran' bermakna...", answers: ["Banyak dan tidak disengaja", "Saling", "Menjadi", "Mempunyai"], correct: 0 },
-                    { q: "Karangan yang memaparkan pendapat atau fakta disebut...", answers: ["Narasi", "Eksposisi", "Puisi", "Drama"], correct: 1 },
-                    { q: "Kata baku dari 'apotik' adalah...", answers: ["Apotik", "Apotek", "Appotek", "Apoteq"], correct: 1 },
-                    { q: "Kata baku dari 'jadual' adalah...", answers: ["Jadual", "Jadwal", "JDWL", "Jadualin"], correct: 1 },
-                    { q: "Sinonim dari kata 'Empati' adalah...", answers: ["Simpati", "Benci", "Acuh tak acuh", "Sombong"], correct: 0 },
-                    { q: "Antonim dari kata 'Optimistis' adalah...", answers: ["Pencemas", "Pessimistis", "Ragu", "Takut"], correct: 1 },
-                    { q: "Sindiran halus yang bertentangan dengan kenyataan...", answers: ["Ironi", "Hiperbola", "Personifikasi", "Sarkasme"], correct: 0 },
-                    { q: "Bagian akhir dari surat resmi biasanya terdapat...", answers: ["Tanda tangan dan nama terang", "Pantun", "Gambar", "Denah"], correct: 0 },
-                    { q: "Kalimat pasif ditandai dengan predikat berawalan...", answers: ["me-", "di- atau ter-", "ber-", "pe-"], correct: 1 },
-                    { q: "Kata serapan baku dari 'system' adalah...", answers: ["Sistem", "Sistim", "Sistematis", "Cistem"], correct: 0 },
-                    { q: "Karangan menceritakan kisah secara runtut...", answers: ["Narasi", "Deskripsi", "Argumentasi", "Persuasi"], correct: 0 },
-                    { q: "Penulisan singkatan 'dan lain-lain' yang baku...", answers: ["dll.", "dst.", "dsb.", "dkk."], correct: 0 },
-                    { q: "Puisi lama yang bersajak a-b-a-b disebut...", answers: ["Pantun", "Gurindam", "Syair", "Karmina"], correct: 0 }
+                    { q: "Gaya bahasa (majas) yang membandingkan benda mati seolah-olah bernyawa dan bertingkah laku seperti manusia adalah majas...", answers: ["Metafora", "Personifikasi", "Hiperbola", "Litotes"], correct: 1 },
+                    { q: "Dalam struktur teks cerita naratif, tahapan di mana konflik memuncak dan kemudian menemukan penyelesaian masalah disebut tahap...", answers: ["Orientasi", "Komplikasi", "Resolusi", "Koda"], correct: 2 },
+                    { q: "Cermati kalimat ini: 'Ayah memeras keringat demi menyekolahkan kami'. Ungkapan 'memeras keringat' bermakna...", answers: ["Berolahraga berat", "Mandi keringat", "Bekerja sangat keras", "Kepanasan"], correct: 2 },
+                    { q: "Paragraf yang kalimat utamanya (ide pokoknya) terletak di akhir paragraf sebagai kesimpulan disebut paragraf...", answers: ["Deduktif", "Induktif", "Campuran", "Narasi"], correct: 1 },
+                    { q: "Teks yang berisi pendapat pribadi penulis yang disertai alasan dan bukti kuat untuk meyakinkan pembaca disebut teks...", answers: ["Argumentasi", "Deskripsi", "Eksposisi", "Prosedur"], correct: 0 },
+                    { q: "Penulisan gabungan kata berikut yang benar menurut Ejaan Bahasa Indonesia (PUEBI) adalah...", answers: ["Tanda-tangan", "Tandatangan", "Tanda tangan", "Tandatangan:"], correct: 2 },
+                    { q: "Makna kata imbuhan 'ber-an' pada kata 'berhamburan' dalam kalimat 'Kertas-kertas berhamburan tertiup angin' menyatakan arti...", answers: ["Saling", "Banyak dan tidak teratur", "Mempunyai", "Menjadi"], correct: 1 },
+                    { q: "Gaya bahasa sindiran yang sangat kasar dan bertujuan menyakiti hati secara langsung disebut majas...", answers: ["Ironi", "Sarkasme", "Sinisme", "Metafora"], correct: 1 },
+                    { q: "Kata bentukan yang tepat jika kata dasar 'pesona' diberi awalan me- adalah...", answers: ["Mepesona", "Mempesona", "Memesona", "Mengesona"], correct: 2 },
+                    { q: "Karya fiksi prosa yang menceritakan seluruh kehidupan tokohnya dari lahir hingga akhir hayat secara panjang lebar disebut...", answers: ["Cerpen", "Roman", "Novel", "Biografi"], correct: 1 }
                 ],
                 ipas: [
-                    { q: "Planet terbesar di tata surya adalah...", answers: ["Saturnus", "Jupiter", "Mars", "Uranus"], correct: 1 },
-                    { q: "Proses pembuatan makanan pada tumbuhan...", answers: ["Respirasi", "Fotosintesis", "Ekskresi", "Transpirasi"], correct: 1 },
-                    { q: "Lapisan udara yang menyelimuti bumi disebut...", answers: ["Litosfer", "Atmosfer", "Hidrosfer", "Biosfer"], correct: 1 },
-                    { q: "Pusat tata surya kita adalah...", answers: ["Bumi", "Matahari", "Bulan", "Jupiter"], correct: 1 },
-                    { q: "Alat pengukur suhu udara disebut...", answers: ["Barometer", "Termometer", "Anemometer", "Seismograf"], correct: 1 },
-                    { q: "Sumbatan pembuluh darah otak menyebabkan...", answers: ["Stroke", "TBC", "Anemia", "Diabetes"], correct: 0 },
-                    { q: "Energi alternatif dari tumbuhan jarak adalah...", answers: ["Biodiesel", "Batu bara", "Solar", "Bensin"], correct: 0 },
-                    { q: "Gaya karena dua permukaan bersentuhan adalah...", answers: ["Gaya gravitasi", "Gaya gesek", "Gaya magnet", "Gaya listrik"], correct: 1 },
-                    { q: "Tempat penyerapan sari makanan di usus...", answers: ["Lambung", "Usus halus", "Usus besar", "Kerongkongan"], correct: 1 },
-                    { q: "Benda yang tidak menghantarkan panas disebut...", answers: ["Konduktor", "Isolator", "Magnetis", "Transparan"], correct: 1 },
-                    { q: "Bulan berputar pada...", answers: ["Porosnya (Rotasi)", "Matahari", "Bintang", "Galaksi"], correct: 0 },
-                    { q: "Terjadinya siang dan malam disebabkan...", answers: ["Revolusi bumi", "Rotasi bumi", "Gravitasi", "Penyusutan"], correct: 1 },
-                    { q: "Gerhana matahari terjadi saat ... di antara bumi dan matahari.", answers: ["Bulan", "Bintang", "Mars", "Venus"], correct: 0 },
-                    { q: "Batuan dari endapan bahan batuan disebut...", answers: ["Beku", "Sedimen", "Malihan", "Metamorf"], correct: 1 },
-                    { q: "Komponen ekosistem yang hidup disebut...", answers: ["Abiotik", "Biotik", "Atmosfer", "Biosfer"], correct: 1 },
-                    { q: "Lapisan bumi tempat manusia tinggal adalah...", answers: ["Kerak bumi", "Mantel", "Inti bumi", "Atmosfer"], correct: 0 },
-                    { q: "Alat optik mata untuk mengatur cahaya masuk...", answers: ["Pupil/Iris", "Retina", "Kornea", "Lensa"], correct: 0 },
-                    { q: "Hewan yang mengalami metamorfosis sempurna...", answers: ["Belalang", "Kecoa", "Kupu-kupu", "Capung"], correct: 2 },
-                    { q: "Pernapasan paus di air menggunakan...", answers: ["Insang", "Paru-paru", "Kulit", "Trakea"], correct: 1 },
-                    { q: "Penyakit darah sukar membeku disebut...", answers: ["Hemofilia", "Hipertensi", "Leukemia", "Anemia"], correct: 0 }
+                    { q: "Jelaskan alasan mengapa pembuluh nadi (arteri) pada manusia memiliki dinding yang lebih tebal dan elastis dibanding pembuluh balik (vena)?", answers: ["Menahan tekanan darah tinggi yang dipompa jantung", "Agar darah mengalir lambat", "Mencegah darah membeku", "Menyerap oksigen langsung dari kulit"], correct: 0 },
+                    { q: "Jika fenomena pemanasan global terus berlangsung, dampak ekologis paling kritis yang segera terjadi pada habitat beruang kutub adalah...", answers: ["Mencairnya es mempersempit area berburu makan", "Meningkatnya populasi ikan laut", "Suhu air menjadi ideal untuk berkembang biak", "Terbentuknya pegunungan es baru"], correct: 0 },
+                    { q: "Mengapa posisi bulan yang berbeda relatif terhadap bumi dan matahari menyebabkan terjadinya pasang surut air laut?", answers: ["Gravitasi bulan dan matahari menarik massa air bumi", "Sinar bulan memanaskan air laut", "Bulan menciptakan pusaran angin besar", "Rotasi bulan menggesek atmosfer bumi"], correct: 0 },
+                    { q: "Proses adaptasi morfologi pada burung elang ditunjukkan oleh bentuk paruh yang tajam dan melengkung, fungsinya adalah untuk...", answers: ["Menciduk ikan dari air", "Memecah biji-bijian keras", "Mencabik-cabik daging mangsa", "Menghisap nektar bunga"], correct: 2 },
+                    { q: "Alat optik pada mata manusia yang berfungsi mengatur jumlah cahaya yang masuk dengan cara membesar atau mengecil adalah...", answers: ["Lensa", "Retina", "Kornea", "Pupil / Iris"], correct: 3 },
+                    { q: "Planet Venus sering disebut sebagai bintang kejora dan merupakan planet terpanas di tata surya karena atmosfernya didominasi oleh gas...", answers: ["Oksigen", "Karbon dioksida yang memicu efek rumah kaca", "Hidrogen", "Nitrogen cair"], correct: 1 },
+                    { q: "Simbiosis mutualisme terjadi pada hubungan antara bakteri Rhizobium dengan akar tanaman polong-polongan. Keuntungan bagi tanaman adalah...", answers: ["Bakteri menyuplai oksigen", "Bakteri membantu mengikat Nitrogen (N) dari udara", "Bakteri mengusir hama serangga", "Bakteri memakan daun kering"], correct: 1 },
+                    { q: "Zat hijau daun (klorofil) pada kloroplas berfungsi penting dalam fotosintesis untuk...", answers: ["Menyerap energi cahaya matahari", "Menghasilkan air", "Menyerap gas oksigen", "Memecah glukosa"], correct: 0 },
+                    { q: "Batuan pualam (marmer) yang indah terbentuk dari proses perubahan batuan kapur akibat tekanan dan suhu tinggi. Batuan jenis ini tergolong...", answers: ["Batuan beku", "Batuan sedimen", "Batuan metamorf (malihan)", "Batuan vulkanik"], correct: 2 },
+                    { q: "Di dalam usus halus manusia terdapat jonjot-jonjot (vili). Fungsi utama dari struktur vili ini adalah...", answers: ["Membunuh kuman penyakit", "Memperluas permukaan untuk penyerapan sari makanan", "Menghancurkan makanan kasar", "Membentuk feses"], correct: 1 }
                 ],
                 pancasila: [
-                    { q: "Sidang BPUPKI pertama membahas tentang...", answers: ["UUD", "Dasar Negara", "Pemerintahan", "Proklamasi"], correct: 1 },
-                    { q: "Tokoh yang mengusulkan nama 'Pancasila'...", answers: ["Soekarno", "Moh. Hatta", "Soepomo", "Yamin"], correct: 0 },
-                    { q: "Panitia Sembilan menghasilkan dokumen...", answers: ["Piagam Jakarta", "UUD 1945", "Teks Proklamasi", "Sumpah Pemuda"], correct: 0 },
-                    { q: "Pancasila tercantum dalam pembukaan UUD 1945 alinea...", answers: ["Alinea ke-4", "Alinea ke-1", "Alinea ke-2", "Alinea ke-3"], correct: 0 },
-                    { q: "Menghormati keputusan rapat meski tidak sependapat...", answers: ["Keempat", "Pertama", "Kelima", "Ketiga"], correct: 0 },
-                    { q: "Bela negara diatur dalam UUD 1945 pasal...", answers: ["Pasal 27 ayat 3", "Pasal 30", "Pasal 1", "Pasal 29"], correct: 0 },
-                    { q: "Tokoh yang berpidato tanggal 1 Juni 1945...", answers: ["Ir. Soekarno", "Moh. Yamin", "Soepomo", "Radjiman"], correct: 0 },
-                    { q: "Kedaulatan di tangan rakyat terdapat pada pasal...", answers: ["Pasal 1 ayat 2", "Pasal 2", "Pasal 3", "Pasal 4"], correct: 0 },
-                    { q: "Chauvinisme bertentangan dengan prinsip...", answers: ["Cinta tanah air yang benar", "Nasionalisme", "Pancasila", "Semua benar"], correct: 0 },
-                    { q: "Pancasila bersifat ideologi terbuka artinya...", answers: ["Dapat mengikuti perkembangan zaman", "Boleh diubah", "Tertutup", "Kuno"], correct: 0 },
-                    { q: "Penyusunan teks proklamasi di rumah...", answers: ["Laksamana Maeda", "Soekarno", "Hatta", "BPUPKI"], correct: 0 },
-                    { q: "Hari Kesaktian Pancasila diperingati...", answers: ["1 Oktober", "1 Juni", "17 Agustus", "28 Oktober"], correct: 0 },
-                    { q: "Politik luar negeri Indonesia menganut prinsip...", answers: ["Bebas aktif", "Kolonialisme", "Imperialisme", "Kapitalisme"], correct: 0 },
-                    { q: "Tenggang rasa antarsesama wujud sila...", answers: ["Kedua", "Ketiga", "Keempat", "Pertama"], correct: 0 },
-                    { q: "Demokrasi Pancasila berpijak pada...", answers: ["Keluargaan dan musyawarah", "Liberal", "Otoriter", "Diktator"], correct: 0 },
-                    { q: "Nilai dasar Pancasila bersifat...", answers: ["Tetap dan tidak berubah", "Sementara", "Bisa dihapus", "Berubah"], correct: 0 },
-                    { q: "Pemisahan kekuasaan negara menganut...", answers: ["Trias Politika", "Monarki", "Oligarki", "Anarki"], correct: 0 },
-                    { q: "Pengadilan pelanggaran HAM berat adalah...", answers: ["Pengadilan HAM ad hoc", "Pengadilan negeri", "Militer", "Polisi"], correct: 0 },
-                    { q: "Semangat merajut persatuan NKRI dikenal sebagai...", answers: ["Wawasan Nusantara", "Globalisasi", "Sekulerisme", "Liberal"], correct: 0 },
-                    { q: "Pancasila resmi menjadi dasar negara pada...", answers: ["18 Agustus 1945", "1 Juni 1945", "17 Agustus 1945", "29 Mei 1945"], correct: 0 }
+                    { q: "Sikap seorang pejabat negara yang mementingkan alokasi dana untuk membangun fasilitas umum desa terpencil dibandingkan memfasilitasi kendaraan mewah dinasnya merupakan perwujudan konkret dari sila ke...", answers: ["Sila 3 dan Sila 5", "Sila 1 dan Sila 2", "Sila 2 saja", "Sila 5 (Keadilan Sosial)"], correct: 3 },
+                    { q: "Pancasila memiliki fungsi sebagai 'Ideologi Terbuka'. Makna mendasar dari pernyataan tersebut adalah bahwa Pancasila...", answers: ["Mudah diubah pasal-pasalnya", "Mampu menyesuaikan dengan dinamika perkembangan zaman tanpa mengubah nilai dasarnya", "Mengadopsi seluruh budaya barat", "Hanya berlaku untuk masa lalu"], correct: 1 },
+                    { q: "Dalam tata urutan peraturan perundang-undangan di Indonesia menurut UU No. 12 Tahun 2011, peraturan yang kedudukannya paling tinggi adalah...", answers: ["Ketetapan MPR", "Undang-Undang (UU)", "Peraturan Pemerintah", "UUD NRI Tahun 1945"], correct: 3 },
+                    { q: "Paham yang menganggap suku bangsanya sendiri lebih unggul dan merendahkan budaya suku lain (Etnosentrisme) sangat bertentangan dengan prinsip...", answers: ["Nasionalisme dan Bhinneka Tunggal Ika", "Patriotisme", "Liberalisme", "Demokrasi Pancasila"], correct: 0 },
+                    { q: "Pasal 27 ayat (3) UUD 1945 menyatakan bahwa 'Setiap warga negara berhak dan wajib ikut serta dalam upaya...'", answers: ["Pendidikan dasar", "Pembelaan negara", "Kemerdekaan berserikat", "Membayar pajak"], correct: 1 },
+                    { q: "Sistem pemerintahan di mana kekuasaan tertinggi berada di tangan rakyat dan dilaksanakan berdasar perwakilan (Sila 4) menganut prinsip demokrasi...", answers: ["Demokrasi Liberal", "Demokrasi Parlementer", "Demokrasi Pancasila (Musyawarah Mufakat)", "Demokrasi Terpimpin"], correct: 2 },
+                    { q: "Salah satu contoh pelanggaran Hak Asasi Manusia (HAM) berat yang peradilannya dilakukan oleh Pengadilan HAM ad hoc adalah...", answers: ["Pencurian", "Pencemaran nama baik", "Kejahatan Genosida", "Penipuan online"], correct: 2 },
+                    { q: "Konsepsi cara pandang bangsa Indonesia terhadap diri dan lingkungannya sebagai satu kesatuan ideologi, politik, ekonomi, sosial budaya, dan pertahanan keamanan disebut...", answers: ["Ketahanan Nasional", "Wawasan Nusantara", "Bela Negara", "Globalisasi"], correct: 1 },
+                    { q: "Tokoh yang memimpin Panitia Sembilan dalam merumuskan 'Piagam Jakarta' yang kelak menjadi cikal bakal Pembukaan UUD 1945 adalah...", answers: ["Ir. Soekarno", "Moh. Hatta", "Muh. Yamin", "Mr. Soepomo"], correct: 0 },
+                    { q: "Sikap 'Tenggang Rasa' dan 'Tepa Selira' antar sesama warga masyarakat agar tidak menyakiti orang lain berakar pada nilai luhur Pancasila sila ke-...", answers: ["1 (Satu)", "2 (Kemanusiaan yang adil dan beradab)", "3 (Tiga)", "4 (Empat)"], correct: 1 }
                 ],
                 seni: [
-                    { q: "Seni rupa 3 dimensi memiliki unsur tambahan...", answers: ["Warna", "Tekstur", "Ruang/Volume", "Bidang"], correct: 2 },
-                    { q: "Tangga nada diatonis mayor memiliki interval...", answers: ["1-1-1/2-1-1-1-1/2", "1-1/2-1-1-1/2-1-1", "1/2-1-1-1/2-1-1-1", "1-1-1-1-1-1-1"], correct: 0 },
-                    { q: "Pola lantai melingkar memberi kesan...", answers: ["Lembut/Keluarga", "Keras", "Berbahaya", "Lurus"], correct: 0 },
-                    { q: "Teknik menempelkan potongan kaca/keramik...", answers: ["Mozaik", "Kolase", "Montase", "Aplik"], correct: 0 },
-                    { q: "Karya seni rupa murni mengutamakan...", answers: ["Keindahan/Estetika", "Kegunaan", "Kekuatan", "Harga"], correct: 0 },
-                    { q: "Alat musik kecapi dimainkan dengan cara...", answers: ["Dipetik", "Ditiup", "Dipukul", "Digesek"], correct: 0 },
-                    { q: "Seni pahat pada dinding candi disebut...", answers: ["Relief", "Patung", "Lukis", "Grafis"], correct: 0 },
-                    { q: "Pencipta lagu 'Bagimu Negeri'...", answers: ["R. Kusbini", "Ibu Sud", "W.R. Supratman", "Ismail Marzuki"], correct: 0 },
-                    { q: "Unsur rupa terkecil dasar gambar adalah...", answers: ["Titik", "Garis", "Warna", "Bidang"], correct: 0 },
-                    { q: "Menyanyi tanpa iringan musik disebut...", answers: ["A capella", "Solo", "Duet", "Koor"], correct: 0 },
-                    { q: "Tari kreasi baru pengembangan dari tari...", answers: ["Tradisional", "Modern", "Kontemporer", "Barat"], correct: 0 },
-                    { q: "Teknik cetak dalam seni grafis menggunakan...", answers: ["Acuan cetak/plat", "Kuas", "Pahat", "Pensil"], correct: 0 },
-                    { q: "Properti tari merak menggunakan...", answers: ["Mahkota burung merak", "Kipas", "Piring", "Tombak"], correct: 0 },
-                    { q: "Suara tinggi perempuan dewasa...", answers: ["Sopran", "Alto", "Tenor", "Bas"], correct: 0 },
-                    { q: "Suara rendah laki-laki dewasa...", answers: ["Bas", "Tenor", "Sopran", "Alto"], correct: 0 },
-                    { q: "Bahan keras buatan untuk patung...", answers: ["Fiberglass/Logam", "Kayu", "Tanah liat", "Bambu"], correct: 0 },
-                    { q: "Kriya tekstil tradisional Indonesia...", answers: ["Batik", "Gerabah", "Anyaman", "Ukiran"], correct: 0 },
-                    { q: "Kesan kedalaman pada bidang datar dicapai lewat...", answers: ["Perspektif/Gelap terang", "Warna", "Garis", "Ukuran"], correct: 0 },
-                    { q: "Teater boneka tangan populer di Indonesia...", answers: ["Wayang orang", "Sigale-gale", "Boneka si Unyil", "Ludruk"], correct: 2 },
-                    { q: "Harmoni dalam musik berarti...", answers: ["Kesesuaian paduan nada", "Volume", "Tempo", "Lirik"], correct: 0 }
+                    { q: "Batik kain tradisional nusantara yang proses pembuatannya memakan waktu berbulan-bulan karena seluruh ornamennya digambar manual menggunakan lilin panas dan canting dinamakan...", answers: ["Batik Cap", "Batik Tulis", "Batik Printing", "Batik Lukis"], correct: 1 },
+                    { q: "Dalam teori musik, susunan jarak antar nada (interval) 1 - 1 - 1/2 - 1 - 1 - 1 - 1/2 merupakan ciri khas dari tangga nada...", answers: ["Diatonis Minor", "Diatonis Mayor", "Pentatonis Pelog", "Kromatis"], correct: 1 },
+                    { q: "Pola lantai (garis pergerakan) melingkar pada tari tradisional umumnya dirancang untuk memberikan kesan yang...", answers: ["Keras dan agresif", "Lembut, menyatu, dan kekeluargaan", "Membingungkan", "Berbahaya"], correct: 1 },
+                    { q: "Seni rupa terapan (applied art) memiliki perbedaan mendasar dengan seni rupa murni (fine art), karena seni terapan lebih mengutamakan nilai...", answers: ["Keindahan (Estetika) saja", "Harga jual di pameran", "Kegunaan (Fungsi Praktis) dalam kehidupan", "Kerumitan teknik"], correct: 2 },
+                    { q: "Karya seni pahatan tiga dimensi yang menempel pada dinding permukaan datar, seperti yang banyak ditemukan di dinding Candi Borobudur, disebut...", answers: ["Patung", "Mozaik", "Relief", "Grafis"], correct: 2 },
+                    { q: "Bernyanyi yang dilakukan oleh sekelompok orang tanpa menggunakan iringan instrumen alat musik sama sekali disebut dengan teknik...", answers: ["Kanon", "Unisono", "A capella", "Seriosa"], correct: 2 },
+                    { q: "Teknik dalam seni grafis di mana gambar dihasilkan dari proses mencetak menggunakan plat (acuan cetak) yang diukir disebut teknik...", answers: ["Cetak (Printmaking)", "Aquarel", "Plakat", "Pointilis"], correct: 0 },
+                    { q: "Suara atau wilayah nada tertinggi pada penyanyi perempuan dewasa dalam paduan suara diklasifikasikan sebagai suara...", answers: ["Alto", "Sopran", "Tenor", "Bas"], correct: 1 },
+                    { q: "Penerapan teknik gelap-terang (shading) dan hukum perspektif pada gambar dua dimensi bertujuan untuk menciptakan ilusi...", answers: ["Warna yang lebih cerah", "Volume, keruangan, dan kedalaman (3D)", "Gambar menjadi abstrak", "Tekstur yang halus"], correct: 1 },
+                    { q: "Harmoni dalam komposisi musik memiliki pengertian sebagai...", answers: ["Kecepatan ketukan lagu", "Keras lembutnya suara", "Kesesuaian paduan nada-nada yang dibunyikan bersamaan", "Panjang pendeknya lirik"], correct: 2 }
                 ],
                 pjok: [
-                    { q: "Senam lantai yang memerlukan keseimbangan...", answers: ["Loncat harimau", "Guling depan", "Sikap kapal terbang", "Lari cepat"], correct: 2 },
-                    { q: "Teknik mengoper bola di dada dalam basket...", answers: ["Overhead pass", "Chest pass", "Bounce pass", "Jump pass"], correct: 1 },
-                    { q: "Nomor lari estafet menggunakan...", answers: ["Tongkat", "Bendera", "Tali", "Bola"], correct: 0 },
-                    { q: "Kemampuan otot kontraksi terus menerus...", answers: ["Daya tahan otot", "Kekuatan", "Kecepatan", "Kelenturan"], correct: 0 },
-                    { q: "Guling lenting bertumpu pada...", answers: ["Tengkuk dan tangan", "Kepala", "Kaki", "Perut"], correct: 0 },
-                    { q: "Sikap pasang dalam pencak silat berfungsi...", answers: ["Menyiagakan diri", "Menyerang", "Lari", "Tidur"], correct: 0 },
-                    { q: "Start lari jarak pendek adalah start...", answers: ["Jongkok", "Berdiri", "Melayang", "Duduk"], correct: 0 },
-                    { q: "Pelanggaran tangan dalam sepak bola...", answers: ["Handball", "Offside", "Corner", "Foul"], correct: 0 },
-                    { q: "Gaya renang tercepat adalah...", answers: ["Gaya bebas", "Gaya dada", "Gaya punggung", "Gaya kupu-kupu"], correct: 0 },
-                    { q: "Push-up melatih kekuatan otot...", answers: ["Lengan dan dada", "Kaki", "Leher", "Perut"], correct: 0 },
-                    { q: "Sit-up melatih kekuatan otot...", answers: ["Perut", "Kaki", "Lengan", "Bahu"], correct: 0 },
-                    { q: "Induk organisasi pencak silat adalah...", answers: ["IPSI", "PSSI", "PBSI", "PERBASI"], correct: 0 },
-                    { q: "Waktu normal sepak bola babak kedua...", answers: ["2 x 45 menit", "2 x 30 menit", "2 x 20 menit", "4 x 10 menit"], correct: 0 },
-                    { q: "Penjaga gawang bertugas...", answers: ["Menjaga gawang", "Mencetak gol", "Menyerang", "Wasit"], correct: 0 },
-                    { q: "Melompati rintangan tinggi dalam atletik...", answers: ["Lompat tinggi/gawang", "Lompat jauh", "Tolak peluru", "Lempar lembing"], correct: 0 },
-                    { q: "Sikap lilin melatih kekuatan...", answers: ["Perut dan pinggang", "Kaki", "Tangan", "Leher"], correct: 0 },
-                    { q: "Tes kesegaran jasmani meliputi...", answers: ["Baring duduk", "Berenang", "Tinju", "Menembak"], correct: 0 },
-                    { q: "Bentuk lapangan bola voli...", answers: ["Persegi panjang", "Bujur sangkar", "Lingkaran", "Segitiga"], correct: 0 },
-                    { q: "Tinggi net voli putra adalah...", answers: ["2,43 meter", "2,24 meter", "2,00 meter", "3,00 meter"], correct: 0 },
-                    { q: "Faktor penentu utama lari cepat...", answers: ["Kecepatan reaksi", "Suara", "Rambut", "Berat badan"], correct: 0 }
+                    { q: "Pada nomor lari sprint 100 meter, faktor biomekanik yang paling krusial menentukan kemenangan seorang pelari selain kekuatan tungkai adalah...", answers: ["Panjang lintasan", "Kecepatan reaksi saat aba-aba start dan akselerasi", "Gaya rambut pelari", "Berat badan pelari"], correct: 1 },
+                    { q: "Teknik dalam bola voli di mana pemain bertahan meloncat dan merentangkan kedua tangan di atas net untuk menghalangi bola smash lawan disebut...", answers: ["Passing", "Spike", "Blocking (Membendung)", "Servis"], correct: 2 },
+                    { q: "Sikap pasang dalam olahraga bela diri Pencak Silat adalah posisi siap tempur yang merupakan perpaduan antara...", answers: ["Lari dan lompat", "Sikap kuda-kuda, tubuh, dan posisi tangan", "Menendang dan meninju", "Berguling dan menghindar"], correct: 1 },
+                    { q: "Dalam senam ketangkasan, tahapan melakukan gerakan guling lenting (neck spring) membutuhkan tumpuan utama pada...", answers: ["Dahi dan ujung kaki", "Tengkuk leher dan tolakan kedua tangan", "Perut bagian bawah", "Punggung dan lutut"], correct: 1 },
+                    { q: "Untuk meningkatkan kebugaran jasmani, latihan *shuttle run* (lari bolak-balik) sangat efektif untuk melatih komponen kebugaran yaitu...", answers: ["Kelenturan sendi", "Kekuatan mengangkat beban", "Agility (Kelincahan) mengubah arah", "Daya tahan paru-paru rata-rata"], correct: 2 },
+                    { q: "Pada peraturan permainan sepak bola, seorang pemain penyerang dinyatakan *offside* apabila ia menerima umpan dalam keadaan...", answers: ["Berada di area penalti sendiri", "Posisinya lebih dekat ke garis gawang lawan daripada bek lawan terakhir (selain kiper)", "Menyentuh bola dengan tangan", "Melanggar kiper"], correct: 1 },
+                    { q: "Manakah gaya renang yang secara teknis membutuhkan koordinasi paling rumit dan memakan energi paling besar (sering disebut gaya lumba-lumba)?", answers: ["Gaya bebas (Freestyle)", "Gaya dada (Breaststroke)", "Gaya punggung (Backstroke)", "Gaya kupu-kupu (Butterfly)"], correct: 3 },
+                    { q: "Bentuk tes kebugaran jasmani yang diukur dengan cara subjek bergantung pada palang tunggal dan mengangkat tubuh hingga dagu melewati palang disebut...", answers: ["Push-up", "Sit-up", "Pull-up", "Back-up"], correct: 2 },
+                    { q: "Tinggi ukuran net bola voli standar internasional untuk pertandingan resmi regu putra dewasa adalah...", answers: ["2,24 meter", "2,43 meter", "2,55 meter", "2,00 meter"], correct: 1 },
+                    { q: "Saat melakukan lompat jauh, gaya di mana atlet melentingkan badan dan mengayunkan kedua lengan ke belakang saat berada di udara disebut gaya...", answers: ["Gaya jongkok (Tuck)", "Gaya berjalan di udara (Walking in the air)", "Gaya menggantung (Hang style)", "Gaya flop"], correct: 2 }
                 ],
                 inggris: [
-                    { q: "What is the past tense of 'Go'?", answers: ["Goed", "Gone", "Went", "Going"], correct: 2 },
-                    { q: "Translate: 'Saya sedang membaca buku'", answers: ["I read a book", "I am reading a book", "I was reading a book", "I will read a book"], correct: 1 },
-                    { q: "What is the plural form of 'Child'?", answers: ["Childs", "Children", "Childes", "Childrens"], correct: 1 },
-                    { q: "Which animal can fly in the sky?", answers: ["Dog", "Cat", "Bird", "Fish"], correct: 2 },
-                    { q: "Complete: 'She ... to school every day.'", answers: ["go", "goes", "gone", "going"], correct: 1 },
-                    { q: "What is the opposite of 'Big'?", answers: ["Small", "Tall", "Long", "Fast"], correct: 0 },
-                    { q: "How many days in a week?", answers: ["Five", "Six", "Seven", "Eight"], correct: 2 },
-                    { q: "English of 'Rumah Sakit'?", answers: ["School", "Hospital", "Market", "Bank"], correct: 1 },
-                    { q: "Complete: 'Yesterday, I ... football.'", answers: ["play", "played", "playing", "plays"], correct: 1 },
-                    { q: "Color from blue and yellow?", answers: ["Green", "Purple", "Orange", "Brown"], correct: 0 },
-                    { q: "Comparative form of 'Good'?", answers: ["Gooder", "Best", "Better", "More good"], correct: 2 },
-                    { q: "Translate: 'Keluarga bahagia'", answers: ["Happy family", "Sad family", "Big family", "Small family"], correct: 0 },
-                    { q: "Which one is a fruit?", answers: ["Carrot", "Potato", "Banana", "Spinach"], correct: 2 },
-                    { q: "Capital city of Indonesia in English?", answers: ["Jakarta", "Bandung", "Surabaya", "Medan"], correct: 0 },
-                    { q: "Complete: 'He is taller ... me.'", answers: ["then", "than", "to", "as"], correct: 1 },
-                    { q: "Time: long hand 12, short hand 8", answers: ["Eight o'clock", "Seven o'clock", "Nine o'clock", "Ten o'clock"], correct: 0 },
-                    { q: "Opposite of 'Hot'?", answers: ["Cold", "Warm", "Cool", "Dry"], correct: 0 },
-                    { q: "Pronoun: '... am a student.'", answers: ["He", "She", "I", "They"], correct: 2 },
-                    { q: "English of 'Perpustakaan'?", answers: ["Library", "Laboratory", "Canteen", "Office"], correct: 0 },
-                    { q: "Complete: 'They ... playing now.'", answers: ["is", "am", "are", "be"], correct: 2 }
+                    { q: "Which sentence accurately uses the Simple Past Tense to describe an event that has completely finished?", answers: ["I go to Bali last week.", "I went to Bali last week.", "I am going to Bali last week.", "I will have gone to Bali last week."], correct: 1 },
+                    { q: "Change the following active sentence into a passive sentence: 'The cat ate the fish.'", answers: ["The fish is eating the cat.", "The cat was eaten by the fish.", "The fish was eaten by the cat.", "The fish ate the cat."], correct: 2 },
+                    { q: "Identify the correct comparative and superlative forms of the adjective 'Far'.", answers: ["Farer / Farest", "More far / Most far", "Farther / Farthest", "Farrer / Farrest"], correct: 2 },
+                    { q: "Complete the conditional sentence (Type 1): 'If it rains tomorrow, I ... at home.'", answers: ["will stay", "would stay", "stayed", "stay"], correct: 0 },
+                    { q: "Read carefully: 'Although it was raining heavily, they continued playing football.' The word 'Although' can be substituted with...", answers: ["Because", "Therefore", "Even though", "However"], correct: 2 },
+                    { q: "Choose the correct question tag: 'You are coming to the party tonight, ...?'", answers: ["do you", "are you", "aren't you", "don't you"], correct: 2 },
+                    { q: "What is the synonym of the word 'Enormous'?", answers: ["Tiny", "Huge / Very big", "Average", "Beautiful"], correct: 1 },
+                    { q: "Fill in the blank with the appropriate relative pronoun: 'The man ... stole my bike has been caught by the police.'", answers: ["which", "who", "whom", "whose"], correct: 1 },
+                    { q: "What is the correct translation of 'Saya sudah tinggal di sini selama 5 tahun' using the Present Perfect Continuous tense?", answers: ["I live here for 5 years.", "I lived here since 5 years.", "I have been living here for 5 years.", "I am living here for 5 years."], correct: 2 },
+                    { q: "Which word has a different vowel pronunciation from the others?", answers: ["Cut", "Hut", "Put", "Nut"], correct: 2 }
                 ],
                 pai: [
-                    { q: "Surat pendek di akhir Al-Qur'an...", answers: ["Ayat pilihan", "Juz amma", "Hadits", "Doa harian"], correct: 1 },
-                    { q: "Jumlah Khulafaur Rasyidin...", answers: ["2 orang", "3 orang", "4 orang", "5 orang"], correct: 2 },
-                    { q: "Sahabat Nabi bergelar 'As-Siddiq'...", answers: ["Abu Bakar", "Umar", "Utsman", "Ali"], correct: 0 },
-                    { q: "Perjalanan Nabi dari Masjidil Haram ke Aqsa...", answers: ["Isra' Mi'raj", "Hijrah", "Maulid", "Nuzulul Quran"], correct: 0 },
-                    { q: "Puasa sunnah tanggal 9 Dzulhijjah...", answers: ["Arafah", "Asyura", "Sya'ban", "Senin Kamis"], correct: 0 },
-                    { q: "Zakat yang wajib dikeluarkan tiap jiwa...", answers: ["Fitrah", "Maal", "Tijarah", "Zira'ah"], correct: 0 },
-                    { q: "Yaumul Hisab artinya hari...", answers: ["Perhitungan amal", "Pembalasan", "Kebangkitan", "Penyesalan"], correct: 0 },
-                    { q: "Nabi yang membelah laut dengan tongkat...", answers: ["Nabi Musa AS", "Nabi Isa AS", "Nabi Ibrahim AS", "Nabi Sulaiman AS"], correct: 0 },
-                    { q: "Sifat Allah 'berbeda dengan makhluk'...", answers: ["Mumatsalatul lil hawaditsi", "Huduts", "Fana", "'Adam"], correct: 0 },
-                    { q: "Jumlah rakaat tarawih umumnya...", answers: ["8 atau 20 rakaat", "2 rakaat", "5 rakaat", "12 rakaat"], correct: 0 },
-                    { q: "Membaca Al-Qur'an sesuai tajwid hukumnya...", answers: ["Sunnah/Fardhu kifayah", "Haram", "Makruh", "Mubah"], correct: 0 },
-                    { q: "Keluarga Nabi yang mengasuh setelah kakeknya...", answers: ["Abu Thalib", "Abu Lahab", "Abu Jahal", "Hamzah"], correct: 0 },
-                    { q: "Salat sunnah pengiring salat fardhu...", answers: ["Rawatib", "Dhuha", "Tahajud", "Hajat"], correct: 0 },
-                    { q: "Sifat wajib rasul dapat dipercaya...", answers: ["Amanah", "Shiddiq", "Tabligh", "Fathonah"], correct: 0 },
-                    { q: "Perintah zakat disejajarkan dengan...", answers: ["Salat", "Puasa", "Haji", "Sedekah"], correct: 0 },
-                    { q: "Tahun kelahiran Nabi Muhammad SAW...", answers: ["Tahun Gajah", "Kemenangan", "Duka", "Fathu Makkah"], correct: 0 },
-                    { q: "Surat tentang pertolongan dan kemenangan...", answers: ["Surat An-Nasr", "Al-Ikhlas", "Al-Asr", "Al-Kafirun"], correct: 0 },
-                    { q: "Menyekutukan Allah disebut...", answers: ["Syirik", "Kafir", "Fasiq", "Nifaq"], correct: 0 },
-                    { q: "Arti Asmaul Husna 'Al-Alim'...", answers: ["Maha Mengetahui", "Mendengar", "Melihat", "Bijaksana"], correct: 0 },
-                    { q: "Malaikat penjaga surga...", answers: ["Ridwan", "Malik", "Munkar", "Nakir"], correct: 0 }
+                    { q: "Peristiwa turunnya ayat suci Al-Qur'an pertama kali (Surat Al-'Alaq 1-5) kepada Nabi Muhammad SAW di Gua Hira secara istilah dikenal dengan peringatan...", answers: ["Nuzulul Qur'an", "Isra' Mi'raj", "Lailatul Qadar", "Maulid Nabi"], correct: 0 },
+                    { q: "Syarat wajib menunaikan Zakat Maal (Harta) adalah apabila harta tersebut telah mencapai batas jumlah minimal yang ditetapkan, atau disebut...", answers: ["Haul", "Nisab", "Fitrah", "Kafarat"], correct: 1 },
+                    { q: "Di hari kiamat, semua amal perbuatan manusia, baik yang besar maupun kecil, akan dihitung dengan sangat teliti. Tahapan ini disebut Yaumul...", answers: ["Ba'ats", "Mahsyar", "Mizan", "Hisab"], correct: 3 },
+                    { q: "Sahabat Nabi yang dijuluki 'As-Siddiq' (Yang membenarkan) karena langsung mempercayai peristiwa Isra Mi'raj tanpa keraguan adalah...", answers: ["Umar bin Khattab", "Ali bin Abi Thalib", "Abu Bakar", "Utsman bin Affan"], correct: 2 },
+                    { q: "Sifat Allah 'Mumatsalatu lil hawaditsi' adalah sifat mustahil yang berarti...", answers: ["Allah sama dengan makhluk-Nya", "Allah butuh bantuan", "Allah bisa mati", "Allah tidak berkuasa"], correct: 0 },
+                    { q: "Shalat sunnah yang dilakukan khusus untuk memohon petunjuk kepada Allah SWT ketika dihadapkan pada dua pilihan yang membingungkan disebut shalat...", answers: ["Tahajud", "Dhuha", "Istikharah", "Hajat"], correct: 2 },
+                    { q: "Dosa besar menyekutukan Allah SWT dengan sesuatu (benda, jin, atau manusia) disebut perbuatan...", answers: ["Fasiq", "Syirik", "Nifaq", "Murtad"], correct: 1 },
+                    { q: "Hukum tajwid apabila terdapat huruf Nun Sukun (نْ) bertemu dengan huruf Ba (ب) sehingga bunyi 'N' berubah menjadi 'M' disebut...", answers: ["Idzhar Halqi", "Idgham Bighunnah", "Ikhfa", "Iqlab"], correct: 3 },
+                    { q: "Kewajiban mengurus jenazah seorang muslim (memandikan, mengkafani, menyalatkan, memakamkan) bagi masyarakat di sekitarnya berhukum...", answers: ["Sunnah Muakkad", "Fardhu 'Ain", "Fardhu Kifayah", "Mubah"], correct: 2 },
+                    { q: "Ayat Al-Qur'an yang menjelaskan bahwa 'Sesungguhnya bersama kesulitan ada kemudahan' terdapat pada surah...", answers: ["Ad-Duha", "Al-Insyirah (Alam Nasyrah)", "Al-Asr", "Al-Kautsar"], correct: 1 }
                 ]
             }
         };
 
-        function getUniqueQuestions(kelas, mapel, difficulty, count) {
-            let diffPool = questionPoolsByDifficulty[difficulty] || questionPoolsByDifficulty['sedang'];
-            let pool = diffPool[mapel] || diffPool['matematika'];
-            let list = [...pool];
-            
-            // JIKA JUMLAH SOAL KURANG DARI COUNT, DAUR ULANG SOAL ASLI DARI POOL (TIDAK ADA FAKE TEXT)
-            while (list.length < count) {
-                let duplicateItem = JSON.parse(JSON.stringify(pool[list.length % pool.length]));
-                list.push(duplicateItem);
-            }
-            return shuffleArray(list).slice(0, count);
-        }
+        /* =========================================================================
+           GAME STATE & CP UPDATE ENGINE
+        ========================================================================= */
+        let activeQuestionBank = defaultCPQuestionBank;
 
-        /* ================================
-           GAME STATE MANAGEMENT
-        ================================ */
         let gameState = {
             selectedClass: 4, selectedSubject: "matematika", difficulty: "mudah", totalQuestions: 10,
             currentQuestion: 0, questions: [], p1Score: 0, p2Score: 0, 
-            p1Correct: 0, p2Correct: 0, p1Wrong: 0, p2Wrong: 0, 
-            p1Late: 0, p2Late: 0, p1Unanswered: 0, p2Unanswered: 0,
+            p1Correct: 0, p2Correct: 0, p1Wrong: 0, p2Wrong: 0, p1Late: 0, p2Late: 0,
             p1Answered: false, p2Answered: false, roundResolved: false,
             soundEnabled: true, paused: false
         };
 
-        const balloonColors = ['#ff3366', '#00c6ff', '#4ade80', '#ffcc00', '#a855f7', '#fb923c', '#06b6d4', '#f43f5e'];
+        const balloonColors = ['#ff3366', '#00c6ff', '#10b981', '#ffcc00', '#a855f7', '#fb923c', '#06b6d4', '#f43f5e'];
 
-        /* ================================
-           WEB AUDIO API (SOUND)
-        ================================ */
+        // FITUR SYNC CP ONLINE DENGAN FETCH API
+        async function fetchCPUpdates() {
+            const btn = document.querySelector('.sync-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Sedang Sinkronisasi...";
+            
+            try {
+                // Di dunia nyata, ganti URL ini dengan API / Raw Github JSON milik SD Kesilir 02
+                // Contoh: const response = await fetch('https://raw.githubusercontent.com/username/repo/main/deeplearning-cp.json');
+                
+                // Karena ini demo, kita simulasikan delay seolah-olah mengambil dari server
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                // Cek penyimpanan lokal dahulu
+                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK');
+                if (savedBank) {
+                    activeQuestionBank = JSON.parse(savedBank);
+                    alert("✨ Bank Soal CP Deep Learning Lokal berhasil dimuat!");
+                } else {
+                    // Jika tidak ada update di lokal/server, simpan default ini sebagai basis lokal
+                    localStorage.setItem('SDN_KESILIR02_CP_BANK', JSON.stringify(defaultCPQuestionBank));
+                    alert("🔄 Sistem CP Deep Learning Kurikulum Merdeka Terkini Sudah Aktif!");
+                }
+            } catch(e) { 
+                console.error("Error fetching CP Bank", e);
+                alert("⚠️ Gagal terhubung ke server. Menggunakan Bank Soal Offline.");
+            }
+            
+            btn.innerText = originalText;
+        }
+
+        // LOGIKA PENARIKAN SOAL TANPA "PERTANYAAN LATIHAN" (NO PLACEHOLDERS)
+        function getUniqueQuestions(kelas, mapel, difficulty, count) {
+            let diffPool = activeQuestionBank[difficulty] || activeQuestionBank['sedang'];
+            let pool = diffPool[mapel] || diffPool['matematika'];
+            
+            // JIKA DAFTAR SOAL DI BANK KURANG DARI JUMLAH YANG DIMINTA, DAUR ULANG SOAL ASLI SECARA BERSIH
+            let list = [];
+            while (list.length < count) {
+                let shuffledSubset = shuffleArray([...pool]);
+                for (let q of shuffledSubset) {
+                    if (list.length < count) {
+                        list.push(JSON.parse(JSON.stringify(q)));
+                    }
+                }
+            }
+            return list.slice(0, count);
+        }
+
+        /* =========================================================================
+           WEB AUDIO API (SOUND EFFECT)
+        ========================================================================= */
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
@@ -1058,7 +866,7 @@
 
             if (type === 'pop') {
                 osc.type = 'triangle'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(150, now + 0.1);
-                gain.gain.setValueAtTime(0.6, now); gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                gain.gain.setValueAtTime(0.5, now); gain.gain.linearRampToValueAtTime(0, now + 0.1);
                 osc.start(now); osc.stop(now + 0.1);
             } else if (type === 'correct') {
                 osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.1); osc.frequency.setValueAtTime(783.99, now + 0.2);
@@ -1066,7 +874,7 @@
                 osc.start(now); osc.stop(now + 0.35);
             } else if (type === 'wrong') {
                 osc.type = 'sawtooth'; osc.frequency.setValueAtTime(250, now); osc.frequency.setValueAtTime(150, now + 0.15);
-                gain.gain.setValueAtTime(0.4, now); gain.gain.linearRampToValueAtTime(0, now + 0.25);
+                gain.gain.setValueAtTime(0.35, now); gain.gain.linearRampToValueAtTime(0, now + 0.25);
                 osc.start(now); osc.stop(now + 0.25);
             } else if (type === 'win') {
                 osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(800, now + 0.5);
@@ -1080,9 +888,9 @@
             document.getElementById('audio-btn').innerText = gameState.soundEnabled ? '🔊' : '🔇';
         }
 
-        /* ================================
-           LOGIKA GAME
-        ================================ */
+        /* =========================================================================
+           GAME CONTROLLER
+        ========================================================================= */
         function selectOption(key, value, elem) {
             gameState[key] = value;
             const parent = elem.parentElement;
@@ -1101,7 +909,6 @@
             gameState.p1Correct = 0; gameState.p2Correct = 0;
             gameState.p1Wrong = 0; gameState.p2Wrong = 0; 
             gameState.p1Late = 0; gameState.p2Late = 0; 
-            gameState.p1Unanswered = 0; gameState.p2Unanswered = 0;
             gameState.currentQuestion = 0; gameState.paused = false;
 
             document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
@@ -1131,13 +938,12 @@
             container1.innerHTML = ''; container2.innerHTML = '';
 
             const options = [...qData.answers];
-            
             generateBalloonsForContainer(container1, options, qData.correct, 1);
             generateBalloonsForContainer(container2, options, qData.correct, 2);
         }
 
         function generateBalloonsForContainer(container, options, correctIndex, playerNum) {
-            const lanePositions = [12, 37, 62, 87];
+            const lanePositions = [10, 35, 60, 85];
             const shuffledLanes = shuffleArray([...lanePositions]);
 
             options.forEach((optText, idx) => {
@@ -1149,9 +955,10 @@
                 
                 b.style.left = `${shuffledLanes[idx]}%`;
                 
-                const duration = Math.random() * 6 + 16;
+                // Durasi jatuhnya balon dibuat agak bervariasi
+                const duration = Math.random() * 5 + 17;
                 b.style.animation = `fallColumn ${duration}s linear infinite`;
-                b.style.animationDelay = `${idx * 1.2}s`;
+                b.style.animationDelay = `${idx * 1.3}s`;
 
                 const isCorrect = (idx === correctIndex);
 
@@ -1163,7 +970,7 @@
                         <div class="balloon-cheeks"><div class="balloon-cheek"></div><div class="balloon-cheek"></div></div>
                         <div class="balloon-mouth"></div>
                     </div>
-                    <span style="color:white; z-index:2; margin-top:20px;">${optText}</span>
+                    <span style="color:white; z-index:2; margin-top:22px; padding:0 4px;">${optText}</span>
                 `;
 
                 b.onclick = () => handleBalloonClick(playerNum, isCorrect, b);
@@ -1178,6 +985,7 @@
 
             balloonElem.classList.add('popping'); playSound('pop');
 
+            // PERHITUNGAN BOBOT POIN OTOMATIS SUPAYA MAKSIMAL 100
             const pointsPerQuestion = 100 / gameState.totalQuestions;
 
             if (isCorrect) {
@@ -1185,22 +993,16 @@
 
                 if (playerNum === 1) {
                     gameState.p1Score += pointsPerQuestion; gameState.p1Correct++; gameState.p1Answered = true;
-                    document.getElementById('p1-score').innerText = Math.round(gameState.p1Score * 100) / 100;
-                    showStatus(1, `⚡ PLAYER 1 BENAR! (+${Math.round(pointsPerQuestion)} poin)`);
-                    showStatus(2, '❌ KETIKUNG! PLAYER 1 BENAR DULUAN');
-                    
-                    if (!gameState.p2Answered) {
-                        gameState.p2Late++;
-                    }
+                    document.getElementById('p1-score').innerText = Math.round(gameState.p1Score * 10) / 10;
+                    showStatus(1, `⚡ BENAR! (+${Math.round(pointsPerQuestion)} Poin)`);
+                    showStatus(2, '❌ KETIKUNG! LAWAN BENAR DULUAN');
+                    if (!gameState.p2Answered) gameState.p2Late++;
                 } else {
                     gameState.p2Score += pointsPerQuestion; gameState.p2Correct++; gameState.p2Answered = true;
-                    document.getElementById('p2-score').innerText = Math.round(gameState.p2Score * 100) / 100;
-                    showStatus(2, `⚡ PLAYER 2 BENAR! (+${Math.round(pointsPerQuestion)} poin)`);
-                    showStatus(1, '❌ KETIKUNG! PLAYER 2 BENAR DULUAN');
-
-                    if (!gameState.p1Answered) {
-                        gameState.p1Late++;
-                    }
+                    document.getElementById('p2-score').innerText = Math.round(gameState.p2Score * 10) / 10;
+                    showStatus(2, `⚡ BENAR! (+${Math.round(pointsPerQuestion)} Poin)`);
+                    showStatus(1, '❌ KETIKUNG! LAWAN BENAR DULUAN');
+                    if (!gameState.p1Answered) gameState.p1Late++;
                 }
 
                 document.getElementById('p1-balloons').classList.add('disabled');
@@ -1209,7 +1011,7 @@
                 setTimeout(() => {
                     gameState.currentQuestion++;
                     loadNextQuestion();
-                }, 1500);
+                }, 1400);
 
             } else {
                 playSound('wrong');
@@ -1229,7 +1031,7 @@
                     setTimeout(() => {
                         gameState.currentQuestion++;
                         loadNextQuestion();
-                    }, 1500);
+                    }, 1400);
                 }
             }
         }
@@ -1245,13 +1047,11 @@
             document.getElementById('res-p1-c').innerText = gameState.p1Correct; 
             document.getElementById('res-p1-w').innerText = gameState.p1Wrong;
             document.getElementById('res-p1-l').innerText = gameState.p1Late;
-            document.getElementById('res-p1-u').innerText = gameState.p1Unanswered;
 
             document.getElementById('res-p2-score').innerText = Math.round(gameState.p2Score); 
             document.getElementById('res-p2-c').innerText = gameState.p2Correct; 
             document.getElementById('res-p2-w').innerText = gameState.p2Wrong;
             document.getElementById('res-p2-l').innerText = gameState.p2Late;
-            document.getElementById('res-p2-u').innerText = gameState.p2Unanswered;
 
             const winAnnounce = document.getElementById('winner-announcement');
             if (gameState.p1Score > gameState.p2Score) {
@@ -1259,7 +1059,7 @@
             } else if (gameState.p2Score > gameState.p1Score) {
                 winAnnounce.innerHTML = "🐸 PLAYER 2 MENANG! 🏆"; winAnnounce.style.color = "#0369a1"; winAnnounce.style.borderColor = "#0ea5e9"; winAnnounce.style.background = "#bae6fd";
             } else {
-                winAnnounce.innerHTML = "🤝 HASIL SERI! HEBAT! 🤝"; winAnnounce.style.color = "#15803d"; winAnnounce.style.borderColor = "#22c55e"; winAnnounce.style.background = "#bbf7d0";
+                winAnnounce.innerHTML = "🤝 HASIL SERI! SANGAT HEBAT! 🤝"; winAnnounce.style.color = "#15803d"; winAnnounce.style.borderColor = "#22c55e"; winAnnounce.style.background = "#bbf7d0";
             }
 
             document.getElementById('result-modal').classList.add('active'); triggerConfetti();
@@ -1273,10 +1073,10 @@
         function triggerConfetti() {
             const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const particles = []; const colors = ['#ff3366', '#00c6ff', '#4ade80', '#ffcc00', '#a855f7'];
+            const particles = []; const colors = ['#ff3366', '#00c6ff', '#10b981', '#ffcc00', '#a855f7'];
 
             for (let i = 0; i < 150; i++) {
-                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 15 + 8, color: colors[Math.floor(Math.random() * colors.length)], vy: Math.random() * 4 + 2, vx: Math.random() * 3 - 1.5 });
+                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 14 + 6, color: colors[Math.floor(Math.random() * colors.length)], vy: Math.random() * 4 + 2, vx: Math.random() * 3 - 1.5 });
             }
 
             function render() {
@@ -1288,6 +1088,11 @@
             }
             render();
         }
+
+        // AUTO CHECK SINKRONISASI SAAT APPS DI-LOAD
+        window.onload = function() {
+            setTimeout(fetchCPUpdates, 500); // Otomatis trigger update JSON saat aplikasi pertama dimuat
+        };
     </script>
 </body>
 </html>
