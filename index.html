@@ -356,7 +356,7 @@
                     <button class="opt-btn" onclick="selectOption('selectedClass', 6, this)">Kelas 6</button>
                 </div>
 
-                <div class="section-label">📖 Pilih Mata Pelajaran Prioritas:</div>
+                <div class="section-label">📖 Pilih Mata Pelajaran (Murni 1 Mapel):</div>
                 <div class="options-grid" id="subject-options">
                     <button class="opt-btn selected" onclick="selectOption('selectedSubject', 'matematika', this)">📐 Matematika</button>
                     <button class="opt-btn" onclick="selectOption('selectedSubject', 'bahasaIndonesia', this)">📖 B. Indonesia</button>
@@ -382,7 +382,7 @@
                     <button class="opt-btn" onclick="selectOption('targetQuestions', 15, this)">15 Soal</button>
                     <button class="opt-btn" onclick="selectOption('targetQuestions', 20, this)">20 Soal</button>
                 </div>
-                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px; line-height: 1.4;">*Sistem dilengkapi Anti-Duplikat. Jika soal di satu mapel habis, sistem otomatis menarik soal unik dari mapel lain di kelas yang sama.</p>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px; line-height: 1.4;">*Sistem Murni 1 Mapel & Anti-Duplikat. Soal tidak akan dicampur dengan mata pelajaran lain.</p>
 
                 <button class="primary-btn" onclick="startGame()">🚀 MULAI BERMAIN 🚀</button>
             </div>
@@ -488,14 +488,21 @@
 
     <script>
         /* =========================================================================
-           BANK SOAL CP DEEP LEARNING - TERSTRUKTUR BERDASARKAN KELAS
+           BANK SOAL CP DEEP LEARNING - DIPERBANYAK & MURNI PER MAPEL & KELAS
         ========================================================================= */
         const defaultCPQuestionBank = {
             "1": {
                 "matematika": [
                     { q: "Ada 3 apel di atas meja, ibu menaruh 2 apel lagi. Berapa jumlah apel sekarang?", answers: ["4", "5", "6", "7"], correct: 1, diff: "mudah" },
                     { q: "Benda di bawah ini yang bentuknya mirip dengan lingkaran adalah...", answers: ["Buku Tulis", "Roda Sepeda", "Pintu Rumah", "Kotak Pensil"], correct: 1, diff: "sedang" },
-                    { q: "Siti memiliki 7 permen. Diberikan kepada adiknya 3 permen. Berapa sisa permen Siti?", answers: ["2", "3", "4", "5"], correct: 2, diff: "sulit" }
+                    { q: "Siti memiliki 7 permen. Diberikan kepada adiknya 3 permen. Berapa sisa permen Siti?", answers: ["2", "3", "4", "5"], correct: 2, diff: "sulit" },
+                    { q: "Berapa hasil dari 5 + 4?", answers: ["7", "8", "9", "10"], correct: 2, diff: "mudah" },
+                    { q: "Angka setelah 19 adalah...", answers: ["18", "20", "21", "22"], correct: 1, diff: "mudah" },
+                    { q: "Budi memiliki 10 kelereng, hilang 4 kelereng. Sisa kelereng Budi...", answers: ["5", "6", "7", "8"], correct: 1, diff: "sedang" },
+                    { q: "Bentuk bangun datar yang memiliki 3 sisi disebut...", answers: ["Persegi", "Segitiga", "Lingkaran", "Persegi Panjang"], correct: 1, diff: "sedang" },
+                    { q: "Ibu membeli 6 jeruk, ayah membelikan lagi 6 jeruk. Jumlah jeruk seluruhnya...", answers: ["10", "11", "12", "14"], correct: 2, diff: "sulit" },
+                    { q: "Bilangan yang lebih besar dari 12 di bawah ini adalah...", answers: ["10", "11", "14", "9"], correct: 2, diff: "sulit" },
+                    { q: "Jari tangan manusia pada satu tangan berjumlah...", answers: ["4", "5", "6", "10"], correct: 1, diff: "mudah" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Hewan yang suaranya 'Meow... Meow...' adalah...", answers: ["Anjing", "Ayam", "Kucing", "Sapi"], correct: 2, diff: "mudah" },
@@ -537,7 +544,14 @@
                 "matematika": [
                     { q: "Berapa hasil penjumlahan 15 + 12?", answers: ["25", "27", "28", "30"], correct: 1, diff: "mudah" },
                     { q: "Jarum pendek menunjuk angka 7, jarum panjang menunjuk angka 12. Pukul berapakah sekarang?", answers: ["Pukul 12", "Pukul 6", "Pukul 7", "Pukul 8"], correct: 2, diff: "sedang" },
-                    { q: "Kakak punya pita panjangnya 10 cm, kemudian dipotong 4 cm. Sisa pita kakak adalah...", answers: ["5 cm", "6 cm", "14 cm", "40 cm"], correct: 1, diff: "sulit" }
+                    { q: "Kakak punya pita panjangnya 10 cm, kemudian dipotong 4 cm. Sisa pita kakak adalah...", answers: ["5 cm", "6 cm", "14 cm", "40 cm"], correct: 1, diff: "sulit" },
+                    { q: "Hasil dari 20 - 8 adalah...", answers: ["10", "11", "12", "13"], correct: 2, diff: "mudah" },
+                    { q: "Berapa hasil dari 5 x 3?", answers: ["12", "15", "18", "20"], correct: 1, diff: "sedang" },
+                    { q: "Angka 7 puluhan dan 4 satuan ditulis...", answers: ["47", "74", "704", "407"], correct: 1, diff: "sedang" },
+                    { q: "Ibu membeli 18 buah salak, dibagikan kepada 3 anak sama banyak. Tiap anak mendapat...", answers: ["5 buah", "6 buah", "7 buah", "8 buah"], correct: 1, diff: "sulit" },
+                    { q: "1 meter sama dengan ... centimeter.", answers: ["10 cm", "100 cm", "1000 cm", "1 cm"], correct: 1, diff: "mudah" },
+                    { q: "Hasil dari 35 + 15 - 10 adalah...", answers: ["30", "40", "45", "50"], correct: 0, diff: "sulit" },
+                    { q: "Nama bilangan dari 145 adalah...", answers: ["Seratus empat puluh lima", "Seratus lima puluh empat", "Empat ratus lima belas", "Lima ratus empat belas"], correct: 0, diff: "mudah" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Huruf kapital digunakan pada...", answers: ["Awal kalimat", "Akhir kalimat", "Tengah kata", "Tanda baca"], correct: 0, diff: "mudah" },
@@ -579,7 +593,14 @@
                 "matematika": [
                     { q: "Hasil dari perkalian 4 x 5 adalah...", answers: ["9", "15", "20", "25"], correct: 2, diff: "mudah" },
                     { q: "Ibu membagi sebuah pizza menjadi 4 bagian sama besar. Satu bagian pizza bernilai pecahan...", answers: ["1/2", "1/3", "1/4", "1/5"], correct: 2, diff: "sedang" },
-                    { q: "Ayah membeli 24 buah apel, kemudian dibagi rata ke dalam 3 kantong. Setiap kantong berisi...", answers: ["6 apel", "7 apel", "8 apel", "9 apel"], correct: 2, diff: "sulit" }
+                    { q: "Ayah membeli 24 buah apel, kemudian dibagi rata ke dalam 3 kantong. Setiap kantong berisi...", answers: ["6 apel", "7 apel", "8 apel", "9 apel"], correct: 2, diff: "sulit" },
+                    { q: "Berapa hasil dari 7 x 8?", answers: ["54", "56", "64", "63"], correct: 1, diff: "sulit" },
+                    { q: "Pecahan 1/2 lebih besar daripada pecahan...", answers: ["1/3", "3/4", "2/3", "4/5"], correct: 0, diff: "sedang" },
+                    { q: "Hasil dari 120 + 130 - 50 adalah...", answers: ["190", "200", "210", "220"], correct: 1, diff: "sulit" },
+                    { q: "Keliling persegi yang memiliki sisi 12 cm adalah...", answers: ["24 cm", "36 cm", "48 cm", "60 cm"], correct: 2, diff: "sulit" },
+                    { q: "Angka 6 pada bilangan 3.650 menempati nilai tempat...", answers: ["Ribuan", "Ratusan", "Puluhan", "Satuan"], correct: 1, diff: "mudah" },
+                    { q: "Hasil pembagian dari 72 : 8 adalah...", answers: ["7", "8", "9", "6"], correct: 2, diff: "sedang" },
+                    { q: "1 jam terdiri dari ... menit.", answers: ["30 menit", "60 menit", "120 menit", "360 menit"], correct: 1, diff: "mudah" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Cerita yang tokohnya adalah hewan yang bisa bicara disebut...", answers: ["Legenda", "Mitos", "Fabel", "Sejarah"], correct: 2, diff: "mudah" },
@@ -621,7 +642,14 @@
                 "matematika": [
                     { q: "Berapa KPK dari bilangan 4 dan 6?", answers: ["10", "12", "18", "24"], correct: 1, diff: "mudah" },
                     { q: "Sebuah persegi panjang memiliki panjang 10 cm dan lebar 6 cm. Luasnya adalah...", answers: ["16 cm²", "32 cm²", "60 cm²", "160 cm²"], correct: 2, diff: "sedang" },
-                    { q: "Sudut yang besarnya tepat 90 derajat disebut sudut...", answers: ["Lancip", "Tumpul", "Lurus", "Siku-siku"], correct: 3, diff: "sulit" }
+                    { q: "Sudut yang besarnya tepat 90 derajat disebut sudut...", answers: ["Lancip", "Tumpul", "Lurus", "Siku-siku"], correct: 3, diff: "sulit" },
+                    { q: "Berapa FPB dari 24 dan 36?", answers: ["6", "12", "18", "8"], correct: 1, diff: "sulit" },
+                    { q: "Hasil dari 3/4 + 1/2 adalah...", answers: ["4/6", "5/4", "4/8", "2/3"], correct: 1, diff: "sedang" },
+                    { q: "Desimal dari pecahan 3/5 adalah...", answers: ["0.3", "0.5", "0.6", "0.75"], correct: 2, diff: "sedang" },
+                    { q: "Keliling sebuah lapangan berbentuk persegi dengan sisi 25 meter adalah...", answers: ["50 meter", "75 meter", "100 meter", "625 meter"], correct: 2, diff: "mudah" },
+                    { q: "Hasil dari 15² (15 kuadrat) adalah...", answers: ["125", "215", "225", "255"], correct: 2, diff: "sulit" },
+                    { q: "Berapa hasil dari 450 : 15?", answers: ["25", "30", "35", "40"], correct: 1, diff: "sulit" },
+                    { q: "Hasil pembulatan bilangan 346 ke puluhan terdekat adalah...", answers: ["340", "350", "400", "345"], correct: 1, diff: "mudah" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Kegiatan tanya jawab dengan narasumber untuk mencari informasi disebut...", answers: ["Pidato", "Wawancara", "Bercerita", "Puisi"], correct: 1, diff: "mudah" },
@@ -663,7 +691,14 @@
                 "matematika": [
                     { q: "Hasil penjumlahan pecahan 1/2 + 1/4 adalah...", answers: ["2/6", "3/4", "2/4", "3/8"], correct: 1, diff: "mudah" },
                     { q: "Sebuah mobil melaju menempuh jarak 100 km dalam waktu 2 jam. Kecepatan mobil tersebut adalah...", answers: ["20 km/jam", "40 km/jam", "50 km/jam", "60 km/jam"], correct: 2, diff: "sedang" },
-                    { q: "Volume kubus yang panjang rusuknya 5 cm adalah...", answers: ["25 cm³", "75 cm³", "125 cm³", "150 cm³"], correct: 2, diff: "sulit" }
+                    { q: "Volume kubus yang panjang rusuknya 5 cm adalah...", answers: ["25 cm³", "75 cm³", "125 cm³", "150 cm³"], correct: 2, diff: "sulit" },
+                    { q: "Hasil dari 2,5 x 4 adalah...", answers: ["8", "10", "12", "15"], correct: 1, diff: "sedang" },
+                    { q: "Luas segitiga dengan alas 10 cm dan tinggi 8 cm adalah...", answers: ["40 cm²", "80 cm²", "20 cm²", "100 cm²"], correct: 0, diff: "sulit" },
+                    { q: "Akar pangkat tiga dari 1.728 adalah...", answers: ["10", "12", "14", "16"], correct: 1, diff: "sulit" },
+                    { q: "Skala pada peta adalah 1 : 500.000. Jarak pada peta 4 cm, maka jarak sebenarnya adalah...", answers: ["20 km", "200 km", "2 km", "50 km"], correct: 0, diff: "sulit" },
+                    { q: "Hasil dari 3/5 : 1/2 adalah...", answers: ["3/10", "6/5", "5/6", "2/5"], correct: 1, diff: "sedang" },
+                    { q: "Sebuah balok memiliki panjang 12 cm, lebar 6 cm, dan tinggi 5 cm. Volumenya adalah...", answers: ["180 cm³", "360 cm³", "72 cm³", "240 cm³"], correct: 1, diff: "sulit" },
+                    { q: "Pecahan biasa dari 0,75 adalah...", answers: ["1/4", "1/2", "3/4", "2/5"], correct: 2, diff: "mudah" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Puisi lama yang bersajak a-b-a-b dan terdiri dari sampiran dan isi disebut...", answers: ["Gurindam", "Syair", "Pantun", "Karmina"], correct: 2, diff: "mudah" },
@@ -705,7 +740,14 @@
                 "matematika": [
                     { q: "Sebuah lingkaran memiliki jari-jari (r) 7 cm. Luas lingkaran tersebut adalah (π = 22/7)...", answers: ["44 cm²", "77 cm²", "154 cm²", "314 cm²"], correct: 2, diff: "mudah" },
                     { q: "Hasil dari operasi hitung campuran: -5 + (3 x 4) adalah...", answers: ["7", "17", "-7", "12"], correct: 0, diff: "sedang" },
-                    { q: "Nilai rata-rata (mean) dari data ulangan 7, 8, 9, 8 adalah...", answers: ["7.5", "8", "8.5", "9"], correct: 1, diff: "sulit" }
+                    { q: "Nilai rata-rata (mean) dari data ulangan 7, 8, 9, 8 adalah...", answers: ["7.5", "8", "8.5", "9"], correct: 1, diff: "sulit" },
+                    { q: "Keliling lingkaran yang memiliki diameter 28 cm adalah (π = 22/7)...", answers: ["44 cm", "88 cm", "154 cm", "616 cm"], correct: 1, diff: "sedang" },
+                    { q: "Hasil dari -15 - (-25) + 10 adalah...", answers: ["0", "10", "20", "-30"], correct: 2, diff: "sedang" },
+                    { q: "Modus dari data nilai ulangan matematika: 7, 8, 9, 8, 6, 8, 7, 10 adalah...", answers: ["6", "7", "8", "9"], correct: 2, diff: "mudah" },
+                    { q: "Volume tabung dengan jari-jari 7 cm dan tinggi 10 cm adalah...", answers: ["1.540 cm³", "3.080 cm³", "770 cm³", "154 cm³"], correct: 0, diff: "sulit" },
+                    { q: "Hasil dari 3/4 x 8/9 adalah...", answers: ["1/2", "2/3", "3/8", "5/12"], correct: 1, diff: "sulit" },
+                    { q: "Jika harga sebuah buku Rp 15.000 diskon 20%, maka uang yang harus dibayar adalah...", answers: ["Rp 10.000", "Rp 11.000", "Rp 12.000", "Rp 13.000"], correct: 2, diff: "sulit" },
+                    { q: "Berapa hasil dari 2,4 + 3 bagian dari 1/2?", answers: ["3.9", "4.0", "2.9", "3.5"], correct: 0, diff: "sulit" }
                 ],
                 "bahasaIndonesia": [
                     { q: "Kegiatan berbicara di depan umum untuk menyampaikan gagasan disebut...", answers: ["Puisi", "Drama", "Pidato", "Wawancara"], correct: 2, diff: "mudah" },
@@ -746,7 +788,7 @@
         };
 
         /* =========================================================================
-           GAME STATE & CP UPDATE ENGINE
+           GAME STATE & ENGINE
         ========================================================================= */
         let activeQuestionBank = defaultCPQuestionBank;
 
@@ -754,8 +796,8 @@
             selectedClass: 4, 
             selectedSubject: "matematika", 
             difficulty: "mudah", 
-            targetQuestions: 10,  // Jumlah soal yang dipilih User
-            roundQuestions: 10,   // Jumlah soal aktual setelah diproses filter
+            targetQuestions: 10,  
+            roundQuestions: 10,   
             currentQuestion: 0, questions: [], p1Score: 0, p2Score: 0, 
             p1Correct: 0, p2Correct: 0, p1Wrong: 0, p2Wrong: 0, p1Late: 0, p2Late: 0,
             p1Answered: false, p2Answered: false, roundResolved: false,
@@ -771,13 +813,11 @@
             
             try {
                 await new Promise(resolve => setTimeout(resolve, 800));
-                
-                // MENGGUNAKAN KEY V4 AGAR CACHE BROWSER SEBELUMNYA DIHAPUS TOTAL
-                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V4');
+                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V5');
                 if (savedBank) {
                     activeQuestionBank = JSON.parse(savedBank);
                 } else {
-                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V4', JSON.stringify(defaultCPQuestionBank));
+                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V5', JSON.stringify(defaultCPQuestionBank));
                 }
             } catch(e) { console.error(e); }
             
@@ -785,31 +825,27 @@
         }
 
         /* =========================================================================
-           LOGIKA ANTI-DUPLIKAT (SUPER KETAT MENGGUNAKAN MAP)
+           LOGIKA MURNI 1 MAPEL & ANTI-DUPLIKAT (TIDAK ADA PENCAMPURAN MAPEL)
         ========================================================================= */
         function getUniqueQuestions(kelas, mapel, difficulty, targetCount) {
             let classKey = kelas.toString();
-            let classBank = activeQuestionBank[classKey];
-
-            // Proteksi jika data error / kosong
-            if (!classBank) {
-                activeQuestionBank = defaultCPQuestionBank;
-                classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
-            }
+            let classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
             
-            // Map digunakan untuk memastikan TIDAK ADA teks pertanyaan (q.q) yang sama persis
+            // Map ketat untuk memastikan tidak ada soal kembar di mapel yang sama
             let uniqueQuestionsMap = new Map();
 
+            // MURNI HANYA MENGAMBIL DARI MAPEL YANG DIPILIH OLEH USER
             let mapelBank = classBank[mapel] || classBank["matematika"];
 
-            // 1. Tarik prioritas pertama (Mapel Sesuai & Kesulitan Sesuai)
+            // 1. Ambil prioritas tingkat kesulitan yang dipilih user
             mapelBank.forEach(q => {
                 if (q.diff === difficulty) {
                     uniqueQuestionsMap.set(q.q, q);
                 }
             });
 
-            // 2. Jika soal masih kurang dari target, ambil soal kesulitan lain di mapel yang sama
+            // 2. Jika soal kurang dari target (misal minta 20 tapi yg mudah ada 10), 
+            //    ambil sisa soal dari tingkat kesulitan lain di MAPEL YANG SAMA (TETAP MURNI 1 MAPEL)
             if (uniqueQuestionsMap.size < targetCount) {
                 mapelBank.forEach(q => {
                     if (q.diff !== difficulty) {
@@ -818,32 +854,15 @@
                 });
             }
 
-            // 3. Jika MASIH KURANG, otomatis pinjam soal dari MAPEL LAIN di Kelas yang sama
-            if (uniqueQuestionsMap.size < targetCount) {
-                for (let otherMapel in classBank) {
-                    if (otherMapel !== mapel) {
-                        classBank[otherMapel].forEach(q => {
-                            // Map akan otomatis menolak memasukkan soal jika 'teks soal' (q.q) sudah pernah masuk
-                            if (uniqueQuestionsMap.size < targetCount * 2) { 
-                                uniqueQuestionsMap.set(q.q, q);
-                            }
-                        });
-                    }
-                }
-            }
-
-            // Ubah Map kembali menjadi Array murni
+            // Ubah Map menjadi Array murni
             let pool = Array.from(uniqueQuestionsMap.values());
 
-            // Acak seluruh soal tersebut secara urutan
+            // Acak urutan soal
             let shuffledPool = shuffleArray(pool);
 
-            // Potong array HANYA sampai sejumlah 'targetCount'. 
-            // Jika isi array kurang dari targetCount (misal minta 20 soal tapi maksimal yg unik cuma 15), 
-            // array tidak akan diduplikasi, game hanya akan merubah max soalnya menjadi 15.
+            // Potong pas sesuai target (tanpa duplikat)
             let finalQuestions = shuffledPool.slice(0, targetCount);
 
-            // Return dengan Deep Copy agar aman tidak merubah database utama
             return JSON.parse(JSON.stringify(finalQuestions));
         }
 
@@ -910,11 +929,9 @@
             document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
             document.getElementById('result-modal').classList.remove('active'); document.getElementById('pause-modal').classList.remove('active');
 
-            // Tarik Soal Anti-Duplikat berdasarkan Pilihan User
+            // Tarik Soal Murni 1 Mapel & Anti Duplikat
             gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.targetQuestions);
             
-            // Atur ulang batasan ronde jika soal tersedia lebih sedikit dari yang diminta
-            // (Jadi jika minta 20 tapi total soal di kelas itu baru ada 15, gamenya otomatis jadi 15 ronde, bukan maksa duplikat soal)
             gameState.roundQuestions = gameState.questions.length;
 
             switchScreen('game-screen'); loadNextQuestion();
