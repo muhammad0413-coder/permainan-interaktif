@@ -770,17 +770,17 @@
                 // Di dunia nyata, ganti URL ini dengan API / Raw Github JSON
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK');
+                // MENGGUNAKAN KEY BARU (_V2) AGAR CACHE LAMA YANG RUSAK DIBUANG
+                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V2');
                 if (savedBank) {
                     activeQuestionBank = JSON.parse(savedBank);
-                    alert("✨ Bank Soal CP Deep Learning Lokal berhasil dimuat!");
+                    console.log("Bank Soal V2 Lokal berhasil dimuat!");
                 } else {
-                    localStorage.setItem('SDN_KESILIR02_CP_BANK', JSON.stringify(defaultCPQuestionBank));
-                    alert("🔄 Sistem CP Terstruktur Kurikulum Merdeka Terkini Sudah Aktif!");
+                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V2', JSON.stringify(defaultCPQuestionBank));
+                    console.log("Sistem CP Terstruktur V2 Sudah Aktif!");
                 }
             } catch(e) { 
                 console.error("Error fetching CP Bank", e);
-                alert("⚠️ Gagal terhubung ke server. Menggunakan Bank Soal Offline.");
             }
             
             btn.innerText = originalText;
@@ -791,8 +791,14 @@
             // Konversi nilai kelas ke bentuk string sebagai kunci objek JSON
             let classKey = kelas.toString();
             
-            // 1. Coba ambil bank soal khusus untuk KELAS yang dipilih. Fallback ke kelas 4 jika gagal.
-            let classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
+            // 1. Coba ambil bank soal khusus untuk KELAS yang dipilih.
+            let classBank = activeQuestionBank[classKey];
+
+            // PROTEKSI (Fallback): Jika data rusak, kembalikan ke default pabrik
+            if (!classBank) {
+                activeQuestionBank = defaultCPQuestionBank;
+                classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
+            }
             
             // 2. Coba ambil bank soal khusus untuk MAPEL yang dipilih.
             let mapelBank = classBank[mapel];
@@ -887,7 +893,7 @@
             document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
             document.getElementById('result-modal').classList.remove('active'); document.getElementById('pause-modal').classList.remove('active');
 
-            // PEMANGGILAN SOAL SEKARANG MENGGUNAKAN KELAS YANG DIPILIH
+            // PEMANGGILAN SOAL
             gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.totalQuestions);
             switchScreen('game-screen'); loadNextQuestion();
         }
