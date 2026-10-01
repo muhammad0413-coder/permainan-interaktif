@@ -377,12 +377,12 @@
 
                 <div class="section-label">🔢 Jumlah Target Soal:</div>
                 <div class="options-grid" id="count-options">
-                    <button class="opt-btn" onclick="selectOption('totalQuestions', 5, this)">5 Soal</button>
-                    <button class="opt-btn selected" onclick="selectOption('totalQuestions', 10, this)">10 Soal</button>
-                    <button class="opt-btn" onclick="selectOption('totalQuestions', 15, this)">15 Soal</button>
-                    <button class="opt-btn" onclick="selectOption('totalQuestions', 20, this)">20 Soal</button>
+                    <button class="opt-btn" onclick="selectOption('targetQuestions', 5, this)">5 Soal</button>
+                    <button class="opt-btn selected" onclick="selectOption('targetQuestions', 10, this)">10 Soal</button>
+                    <button class="opt-btn" onclick="selectOption('targetQuestions', 15, this)">15 Soal</button>
+                    <button class="opt-btn" onclick="selectOption('targetQuestions', 20, this)">20 Soal</button>
                 </div>
-                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">*Jika soal di satu mapel habis, sistem otomatis menarik soal unik dari mapel lain di kelas yang sama agar tidak ada soal duplikat.</p>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px; line-height: 1.4;">*Sistem dilengkapi Anti-Duplikat. Jika soal di satu mapel habis, sistem otomatis menarik soal unik dari mapel lain di kelas yang sama.</p>
 
                 <button class="primary-btn" onclick="startGame()">🚀 MULAI BERMAIN 🚀</button>
             </div>
@@ -751,7 +751,11 @@
         let activeQuestionBank = defaultCPQuestionBank;
 
         let gameState = {
-            selectedClass: 4, selectedSubject: "matematika", difficulty: "mudah", totalQuestions: 10,
+            selectedClass: 4, 
+            selectedSubject: "matematika", 
+            difficulty: "mudah", 
+            targetQuestions: 10,  // Jumlah soal yang dipilih User
+            roundQuestions: 10,   // Jumlah soal aktual setelah diproses filter
             currentQuestion: 0, questions: [], p1Score: 0, p2Score: 0, 
             p1Correct: 0, p2Correct: 0, p1Wrong: 0, p2Wrong: 0, p1Late: 0, p2Late: 0,
             p1Answered: false, p2Answered: false, roundResolved: false,
@@ -768,11 +772,12 @@
             try {
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V3');
+                // MENGGUNAKAN KEY V4 AGAR CACHE BROWSER SEBELUMNYA DIHAPUS TOTAL
+                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V4');
                 if (savedBank) {
                     activeQuestionBank = JSON.parse(savedBank);
                 } else {
-                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V3', JSON.stringify(defaultCPQuestionBank));
+                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V4', JSON.stringify(defaultCPQuestionBank));
                 }
             } catch(e) { console.error(e); }
             
@@ -780,47 +785,65 @@
         }
 
         /* =========================================================================
-           LOGIKA PENARIKAN SOAL TANPA DUPLIKAT (ANTI-RECYCLE)
+           LOGIKA ANTI-DUPLIKAT (SUPER KETAT MENGGUNAKAN MAP)
         ========================================================================= */
-        function getUniqueQuestions(kelas, mapel, difficulty, count) {
+        function getUniqueQuestions(kelas, mapel, difficulty, targetCount) {
             let classKey = kelas.toString();
             let classBank = activeQuestionBank[classKey];
 
+            // Proteksi jika data error / kosong
             if (!classBank) {
                 activeQuestionBank = defaultCPQuestionBank;
                 classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
             }
             
-            let mapelBank = classBank[mapel];
-            if (!mapelBank || mapelBank.length === 0) {
-                mapelBank = classBank["matematika"];
+            // Map digunakan untuk memastikan TIDAK ADA teks pertanyaan (q.q) yang sama persis
+            let uniqueQuestionsMap = new Map();
+
+            let mapelBank = classBank[mapel] || classBank["matematika"];
+
+            // 1. Tarik prioritas pertama (Mapel Sesuai & Kesulitan Sesuai)
+            mapelBank.forEach(q => {
+                if (q.diff === difficulty) {
+                    uniqueQuestionsMap.set(q.q, q);
+                }
+            });
+
+            // 2. Jika soal masih kurang dari target, ambil soal kesulitan lain di mapel yang sama
+            if (uniqueQuestionsMap.size < targetCount) {
+                mapelBank.forEach(q => {
+                    if (q.diff !== difficulty) {
+                        uniqueQuestionsMap.set(q.q, q);
+                    }
+                });
             }
 
-            // 1. Ambil prioritas utama: Kesulitan dan Mapel yang sesuai
-            let pool = mapelBank.filter(q => q.diff === difficulty);
-
-            // 2. Jika target kurang, ambil dari kesulitan lain di mapel yang sama
-            if (pool.length < count) {
-                let otherDiffs = mapelBank.filter(q => q.diff !== difficulty);
-                pool = pool.concat(otherDiffs);
-            }
-
-            // 3. Jika JUMLAH MASIH KURANG, otomatis pinjam dari Mapel Lain di Kelas yang sama 
-            //    demi menutupi kuota TANPA melakukan duplikasi soal
-            if (pool.length < count) {
+            // 3. Jika MASIH KURANG, otomatis pinjam soal dari MAPEL LAIN di Kelas yang sama
+            if (uniqueQuestionsMap.size < targetCount) {
                 for (let otherMapel in classBank) {
                     if (otherMapel !== mapel) {
-                        pool = pool.concat(classBank[otherMapel]);
+                        classBank[otherMapel].forEach(q => {
+                            // Map akan otomatis menolak memasukkan soal jika 'teks soal' (q.q) sudah pernah masuk
+                            if (uniqueQuestionsMap.size < targetCount * 2) { 
+                                uniqueQuestionsMap.set(q.q, q);
+                            }
+                        });
                     }
                 }
             }
 
-            // Acak seluruh soal di pool
-            let shuffledPool = shuffleArray([...pool]);
+            // Ubah Map kembali menjadi Array murni
+            let pool = Array.from(uniqueQuestionsMap.values());
 
-            // Potong pas sesuai yang direquest. Jika sisa pool < count, ambil semua (tidak diulang/diduplikasi)
-            let finalQuestions = shuffledPool.slice(0, count);
+            // Acak seluruh soal tersebut secara urutan
+            let shuffledPool = shuffleArray(pool);
 
+            // Potong array HANYA sampai sejumlah 'targetCount'. 
+            // Jika isi array kurang dari targetCount (misal minta 20 soal tapi maksimal yg unik cuma 15), 
+            // array tidak akan diduplikasi, game hanya akan merubah max soalnya menjadi 15.
+            let finalQuestions = shuffledPool.slice(0, targetCount);
+
+            // Return dengan Deep Copy agar aman tidak merubah database utama
             return JSON.parse(JSON.stringify(finalQuestions));
         }
 
@@ -887,26 +910,27 @@
             document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
             document.getElementById('result-modal').classList.remove('active'); document.getElementById('pause-modal').classList.remove('active');
 
-            // Tarik Soal Anti-Duplikat
-            gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.totalQuestions);
+            // Tarik Soal Anti-Duplikat berdasarkan Pilihan User
+            gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.targetQuestions);
             
-            // Mengatur Ulang Jumlah Target Soal Jika Bank Soal Kurang (Mencegah Error/Duplikat)
-            gameState.totalQuestions = gameState.questions.length;
+            // Atur ulang batasan ronde jika soal tersedia lebih sedikit dari yang diminta
+            // (Jadi jika minta 20 tapi total soal di kelas itu baru ada 15, gamenya otomatis jadi 15 ronde, bukan maksa duplikat soal)
+            gameState.roundQuestions = gameState.questions.length;
 
             switchScreen('game-screen'); loadNextQuestion();
         }
 
         function loadNextQuestion() {
-            if (gameState.currentQuestion >= gameState.questions.length) { finishGame(); return; }
+            if (gameState.currentQuestion >= gameState.roundQuestions) { finishGame(); return; }
 
             gameState.p1Answered = false; gameState.p2Answered = false; gameState.roundResolved = false;
             document.getElementById('p1-status').classList.remove('active'); document.getElementById('p2-status').classList.remove('active');
             document.getElementById('p1-balloons').classList.remove('disabled'); document.getElementById('p2-balloons').classList.remove('disabled');
 
             const qObj = gameState.questions[gameState.currentQuestion];
-            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.totalQuestions}`;
+            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.roundQuestions}`;
             document.getElementById('question-text').innerText = qObj.q;
-            document.getElementById('progress-bar').style.width = `${((gameState.currentQuestion) / gameState.totalQuestions) * 100}%`;
+            document.getElementById('progress-bar').style.width = `${((gameState.currentQuestion) / gameState.roundQuestions) * 100}%`;
 
             renderSharedFallingBalloons(qObj);
         }
@@ -962,7 +986,7 @@
 
             balloonElem.classList.add('popping'); playSound('pop');
 
-            const pointsPerQuestion = 100 / gameState.totalQuestions;
+            const pointsPerQuestion = 100 / gameState.roundQuestions;
 
             if (isCorrect) {
                 gameState.roundResolved = true; playSound('correct');
