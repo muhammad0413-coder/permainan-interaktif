@@ -356,7 +356,7 @@
                     <button class="opt-btn" onclick="selectOption('selectedClass', 6, this)">Kelas 6</button>
                 </div>
 
-                <div class="section-label">📖 Pilih Mata Pelajaran (Capaian Pembelajaran):</div>
+                <div class="section-label">📖 Pilih Mata Pelajaran Prioritas:</div>
                 <div class="options-grid" id="subject-options">
                     <button class="opt-btn selected" onclick="selectOption('selectedSubject', 'matematika', this)">📐 Matematika</button>
                     <button class="opt-btn" onclick="selectOption('selectedSubject', 'bahasaIndonesia', this)">📖 B. Indonesia</button>
@@ -368,20 +368,21 @@
                     <button class="opt-btn" onclick="selectOption('selectedSubject', 'pai', this)">🕌 Agama Islam</button>
                 </div>
 
-                <div class="section-label">🎯 Pilih Tingkat Kedalaman CP:</div>
+                <div class="section-label">🎯 Pilih Tingkat Kesulitan Awal:</div>
                 <div class="options-grid" id="diff-options">
                     <button class="opt-btn selected" onclick="selectOption('difficulty', 'mudah', this)">🟢 Dasar (Pemahaman)</button>
                     <button class="opt-btn" onclick="selectOption('difficulty', 'sedang', this)">🟡 Menengah (Aplikasi)</button>
                     <button class="opt-btn" onclick="selectOption('difficulty', 'sulit', this)">🔴 Deep Learning (HOTS)</button>
                 </div>
 
-                <div class="section-label">🔢 Jumlah Soal Kuis:</div>
+                <div class="section-label">🔢 Jumlah Target Soal:</div>
                 <div class="options-grid" id="count-options">
                     <button class="opt-btn" onclick="selectOption('totalQuestions', 5, this)">5 Soal</button>
                     <button class="opt-btn selected" onclick="selectOption('totalQuestions', 10, this)">10 Soal</button>
                     <button class="opt-btn" onclick="selectOption('totalQuestions', 15, this)">15 Soal</button>
                     <button class="opt-btn" onclick="selectOption('totalQuestions', 20, this)">20 Soal</button>
                 </div>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">*Jika soal di satu mapel habis, sistem otomatis menarik soal unik dari mapel lain di kelas yang sama agar tidak ada soal duplikat.</p>
 
                 <button class="primary-btn" onclick="startGame()">🚀 MULAI BERMAIN 🚀</button>
             </div>
@@ -488,7 +489,6 @@
     <script>
         /* =========================================================================
            BANK SOAL CP DEEP LEARNING - TERSTRUKTUR BERDASARKAN KELAS
-           (Kurikulum Merdeka: Fase A, Fase B, Fase C)
         ========================================================================= */
         const defaultCPQuestionBank = {
             "1": {
@@ -760,74 +760,68 @@
 
         const balloonColors = ['#ff3366', '#00c6ff', '#10b981', '#ffcc00', '#a855f7', '#fb923c', '#06b6d4', '#f43f5e'];
 
-        // FITUR SYNC CP ONLINE DENGAN FETCH API
         async function fetchCPUpdates() {
             const btn = document.querySelector('.sync-btn');
             const originalText = btn.innerText;
             btn.innerText = "⏳ Sedang Sinkronisasi...";
             
             try {
-                // Di dunia nyata, ganti URL ini dengan API / Raw Github JSON
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                // MENGGUNAKAN KEY BARU (_V2) AGAR CACHE LAMA YANG RUSAK DIBUANG
-                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V2');
+                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V3');
                 if (savedBank) {
                     activeQuestionBank = JSON.parse(savedBank);
-                    console.log("Bank Soal V2 Lokal berhasil dimuat!");
                 } else {
-                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V2', JSON.stringify(defaultCPQuestionBank));
-                    console.log("Sistem CP Terstruktur V2 Sudah Aktif!");
+                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V3', JSON.stringify(defaultCPQuestionBank));
                 }
-            } catch(e) { 
-                console.error("Error fetching CP Bank", e);
-            }
+            } catch(e) { console.error(e); }
             
             btn.innerText = originalText;
         }
 
-        // LOGIKA PENARIKAN SOAL YANG MENGUTAMAKAN KELAS, MAPEL, LALU DIFFICULTY
+        /* =========================================================================
+           LOGIKA PENARIKAN SOAL TANPA DUPLIKAT (ANTI-RECYCLE)
+        ========================================================================= */
         function getUniqueQuestions(kelas, mapel, difficulty, count) {
-            // Konversi nilai kelas ke bentuk string sebagai kunci objek JSON
             let classKey = kelas.toString();
-            
-            // 1. Coba ambil bank soal khusus untuk KELAS yang dipilih.
             let classBank = activeQuestionBank[classKey];
 
-            // PROTEKSI (Fallback): Jika data rusak, kembalikan ke default pabrik
             if (!classBank) {
                 activeQuestionBank = defaultCPQuestionBank;
                 classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
             }
             
-            // 2. Coba ambil bank soal khusus untuk MAPEL yang dipilih.
             let mapelBank = classBank[mapel];
             if (!mapelBank || mapelBank.length === 0) {
-                // Fallback darurat: Jika mapel kosong di kelas ini, pakaikan matematika
                 mapelBank = classBank["matematika"];
             }
 
-            // 3. Filter berdasarkan TINGKAT KESULITAN (difficulty)
+            // 1. Ambil prioritas utama: Kesulitan dan Mapel yang sesuai
             let pool = mapelBank.filter(q => q.diff === difficulty);
 
-            // 4. Jika jumlah soal di tingkat kesulitan itu KURANG dari jumlah soal kuis (count),
-            //    tambahkan sisa soal dari tingkat kesulitan lain dalam kelas & mapel yang SAMA.
+            // 2. Jika target kurang, ambil dari kesulitan lain di mapel yang sama
             if (pool.length < count) {
                 let otherDiffs = mapelBank.filter(q => q.diff !== difficulty);
                 pool = pool.concat(otherDiffs);
             }
 
-            // 5. Jika total soal masih kurang, duplikasi acak (daur ulang bersih) agar memenuhi jumlah 'count'
-            let list = [];
-            while (list.length < count) {
-                let shuffledSubset = shuffleArray([...pool]);
-                for (let q of shuffledSubset) {
-                    if (list.length < count) {
-                        list.push(JSON.parse(JSON.stringify(q)));
+            // 3. Jika JUMLAH MASIH KURANG, otomatis pinjam dari Mapel Lain di Kelas yang sama 
+            //    demi menutupi kuota TANPA melakukan duplikasi soal
+            if (pool.length < count) {
+                for (let otherMapel in classBank) {
+                    if (otherMapel !== mapel) {
+                        pool = pool.concat(classBank[otherMapel]);
                     }
                 }
             }
-            return list;
+
+            // Acak seluruh soal di pool
+            let shuffledPool = shuffleArray([...pool]);
+
+            // Potong pas sesuai yang direquest. Jika sisa pool < count, ambil semua (tidak diulang/diduplikasi)
+            let finalQuestions = shuffledPool.slice(0, count);
+
+            return JSON.parse(JSON.stringify(finalQuestions));
         }
 
         /* =========================================================================
@@ -893,8 +887,12 @@
             document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
             document.getElementById('result-modal').classList.remove('active'); document.getElementById('pause-modal').classList.remove('active');
 
-            // PEMANGGILAN SOAL
+            // Tarik Soal Anti-Duplikat
             gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.totalQuestions);
+            
+            // Mengatur Ulang Jumlah Target Soal Jika Bank Soal Kurang (Mencegah Error/Duplikat)
+            gameState.totalQuestions = gameState.questions.length;
+
             switchScreen('game-screen'); loadNextQuestion();
         }
 
@@ -906,9 +904,9 @@
             document.getElementById('p1-balloons').classList.remove('disabled'); document.getElementById('p2-balloons').classList.remove('disabled');
 
             const qObj = gameState.questions[gameState.currentQuestion];
-            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.questions.length}`;
+            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.totalQuestions}`;
             document.getElementById('question-text').innerText = qObj.q;
-            document.getElementById('progress-bar').style.width = `${((gameState.currentQuestion) / gameState.questions.length) * 100}%`;
+            document.getElementById('progress-bar').style.width = `${((gameState.currentQuestion) / gameState.totalQuestions) * 100}%`;
 
             renderSharedFallingBalloons(qObj);
         }
@@ -935,7 +933,6 @@
                 
                 b.style.left = `${shuffledLanes[idx]}%`;
                 
-                // Durasi jatuhnya balon dibuat bervariasi
                 const duration = Math.random() * 5 + 17;
                 b.style.animation = `fallColumn ${duration}s linear infinite`;
                 b.style.animationDelay = `${idx * 1.3}s`;
@@ -1068,7 +1065,6 @@
             render();
         }
 
-        // AUTO CHECK SINKRONISASI SAAT APPS DI-LOAD
         window.onload = function() {
             setTimeout(fetchCPUpdates, 500);
         };
