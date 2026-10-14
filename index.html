@@ -1,1114 +1,1426 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Balon Pintar CP Deep Learning - SD Negeri Kesilir 02</title>
-    <style>
-        /* ================================
-           CSS RESET & BASE STYLES
-        ================================ */
-        * {
-            box-sizing: border-box; margin: 0; padding: 0;
-            user-select: none; -webkit-user-select: none; touch-action: manipulation;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎈 BALON PINTAR - SD NEGERI KESILIR 02 | Game Edukasi 2 Pemain</title>
+  <style>
+    /* ============================================================
+       RESET & TEMA VISUAL
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+    :root {
+      --sky-top: #38bdf8; --sky-bottom: #bae6fd; --grass: #22c55e;
+      --p1: #2563eb; --p2: #db2777; --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      font-family: var(--font);
+      background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 65%, #86efac 90%, var(--grass) 100%);
+      min-height: 100vh; width: 100vw; overflow: hidden; color: #1e293b; position: relative;
+    }
 
-        body {
-            font-family: 'Nunito', 'Fredoka One', 'Comic Sans MS', sans-serif;
-            background: linear-gradient(to bottom, #3b82f6 0%, #06b6d4 50%, #10b981 50%, #34d399 100%);
-            height: 100vh; width: 100vw; overflow: hidden; position: relative; color: #1e293b;
-        }
+    /* DEKORASI LANGIT & TAMAN */
+    .sky-decor { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .sun {
+      position: absolute; top: 14px; left: 24px; width: 60px; height: 60px;
+      background: radial-gradient(circle, #fffbeb 25%, #fde047 65%, #f59e0b 100%);
+      border-radius: 50%; box-shadow: 0 0 35px #fde047, 0 0 70px rgba(250,204,21,0.5);
+      animation: sunPulse 6s ease-in-out infinite alternate;
+    }
+    .cloud { position: absolute; background: rgba(255,255,255,0.9); border-radius: 50px; box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+    .cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+    .c1 { width: 120px; height: 38px; top: 35px; left: -140px; animation: driftCloud 36s linear infinite; }
+    .c1::before { width: 50px; height: 50px; top: -22px; left: 20px; }
+    .c1::after { width: 40px; height: 40px; top: -16px; left: 56px; }
+    .c2 { width: 150px; height: 44px; top: 80px; left: -180px; animation: driftCloud 48s linear infinite 12s; }
+    .c2::before { width: 60px; height: 60px; top: -28px; left: 26px; }
+    .c2::after { width: 48px; height: 48px; top: -18px; left: 74px; }
+    .bird { position: absolute; font-size: 1.25rem; animation: flyBird 24s linear infinite; }
+    .b1 { top: 65px; left: -50px; } .b2 { top: 105px; left: -50px; animation-delay: 12s; font-size: 1rem; }
+    .garden {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 42px;
+      background: linear-gradient(180deg, #4ade80 0%, #16a34a 50%, #15803d 100%);
+      border-top: 3px solid #86efac; z-index: 2; display: flex; justify-content: space-around;
+      align-items: flex-end; padding-bottom: 3px; font-size: 1.2rem;
+    }
 
-        /* ================================
-           DEKORASI BACKGROUND KARTUN
-        ================================ */
-        .sky-layer { position: absolute; top: 0; left: 0; width: 100%; height: 50%; pointer-events: none; z-index: 1; overflow: hidden; }
-        .grass-layer { position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; pointer-events: none; z-index: 1; }
+    /* APP & LAYAR */
+    #app { position: relative; width: 100vw; height: 100vh; z-index: 10; display: flex; flex-direction: column; }
+    .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+    .screen.active { display: flex; flex-direction: column; }
 
-        .sun {
-            position: absolute; top: 20px; right: 40px; width: 100px; height: 100px; background: #ffdf00;
-            border-radius: 50%; border: 6px solid #ffb300; box-shadow: 0 0 40px rgba(255, 223, 0, 0.8);
-            animation: pulse-sun 4s infinite alternate ease-in-out;
-            display: flex; align-items: center; justify-content: center; font-size: 50px;
-        }
-        @keyframes pulse-sun {
-            0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1.15) rotate(15deg); }
-        }
+    /* MENU AWAL */
+    #startScreen {
+      overflow-y: auto; padding: 16px; align-items: center; justify-content: flex-start;
+      background: radial-gradient(circle at center 20%, rgba(255,255,255,0.4) 0%, transparent 70%); z-index: 20;
+    }
+    .brand { text-align: center; margin: 8px 0 14px; }
+    .hero-balloon { font-size: 3.2rem; display: inline-block; animation: heroBounce 2.4s ease-in-out infinite; }
+    .game-title {
+      font-size: 2.3rem; font-weight: 900; color: #0369a1;
+      text-shadow: 2px 2px 0 #fff, 4px 4px 0 #bae6fd; letter-spacing: 1px; line-height: 1.1;
+    }
+    .game-sub { font-size: 0.95rem; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 2px; margin-top: 2px; }
+    .school-tag {
+      display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff; padding: 5px 16px; border-radius: 999px; font-weight: 800; font-size: 0.9rem; margin-top: 6px;
+      box-shadow: 0 4px 12px rgba(2,132,199,0.3); border: 2px solid #e0f2fe;
+    }
+    .menu-box {
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-radius: 22px; padding: 18px 22px;
+      width: 100%; max-width: 800px; box-shadow: 0 16px 36px rgba(15,23,42,0.15); border: 3px solid #fff; margin-bottom: 50px;
+    }
+    .sec-label { font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .grid-opts { display: grid; gap: 8px; margin-bottom: 16px; }
+    .g-cls { grid-template-columns: repeat(6, 1fr); }
+    .g-subj { grid-template-columns: repeat(4, 1fr); }
+    .g-diff { grid-template-columns: repeat(3, 1fr); }
+    .g-cnt { grid-template-columns: repeat(4, 1fr); }
+    .opt-card {
+      background: #f8fafc; border: 2.5px solid #e2e8f0; border-radius: 12px; padding: 9px 6px; text-align: center;
+      cursor: pointer; font-weight: 700; font-size: 0.88rem; color: #334155; transition: all 0.18s ease;
+    }
+    .opt-card:hover { transform: translateY(-2px); border-color: #38bdf8; background: #f0f9ff; }
+    .opt-card.active {
+      background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border-color: #0284c7;
+      box-shadow: 0 4px 12px rgba(2,132,199,0.35); transform: translateY(-2px) scale(1.02);
+    }
+    .btn-play {
+      width: 100%; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; border: none;
+      border-radius: 16px; padding: 15px; font-size: 1.25rem; font-weight: 900; letter-spacing: 1px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(22,163,74,0.35); transition: all 0.2s ease; display: flex; align-items: center;
+      justify-content: center; gap: 10px;
+    }
+    .btn-play:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(22,163,74,0.45); }
 
-        .cloud {
-            position: absolute; background: white; border-radius: 50px;
-            box-shadow: 0 10px 0 rgba(0,0,0,0.05); animation: float-cloud linear infinite;
-        }
-        .cloud::before, .cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
-        
-        .cloud1 { width: 160px; height: 60px; top: 10%; left: -200px; animation-duration: 40s; }
-        .cloud1::before { width: 80px; height: 80px; top: -35px; left: 25px; }
-        .cloud1::after { width: 60px; height: 60px; top: -20px; left: 85px; }
+    /* LAYAR GAME */
+    #gameScreen { display: none; flex-direction: column; height: 100vh; overflow: hidden; position: relative; }
+    #gameScreen.active { display: flex; }
+    .game-nav {
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(6px); padding: 8px 14px;
+      border-bottom: 2.5px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.06); z-index: 30;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .nav-row { display: flex; justify-content: space-between; align-items: center; }
+    .info-pill {
+      background: #f1f5f9; padding: 3px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 800;
+      color: #0369a1; border: 1.5px solid #bae6fd; display: flex; align-items: center; gap: 6px;
+    }
+    .nav-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 10px; padding: 5px 10px;
+      font-size: 0.85rem; font-weight: 800; cursor: pointer; color: #334155; transition: 0.15s ease;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .btn-icon:hover { background: #e2e8f0; }
+    .progress-bar-wrap { width: 100%; height: 7px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #22c55e); width: 0%; transition: width 0.3s ease; }
 
-        .cloud2 { width: 220px; height: 70px; top: 25%; left: -250px; animation-duration: 50s; animation-delay: 15s; }
-        .cloud2::before { width: 100px; height: 100px; top: -45px; left: 35px; }
-        .cloud2::after { width: 80px; height: 80px; top: -25px; left: 110px; }
+    .q-banner {
+      background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 9px 14px; border-radius: 12px;
+      text-align: center; box-shadow: 0 4px 10px rgba(2,132,199,0.25); border: 2px solid #bae6fd;
+    }
+    .q-tag { font-size: 0.75rem; font-weight: 800; color: #fef08a; text-transform: uppercase; letter-spacing: 1px; }
+    .q-text { font-size: 1.18rem; font-weight: 800; line-height: 1.25; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        @keyframes float-cloud {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(100vw + 300px)); }
-        }
+    /* ARENA 2 PEMAIN */
+    .arena { flex: 1; display: flex; position: relative; overflow: hidden; margin-bottom: 35px; }
+    .divider {
+      position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
+      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.7) 0, rgba(255,255,255,0.7) 12px, transparent 12px, transparent 24px);
+      transform: translateX(-50%); z-index: 15; pointer-events: none;
+    }
+    .p-zone { flex: 1; display: flex; flex-direction: column; position: relative; height: 100%; overflow: hidden; }
+    .p1-side { border-right: 2px dashed rgba(59,130,246,0.2); background: linear-gradient(180deg, rgba(219,234,254,0.25) 0%, rgba(219,234,254,0.05) 100%); }
+    .p2-side { border-left: 2px dashed rgba(236,72,153,0.2); background: linear-gradient(180deg, rgba(252,231,243,0.25) 0%, rgba(252,231,243,0.05) 100%); }
 
-        .decor-items {
-            position: absolute; bottom: -10px; left: 0; width: 100%;
-            display: flex; justify-content: space-around; font-size: 60px; align-items: flex-end;
-            padding: 0 30px;
-        }
-        .bounce-anim { animation: bounce 3s infinite ease-in-out; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .p-bar {
+      padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;
+      z-index: 20; border-bottom: 1.5px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);
+    }
+    .p-meta { display: flex; align-items: center; gap: 6px; }
+    .p-avatar { font-size: 1.6rem; }
+    .p-name { font-weight: 900; font-size: 0.95rem; }
+    .p1-text { color: var(--p1); } .p2-text { color: var(--p2); }
+    .p-stats { font-size: 0.75rem; font-weight: 700; display: flex; gap: 6px; }
+    .c-ok { color: #16a34a; } .c-err { color: #dc2626; }
+    .p-score {
+      background: #fff; padding: 3px 10px; border-radius: 999px; font-weight: 900; font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 4px; transition: transform 0.2s ease;
+    }
+    .score-p1 { border: 2px solid var(--p1); color: var(--p1); }
+    .score-p2 { border: 2px solid var(--p2); color: var(--p2); }
+    .score-pulse { transform: scale(1.25); }
 
-        /* ================================
-           CONTAINER & LAYAR APP
-        ================================ */
-        #app-container { position: relative; width: 100%; height: 100%; z-index: 10; display: flex; flex-direction: column; }
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none;
-            flex-direction: column; align-items: center; justify-content: center; padding: 15px; z-index: 20;
-        }
-        .screen.active { display: flex; }
+    .p-badge { font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; border: 1px solid #cbd5e1; background: #f1f5f9; color: #64748b; }
+    .b-ready { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .b-done { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .b-wait { background: #fef3c7; color: #b45309; border-color: #fde047; }
+    .b-fail { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
 
-        /* ================================
-           KARTU MENU
-        ================================ */
-        .glass-card {
-            background: #ffffff; border-radius: 40px; padding: 25px 30px;
-            box-shadow: 0 20px 0 rgba(0, 0, 0, 0.15), inset 0 -10px 0 rgba(0,0,0,0.05);
-            border: 8px solid #cbd5e1; max-width: 950px; width: 95%; max-height: 94vh;
-            overflow-y: auto; text-align: center; position: relative;
-        }
+    .canvas-sky { flex: 1; position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-        .main-title {
-            font-size: 3.2rem; color: #ff3366; margin-bottom: 2px; font-weight: 900;
-            text-shadow: 4px 4px 0px #ffcc00, 8px 8px 0px rgba(0,0,0,0.15); letter-spacing: 2px;
-            animation: bounce-title 2s infinite ease-in-out;
-        }
-        @keyframes bounce-title { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03) rotate(1deg); } }
+    .p-feedback {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 1.1rem;
+      font-weight: 900; padding: 5px 14px; border-radius: 999px; z-index: 25; pointer-events: none; opacity: 0;
+      transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); white-space: nowrap;
+    }
+    .fb-ok { background: #22c55e; color: #fff; opacity: 1; transform: translateX(-50%) translateY(4px) scale(1.08); }
+    .fb-err { background: #ef4444; color: #fff; opacity: 1; transform: translateX(-50%) translateY(4px); animation: shake 0.4s ease; }
 
-        .school-name {
-            font-size: 1rem; color: white; font-weight: 900; background: #8b5cf6;
-            display: inline-flex; align-items: center; gap: 10px; padding: 8px 25px; border-radius: 30px;
-            margin-bottom: 15px; border: 4px solid #c4b5fd; box-shadow: 0 5px 0 #6d28d9;
-        }
+    /* BALON DESIGN & TALI */
+    .balloon {
+      position: absolute; width: 92px; height: 116px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: inset -5px -7px 14px rgba(0,0,0,0.22), 0 8px 20px rgba(0,0,0,0.16);
+      transform-origin: center bottom; transition: transform 0.15s ease, filter 0.15s ease;
+      touch-action: manipulation; z-index: 10;
+    }
+    .balloon:hover { transform: scale(1.08); filter: brightness(1.08); z-index: 15; }
+    .balloon:active { transform: scale(0.96); }
+    .balloon::before {
+      content: ''; position: absolute; top: 10px; left: 12px; width: 22px; height: 34px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 75%);
+      transform: rotate(-28deg); pointer-events: none;
+    }
+    .balloon::after {
+      content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+      width: 11px; height: 7px; background: inherit; border-radius: 2px 2px 5px 5px;
+      filter: brightness(0.85); box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .b-string {
+      position: absolute; bottom: -38px; left: 50%; transform: translateX(-50%); width: 2px; height: 35px;
+      background: rgba(148,163,184,0.85); transform-origin: top center; animation: stringSway 3s ease-in-out infinite alternate; pointer-events: none;
+    }
+    .b-text {
+      padding: 4px 6px; color: #fff; font-weight: 900; font-size: 0.92rem; text-align: center;
+      line-height: 1.15; text-shadow: 0 2px 4px rgba(0,0,0,0.6); max-width: 82px; word-break: break-word; pointer-events: none; z-index: 5;
+    }
+    .b-red { background: radial-gradient(circle at 35% 30%, #f87171, #dc2626 70%, #991b1b); }
+    .b-blue { background: radial-gradient(circle at 35% 30%, #60a5fa, #2563eb 70%, #1e40af); }
+    .b-green { background: radial-gradient(circle at 35% 30%, #4ade80, #16a34a 70%, #166534); }
+    .b-yellow { background: radial-gradient(circle at 35% 30%, #fde047, #eab308 70%, #a16207); }
+    .b-purple { background: radial-gradient(circle at 35% 30%, #c084fc, #9333ea 70%, #6b21a8); }
+    .b-orange { background: radial-gradient(circle at 35% 30%, #fb923c, #ea580c 70%, #9a3412); }
+    .b-pink { background: radial-gradient(circle at 35% 30%, #f472b6, #db2777 70%, #9d174d); }
+    .b-cyan { background: radial-gradient(circle at 35% 30%, #38bdf8, #0284c7 70%, #075985); }
+    .balloon.popping { animation: pop 0.26s ease-out forwards !important; pointer-events: none; }
+    .particle {
+      position: absolute; width: 7px; height: 7px; border-radius: 50%; pointer-events: none; z-index: 40;
+      animation: pBurst 0.55s ease-out forwards;
+    }
 
-        .cp-badge {
-            background: #10b981; color: white; font-size: 0.85rem; font-weight: 800;
-            padding: 4px 12px; border-radius: 20px; border: 2px solid #a7f3d0;
-        }
+    /* KEYFRAMES */
+    @keyframes floatA {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(12px, -20px) rotate(4deg); }
+      66% { transform: translate(-10px, -34px) rotate(-3deg); }
+    }
+    @keyframes floatB {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-14px, -26px) rotate(-4deg); }
+      66% { transform: translate(10px, -36px) rotate(3deg); }
+    }
+    @keyframes floatC {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(14px, -28px) scale(1.02) rotate(3deg); }
+    }
+    @keyframes floatD {
+      0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+      50% { transform: translate(-12px, -30px) rotate(3deg); }
+    }
+    @keyframes swayA { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-22px); } }
+    @keyframes swayB { 0%, 100% { transform: rotate(4deg) translateY(0); } 50% { transform: rotate(-4deg) translateY(-24px); } }
+    @keyframes pop { 0% { transform: scale(1); opacity: 1; } 40% { transform: scale(1.3); opacity: 0.9; } 100% { transform: scale(0); opacity: 0; } }
+    @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.2); opacity: 0; } }
+    @keyframes pBurst { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+    @keyframes stringSway { 0% { transform: translateX(-50%) rotate(-6deg); } 100% { transform: translateX(-50%) rotate(6deg); } }
+    @keyframes shake {
+      0%, 100% { transform: translateX(-50%); } 25% { transform: translateX(calc(-50% - 8px)); }
+      50% { transform: translateX(calc(-50% + 8px)); } 75% { transform: translateX(calc(-50% - 4px)); }
+    }
+    @keyframes heroBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px) rotate(4deg); } }
+    @keyframes sunPulse { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+    @keyframes driftCloud { 0% { transform: translateX(0); } 100% { transform: translateX(calc(100vw + 300px)); } }
+    @keyframes flyBird { 0% { transform: translate(0, 0); } 100% { transform: translate(calc(100vw + 80px), -20px); } }
 
-        .section-label {
-            font-size: 1.2rem; font-weight: 900; color: #1e293b;
-            margin: 12px 0 8px 0; text-align: left; display: flex; align-items: center; justify-content: space-between;
-            background: #f1f5f9; padding: 8px 18px; border-radius: 20px; border-left: 8px solid #ff3366;
-        }
+    /* MODAL PAUSE */
+    .modal-wrap {
+      display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.65); backdrop-filter: blur(5px);
+      z-index: 100; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-wrap.active { display: flex; }
+    .m-card {
+      background: #fff; border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 3px solid #38bdf8;
+    }
+    .m-title { font-size: 1.5rem; font-weight: 900; color: #0369a1; margin-bottom: 16px; }
+    .m-btns { display: flex; flex-direction: column; gap: 10px; }
+    .btn-m {
+      padding: 12px; border-radius: 12px; font-size: 1.05rem; font-weight: 800; cursor: pointer; border: none;
+      transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .bm-resume { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; }
+    .bm-menu { background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; }
+    .btn-m:hover { transform: translateY(-2px); }
 
-        .sync-btn {
-            background: #0d9488; color: white; border: 3px solid #14b8a6;
-            border-radius: 15px; padding: 5px 12px; font-size: 0.9rem; font-weight: 800;
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 #0f766e;
-        }
-        .sync-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f766e; }
+    /* LAYAR HASIL */
+    #resultScreen { align-items: center; justify-content: center; padding: 16px; overflow-y: auto; z-index: 20; }
+    .res-box {
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); border-radius: 24px; padding: 24px;
+      width: 100%; max-width: 640px; box-shadow: 0 20px 45px rgba(0,0,0,0.18); border: 3px solid #fff;
+      text-align: center; margin-bottom: 40px;
+    }
+    .res-title { font-size: 1.85rem; font-weight: 900; color: #0369a1; }
+    .res-sub { font-weight: 700; color: #64748b; font-size: 0.9rem; }
+    .win-box {
+      margin: 16px 0; padding: 14px; border-radius: 18px; background: linear-gradient(135deg, #fef08a, #fde047);
+      border: 3px solid #facc15; box-shadow: 0 6px 18px rgba(234,179,8,0.3);
+    }
+    .win-icon { font-size: 2.8rem; display: block; margin-bottom: 2px; }
+    .win-tag { font-size: 1rem; font-weight: 800; color: #854d0e; text-transform: uppercase; letter-spacing: 1px; }
+    .win-name { font-size: 1.85rem; font-weight: 900; color: #713f12; margin: 3px 0; }
+    .win-desc { font-size: 0.9rem; font-weight: 700; color: #a16207; }
 
-        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 15px; }
+    .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+    .res-card { padding: 14px; border-radius: 18px; background: #fff; border: 3px solid #e2e8f0; }
+    .rc-p1 { border-color: var(--p1); } .rc-p2 { border-color: var(--p2); }
+    .rc-avatar { font-size: 2.2rem; }
+    .rc-name { font-weight: 900; font-size: 1.05rem; }
+    .rc-num { font-size: 2rem; font-weight: 900; color: #0f172a; margin: 4px 0; }
+    .rc-stats { display: flex; justify-content: center; gap: 12px; font-size: 0.85rem; font-weight: 800; }
+    .res-acts { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-again {
+      flex: 1; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; border: none;
+      border-radius: 14px; padding: 13px; font-size: 1.1rem; font-weight: 900; cursor: pointer;
+    }
+    .btn-home {
+      flex: 1; background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: none;
+      border-radius: 14px; padding: 13px; font-size: 1.1rem; font-weight: 900; cursor: pointer;
+    }
+    .btn-again:hover, .btn-home:hover { transform: translateY(-2px); }
 
-        .opt-btn {
-            background: white; border: 4px solid #cbd5e1; border-radius: 22px;
-            padding: 12px 8px; font-size: 1rem; font-weight: 900; color: #64748b;
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 0 #cbd5e1;
-        }
-        .opt-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #cbd5e1; background: #f8fafc; }
-        .opt-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #cbd5e1; }
-        
-        .opt-btn.selected {
-            background: #00c6ff; color: #ffffff; border-color: #0072ff;
-            box-shadow: 0 6px 0 #0072ff; transform: translateY(-2px);
-        }
+    #confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
 
-        .primary-btn {
-            background: #ffcc00; color: #d97706; border: 6px solid #f59e0b;
-            border-radius: 50px; padding: 16px 45px; font-size: 1.7rem; font-weight: 900;
-            cursor: pointer; transition: all 0.2s; margin-top: 10px;
-            box-shadow: 0 10px 0 #d97706, 0 15px 20px rgba(0,0,0,0.2);
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.5); letter-spacing: 2px;
-        }
-        .primary-btn:hover { transform: translateY(-4px) scale(1.03); filter: brightness(1.08); box-shadow: 0 14px 0 #d97706; }
-        .primary-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #d97706; }
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .game-title { font-size: 1.8rem; }
+      .g-cls { grid-template-columns: repeat(3, 1fr); }
+      .g-subj { grid-template-columns: repeat(2, 1fr); }
+      .q-text { font-size: 1.05rem; }
+      .balloon { width: 76px; height: 100px; }
+      .b-text { font-size: 0.8rem; max-width: 68px; }
+      .p-name { font-size: 0.86rem; }
+      .p-score { font-size: 0.9rem; padding: 2px 7px; }
+      .grid-scores { grid-template-columns: 1fr; gap: 10px; }
+      .res-acts { flex-direction: column; }
+    }
 
-        .audio-toggle {
-            position: absolute; top: 20px; right: 20px; z-index: 100;
-            background: #ffffff; border: 5px solid #ffcc00; border-radius: 50%;
-            width: 60px; height: 60px; font-size: 28px; cursor: pointer;
-            box-shadow: 0 8px 0 #f59e0b; transition: transform 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* ================================
-           GAME HUD & AREA BERMAIN
-        ================================ */
-        #game-screen { padding: 0; justify-content: flex-start; }
-
-        .game-header {
-            width: 100%; background: rgba(255, 255, 255, 0.96);
-            border-bottom: 8px solid #00c6ff; padding: 10px 20px;
-            display: flex; flex-direction: column; align-items: center; z-index: 30;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 0 0 30px 30px;
-        }
-
-        .top-nav { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        
-        .pause-btn {
-            background: #ff3366; color: white; border: 4px solid #e11d48;
-            border-radius: 20px; padding: 6px 18px; font-weight: 900; font-size: 1rem; cursor: pointer;
-            box-shadow: 0 5px 0 #be123c;
-        }
-
-        .question-progress {
-            font-weight: 900; color: white; background: #8b5cf6;
-            padding: 5px 20px; border-radius: 25px; border: 4px solid #c4b5fd; font-size: 1.1rem;
-            box-shadow: 0 4px 0 #6d28d9;
-        }
-
-        .progress-bar-container {
-            width: 100%; height: 16px; background: #e2e8f0;
-            border-radius: 12px; margin-top: 4px; overflow: hidden; border: 3px solid #cbd5e1;
-        }
-        .progress-bar-fill {
-            height: 100%; width: 0%; background: linear-gradient(90deg, #ffcc00, #ff3366); transition: width 0.4s ease;
-        }
-
-        .question-card {
-            background: #ffffff; border: 6px solid #00c6ff; border-radius: 25px;
-            padding: 12px 20px; width: 100%; max-width: 900px; text-align: center;
-            font-size: 1.35rem; font-weight: 900; color: #0f172a; margin-top: 8px;
-            box-shadow: 0 8px 0 #0072ff; line-height: 1.3;
-        }
-
-        /* SPLIT SCREEN */
-        .play-arena { width: 100%; flex: 1; display: flex; position: relative; overflow: hidden; }
-        .divider { width: 10px; height: 100%; background: #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.25); z-index: 25; border-radius: 8px; }
-        
-        .player-zone { flex: 1; position: relative; display: flex; flex-direction: column; overflow: hidden; }
-        .player-zone.p1 { background: rgba(255, 51, 102, 0.08); }
-        .player-zone.p2 { background: rgba(0, 198, 255, 0.08); }
-
-        .player-hud {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 18px; background: rgba(255, 255, 255, 0.92); z-index: 20;
-            border-bottom: 4px solid rgba(0,0,0,0.1); border-radius: 0 0 20px 20px; margin: 0 10px;
-        }
-
-        .player-identity { font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
-        .p1 .player-identity { color: #e11d48; }
-        .p2 .player-identity { color: #0369a1; }
-
-        .score-badge {
-            background: #ffcc00; border: 3px solid #f59e0b; color: #b45309;
-            padding: 4px 15px; border-radius: 18px; font-weight: 900; font-size: 1.3rem; box-shadow: 0 4px 0 #d97706;
-        }
-
-        .status-msg {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            background: white; color: #0f172a; padding: 18px 25px;
-            border-radius: 25px; font-weight: 900; font-size: 1.2rem; z-index: 40;
-            display: none; text-align: center; border: 6px solid #ffcc00;
-            box-shadow: 0 12px 0 #d97706, 0 20px 30px rgba(0,0,0,0.35); width: 85%;
-        }
-        .status-msg.active { display: block; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-        .mascot-avatar {
-            width: 42px; height: 42px; border-radius: 50%; display: inline-flex;
-            align-items: center; justify-content: center; font-size: 26px;
-            background: white; border: 3px solid currentColor; box-shadow: 0 3px 0 currentColor;
-        }
-
-        /* ================================
-           BALON JALUR
-        ================================ */
-        .balloon-container { width: 100%; flex: 1; position: relative; overflow: hidden; }
-        .balloon-container.disabled { pointer-events: none; opacity: 0.35; filter: grayscale(1); transition: all 0.4s; }
-
-        .balloon {
-            position: absolute; width: 110px; height: 130px;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white; font-weight: 900; font-size: 0.9rem;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.5); cursor: pointer; z-index: 10;
-            box-shadow: inset -10px -10px 18px rgba(0,0,0,0.2), inset 10px 10px 18px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.2);
-            top: -180px; padding: 8px; line-height: 1.25;
-        }
-        .balloon::before {
-            content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
-            border-top: 12px solid currentColor; filter: brightness(0.8);
-        }
-        .balloon-string {
-            position: absolute; bottom: -35px; left: 50%; width: 3px; height: 30px;
-            background: rgba(0,0,0,0.3); transform: translateX(-50%); border-radius: 2px;
-        }
-        .balloon-shine {
-            position: absolute; top: 15%; left: 18%; width: 16px; height: 26px;
-            background: rgba(255,255,255,0.6); border-radius: 50%; transform: rotate(-30deg);
-        }
-
-        .balloon-face { position: absolute; top: 18%; display: flex; flex-direction: column; align-items: center; gap: 3px; pointer-events: none; }
-        .balloon-eyes { display: flex; gap: 10px; }
-        .balloon-eye { width: 7px; height: 7px; background: white; border-radius: 50%; box-shadow: 0 0 2px black; animation: blink 4s infinite; }
-        .balloon-cheeks { display: flex; gap: 22px; position: absolute; top: 5px; }
-        .balloon-cheek { width: 8px; height: 4px; background: rgba(255,105,180,0.8); border-radius: 50%; }
-        .balloon-mouth { width: 9px; height: 4px; border-bottom: 2px solid white; border-radius: 0 0 8px 8px; }
-
-        @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
-
-        @keyframes fallColumn {
-            0% { top: -180px; }
-            100% { top: 120%; }
-        }
-
-        .balloon.popping { animation: popOut 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
-        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
-
-        /* ================================
-           OVERLAYS & HASIL AKHIR
-        ================================ */
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
-            z-index: 50; display: none; align-items: center; justify-content: center;
-        }
-        .overlay.active { display: flex; }
-
-        .winner-card {
-            background: white; border-radius: 35px; padding: 25px; width: 95%; max-width: 620px;
-            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 8px solid #ffcc00;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-        .res-box { padding: 12px; border-radius: 20px; background: #f8fafc; border: 4px solid #cbd5e1; box-shadow: 0 5px 0 #cbd5e1; font-size: 0.9rem; }
-        .res-box.p1 { border-color: #fda4af; background: #fff1f2; box-shadow: 0 5px 0 #fda4af; }
-        .res-box.p2 { border-color: #7dd3fc; background: #f0f9ff; box-shadow: 0 5px 0 #7dd3fc; }
-        .res-title { font-weight: 900; margin-bottom: 4px; font-size: 1.1rem; }
-        .res-score { font-size: 2.3rem; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); margin-bottom: 6px; }
-
-        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
-
-        @keyframes popIn { 0% { transform: scale(0.3) translateY(40px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
-
-        @media (max-width: 640px) {
-            .main-title { font-size: 2.2rem; }
-            .question-card { font-size: 1.05rem; padding: 10px; }
-            .balloon { width: 85px; height: 105px; font-size: 0.75rem; }
-            .options-grid { grid-template-columns: repeat(2, 1fr); }
-            .res-score { font-size: 1.8rem; }
-        }
-    </style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- DEKORASI BACKGROUND KARTUN -->
-    <div class="sky-layer">
-        <div class="sun">😎</div>
-        <div class="cloud cloud1"></div>
-        <div class="cloud cloud2"></div>
-    </div>
-    <div class="grass-layer">
-        <div class="decor-items">
-            <span class="bounce-anim">🌲</span>
-            <span class="windmill">🎡</span>
-            <span class="bounce-anim" style="animation-delay: 1s;">🍄</span>
-            <span style="font-size: 60px;">🎪</span>
-            <span class="bounce-anim" style="animation-delay: 0.5s;">🌻</span>
-            <span class="bounce-anim">🌲</span>
+  <!-- Dekorasi Langit & Taman -->
+  <div class="sky-decor" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="bird b1">🐦</div>
+    <div class="bird b2">🐦</div>
+  </div>
+  <div class="garden" aria-hidden="true">
+    <span>🌳</span><span>🌼</span><span>🌱</span><span>🌸</span><span>🌳</span><span>🌻</span><span>🌱</span><span>🌼</span><span>🌳</span>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div id="app">
+    <!-- MENU AWAL -->
+    <main id="startScreen" class="screen active">
+      <div class="brand">
+        <div class="hero-balloon">🎈</div>
+        <h1 class="game-title">BALON PINTAR</h1>
+        <p class="game-sub">Game Edukasi 2 Pemain</p>
+        <div class="school-tag">
+          <span>🏫</span>
+          <span>SD NEGERI KESILIR 02</span>
         </div>
-    </div>
+      </div>
 
-    <button class="audio-toggle" id="audio-btn" onclick="toggleSound()">🔊</button>
-
-    <!-- APP CONTAINER -->
-    <div id="app-container">
-
-        <!-- SCREEN 1: MENU UTAMA -->
-        <div id="menu-screen" class="screen active">
-            <div class="glass-card">
-                <div class="main-title">🎈 BALON PINTAR 🎈</div>
-                <div class="sub-title">⚡ GAME KUIS CP DEEP LEARNING MERDEKA</div>
-                <br>
-                <div class="school-name">
-                    🏫 SD NEGERI KESILIR 02
-                    <span class="cp-badge">✨ CP Deep Learning Active</span>
-                </div>
-
-                <div class="section-label">
-                    <span>🎒 Pilih Kelas:</span>
-                    <button class="sync-btn" onclick="fetchCPUpdates()" title="Perbarui Soal CP Terbaru dari Server">🔄 Sync CP Online</button>
-                </div>
-                <div class="options-grid" id="class-options">
-                    <button class="opt-btn" onclick="selectOption('selectedClass', 1, this)">Kelas 1</button>
-                    <button class="opt-btn" onclick="selectOption('selectedClass', 2, this)">Kelas 2</button>
-                    <button class="opt-btn" onclick="selectOption('selectedClass', 3, this)">Kelas 3</button>
-                    <button class="opt-btn selected" onclick="selectOption('selectedClass', 4, this)">Kelas 4</button>
-                    <button class="opt-btn" onclick="selectOption('selectedClass', 5, this)">Kelas 5</button>
-                    <button class="opt-btn" onclick="selectOption('selectedClass', 6, this)">Kelas 6</button>
-                </div>
-
-                <div class="section-label">📖 Pilih Mata Pelajaran (Murni 1 Mapel):</div>
-                <div class="options-grid" id="subject-options">
-                    <button class="opt-btn selected" onclick="selectOption('selectedSubject', 'matematika', this)">📐 Matematika</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'bahasaIndonesia', this)">📖 B. Indonesia</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'ipas', this)">🌱 IPAS</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'pancasila', this)">🇮🇩 Pancasila</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'seni', this)">🎨 Seni Budaya</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'pjok', this)">🏃 PJOK</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'inggris', this)">🇬🇧 B. Inggris</button>
-                    <button class="opt-btn" onclick="selectOption('selectedSubject', 'pai', this)">🕌 Agama Islam</button>
-                </div>
-
-                <div class="section-label">🎯 Pilih Tingkat Kesulitan Awal:</div>
-                <div class="options-grid" id="diff-options">
-                    <button class="opt-btn selected" onclick="selectOption('difficulty', 'mudah', this)">🟢 Dasar (Pemahaman)</button>
-                    <button class="opt-btn" onclick="selectOption('difficulty', 'sedang', this)">🟡 Menengah (Aplikasi)</button>
-                    <button class="opt-btn" onclick="selectOption('difficulty', 'sulit', this)">🔴 Deep Learning (HOTS)</button>
-                </div>
-
-                <div class="section-label">🔢 Jumlah Target Soal:</div>
-                <div class="options-grid" id="count-options">
-                    <button class="opt-btn" onclick="selectOption('targetQuestions', 5, this)">5 Soal</button>
-                    <button class="opt-btn selected" onclick="selectOption('targetQuestions', 10, this)">10 Soal</button>
-                    <button class="opt-btn" onclick="selectOption('targetQuestions', 15, this)">15 Soal</button>
-                    <button class="opt-btn" onclick="selectOption('targetQuestions', 20, this)">20 Soal</button>
-                </div>
-                <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px; line-height: 1.4;">*Sistem Murni 1 Mapel & Anti-Duplikat. Soal tidak akan dicampur dengan mata pelajaran lain.</p>
-
-                <button class="primary-btn" onclick="startGame()">🚀 MULAI BERMAIN 🚀</button>
-            </div>
+      <div class="menu-box">
+        <div class="sec-label"><span>🎒</span><span>Pilih Kelas:</span></div>
+        <div class="grid-opts g-cls" id="classSelector">
+          <div class="opt-card active" data-class="1">Kelas 1</div>
+          <div class="opt-card" data-class="2">Kelas 2</div>
+          <div class="opt-card" data-class="3">Kelas 3</div>
+          <div class="opt-card" data-class="4">Kelas 4</div>
+          <div class="opt-card" data-class="5">Kelas 5</div>
+          <div class="opt-card" data-class="6">Kelas 6</div>
         </div>
 
-        <!-- SCREEN 2: GAMEPLAY -->
-        <div id="game-screen" class="screen">
-            <div class="game-header">
-                <div class="top-nav">
-                    <button class="pause-btn" onclick="pauseGame()">⏸ PAUSE</button>
-                    <div class="question-progress" id="q-progress-text">SOAL 1 / 10</div>
-                    <div style="width:75px"></div>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-fill" id="progress-bar"></div>
-                </div>
-                <div class="question-card" id="question-text">Memuat Pertanyaan CP...</div>
-            </div>
-
-            <div class="play-arena">
-                <!-- PLAYER 1 (LEFT) -->
-                <div class="player-zone p1">
-                    <div class="player-hud">
-                        <div class="player-identity">
-                            <span class="mascot-avatar" style="color:#e11d48;">🦊</span>
-                            PLAYER 1
-                        </div>
-                        <div class="score-badge">⭐ <span id="p1-score">0</span></div>
-                    </div>
-                    <div class="status-msg" id="p1-status"></div>
-                    <div class="balloon-container" id="p1-balloons"></div>
-                </div>
-
-                <div class="divider"></div>
-
-                <!-- PLAYER 2 (RIGHT) -->
-                <div class="player-zone p2">
-                    <div class="player-hud">
-                        <div class="player-identity">
-                            <span class="mascot-avatar" style="color:#0369a1;">🐸</span>
-                            PLAYER 2
-                        </div>
-                        <div class="score-badge">⭐ <span id="p2-score">0</span></div>
-                    </div>
-                    <div class="status-msg" id="p2-status"></div>
-                    <div class="balloon-container" id="p2-balloons"></div>
-                </div>
-            </div>
+        <div class="sec-label"><span>📚</span><span>Pilih Mata Pelajaran:</span></div>
+        <div class="grid-opts g-subj" id="subjectSelector">
+          <div class="opt-card active" data-subject="matematika">📐 Matematika</div>
+          <div class="opt-card" data-subject="bahasaIndonesia">📖 B. Indonesia</div>
+          <div class="opt-card" data-subject="ipas">🌱 IPAS</div>
+          <div class="opt-card" data-subject="pancasila">🇮🇩 Pancasila</div>
         </div>
 
-        <!-- OVERLAY: PAUSE -->
-        <div class="overlay" id="pause-modal">
-            <div class="glass-card" style="max-width: 450px;">
-                <h2 style="font-size: 2.5rem; color: #ff3366; margin-bottom: 15px; font-weight: 900;">⏸ GAME DIJEDA</h2>
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <button class="primary-btn" onclick="resumeGame()" style="margin:0; font-size: 1.3rem;">▶ LANJUTKAN</button>
-                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1.1rem;">🏠 KEMBALI KE MENU</button>
-                </div>
-            </div>
+        <div class="sec-label"><span>⚡</span><span>Pilih Tingkat Kesulitan:</span></div>
+        <div class="grid-opts g-diff" id="difficultySelector">
+          <div class="opt-card active" data-difficulty="mudah">🟢 Mudah</div>
+          <div class="opt-card" data-difficulty="sedang">🟡 Sedang</div>
+          <div class="opt-card" data-difficulty="sulit">🔴 Sulit</div>
         </div>
 
-        <!-- OVERLAY: HASIL AKHIR -->
-        <div class="overlay" id="result-modal">
-            <div class="winner-card">
-                <h1 style="font-size: 2.8rem; color: #00c6ff; margin-bottom: 5px; font-weight: 900;">🎉 EVALUASI CP SELESAI! 🎉</h1>
-                <p style="color: #64748b; font-weight: 900; font-size: 1.1rem;">SD NEGERI KESILIR 02 - DEEP LEARNING</p>
-
-                <div id="winner-announcement" style="font-size: 1.8rem; font-weight: 900; color: #d97706; margin: 15px 0; background: #ffcc00; padding: 10px; border-radius: 20px; border: 5px solid #f59e0b; box-shadow: 0 6px 0 #d97706;">
-                    🦊 PLAYER 1 MENANG!
-                </div>
-
-                <div class="result-grid">
-                    <div class="res-box p1">
-                        <div class="res-title" style="color:#e11d48;">🦊 PLAYER 1</div>
-                        <div class="res-score" id="res-p1-score">0</div>
-                        <div style="font-size: 0.85rem; color:#475569; font-weight: 900; line-height: 1.5;">
-                            ✅ Benar: <span id="res-p1-c">0</span><br>
-                            ❌ Salah: <span id="res-p1-w">0</span><br>
-                            ⏳ Ketikung: <span id="res-p1-l">0</span>
-                        </div>
-                    </div>
-                    <div class="res-box p2">
-                        <div class="res-title" style="color:#0369a1;">🐸 PLAYER 2</div>
-                        <div class="res-score" id="res-p2-score">0</div>
-                        <div style="font-size: 0.85rem; color:#475569; font-weight: 900; line-height: 1.5;">
-                            ✅ Benar: <span id="res-p2-c">0</span><br>
-                            ❌ Salah: <span id="res-p2-w">0</span><br>
-                            ⏳ Ketikung: <span id="res-p2-l">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px;">
-                    <button class="primary-btn" onclick="startGame()" style="margin:0; font-size: 1.2rem; padding: 10px 22px;">🔄 MAIN LAGI</button>
-                    <button class="opt-btn" onclick="returnToMenu()" style="font-size: 1rem; padding: 10px 18px;">🏠 MENU</button>
-                </div>
-            </div>
+        <div class="sec-label"><span>🎯</span><span>Pilih Jumlah Soal:</span></div>
+        <div class="grid-opts g-cnt" id="countSelector">
+          <div class="opt-card" data-count="5">5 Soal</div>
+          <div class="opt-card active" data-count="10">10 Soal</div>
+          <div class="opt-card" data-count="15">15 Soal</div>
+          <div class="opt-card" data-count="20">20 Soal</div>
         </div>
 
+        <button id="btnStartGame" class="btn-play" type="button">
+          <span>🎮</span><span>MULAI PERMAINAN</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- LAYAR GAME -->
+    <div id="gameScreen" class="screen">
+      <header class="game-nav">
+        <div class="nav-row">
+          <div class="info-pill">
+            <span id="questionCounter">SOAL 1 / 10</span>
+            <span>•</span>
+            <span id="gameMetaBadge">Kelas 1 - Matematika</span>
+          </div>
+          <div class="nav-actions">
+            <button id="btnSoundToggle" class="btn-icon" type="button" title="Suara">
+              <span id="soundIcon">🔊</span><span id="soundLabel">SOUND ON</span>
+            </button>
+            <button id="btnPause" class="btn-icon" type="button" title="Jeda">
+              <span>⏸</span><span>PAUSE</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div id="progressBar" class="progress-bar-fill"></div>
+        </div>
+
+        <div class="q-banner">
+          <div class="q-tag">PERTANYAAN</div>
+          <h2 id="questionDisplay" class="q-text">Memuat pertanyaan...</h2>
+        </div>
+      </header>
+
+      <div class="arena">
+        <div class="divider"></div>
+
+        <!-- PLAYER 1 -->
+        <section class="p-zone p1-side" id="zonePlayer1">
+          <div class="p-bar">
+            <div class="p-meta">
+              <span class="p-avatar">👦</span>
+              <div>
+                <div class="p-name p1-text">PLAYER 1</div>
+                <div class="p-stats">
+                  <span class="c-ok">✓ <span id="p1CorrectCount">0</span></span>
+                  <span class="c-err">✗ <span id="p1WrongCount">0</span></span>
+                </div>
+              </div>
+            </div>
+            <div id="p1ScoreBox" class="p-score score-p1">
+              <span>⭐</span><span id="p1Score">0</span>
+            </div>
+            <div id="p1StatusBadge" class="p-badge b-ready">Giliran Bermain</div>
+          </div>
+
+          <div id="p1Feedback" class="p-feedback"></div>
+          <div class="canvas-sky" id="canvasPlayer1"></div>
+        </section>
+
+        <!-- PLAYER 2 -->
+        <section class="p-zone p2-side" id="zonePlayer2">
+          <div class="p-bar">
+            <div class="p-meta">
+              <span class="p-avatar">👧</span>
+              <div>
+                <div class="p-name p2-text">PLAYER 2</div>
+                <div class="p-stats">
+                  <span class="c-ok">✓ <span id="p2CorrectCount">0</span></span>
+                  <span class="c-err">✗ <span id="p2WrongCount">0</span></span>
+                </div>
+              </div>
+            </div>
+            <div id="p2ScoreBox" class="p-score score-p2">
+              <span>⭐</span><span id="p2Score">0</span>
+            </div>
+            <div id="p2StatusBadge" class="p-badge b-ready">Giliran Bermain</div>
+          </div>
+
+          <div id="p2Feedback" class="p-feedback"></div>
+          <div class="canvas-sky" id="canvasPlayer2"></div>
+        </section>
+      </div>
     </div>
 
-    <canvas id="confetti-canvas"></canvas>
+    <!-- MODAL PAUSE -->
+    <div id="pauseModal" class="modal-wrap">
+      <div class="m-card">
+        <h3 class="m-title">⏸ GAME DIJEDA</h3>
+        <div class="m-btns">
+          <button id="btnResume" class="btn-m bm-resume" type="button">
+            <span>▶</span><span>LANJUTKAN</span>
+          </button>
+          <button id="btnExitToMenu" class="btn-m bm-menu" type="button">
+            <span>🏠</span><span>KEMBALI KE MENU</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        /* =========================================================================
-           BANK SOAL CP DEEP LEARNING - DIPERBANYAK & MURNI PER MAPEL & KELAS
-        ========================================================================= */
-        const defaultCPQuestionBank = {
-            "1": {
-                "matematika": [
-                    { q: "Ada 3 apel di atas meja, ibu menaruh 2 apel lagi. Berapa jumlah apel sekarang?", answers: ["4", "5", "6", "7"], correct: 1, diff: "mudah" },
-                    { q: "Benda di bawah ini yang bentuknya mirip dengan lingkaran adalah...", answers: ["Buku Tulis", "Roda Sepeda", "Pintu Rumah", "Kotak Pensil"], correct: 1, diff: "sedang" },
-                    { q: "Siti memiliki 7 permen. Diberikan kepada adiknya 3 permen. Berapa sisa permen Siti?", answers: ["2", "3", "4", "5"], correct: 2, diff: "sulit" },
-                    { q: "Berapa hasil dari 5 + 4?", answers: ["7", "8", "9", "10"], correct: 2, diff: "mudah" },
-                    { q: "Angka setelah 19 adalah...", answers: ["18", "20", "21", "22"], correct: 1, diff: "mudah" },
-                    { q: "Budi memiliki 10 kelereng, hilang 4 kelereng. Sisa kelereng Budi...", answers: ["5", "6", "7", "8"], correct: 1, diff: "sedang" },
-                    { q: "Bentuk bangun datar yang memiliki 3 sisi disebut...", answers: ["Persegi", "Segitiga", "Lingkaran", "Persegi Panjang"], correct: 1, diff: "sedang" },
-                    { q: "Ibu membeli 6 jeruk, ayah membelikan lagi 6 jeruk. Jumlah jeruk seluruhnya...", answers: ["10", "11", "12", "14"], correct: 2, diff: "sulit" },
-                    { q: "Bilangan yang lebih besar dari 12 di bawah ini adalah...", answers: ["10", "11", "14", "9"], correct: 2, diff: "sulit" },
-                    { q: "Jari tangan manusia pada satu tangan berjumlah...", answers: ["4", "5", "6", "10"], correct: 1, diff: "mudah" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Hewan yang suaranya 'Meow... Meow...' adalah...", answers: ["Anjing", "Ayam", "Kucing", "Sapi"], correct: 2, diff: "mudah" },
-                    { q: "Suku kata dari kata 'SEPATU' adalah...", answers: ["Se-pat-u", "S-e-p-a-t-u", "Se-pa-tu", "Sep-a-tu"], correct: 2, diff: "sedang" },
-                    { q: "Lengkapi kalimat ini: 'Sebelum makan, kita harus mencuci ...'", answers: ["Kaki", "Telinga", "Tangan", "Rambut"], correct: 2, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Anggota tubuh yang kita gunakan untuk melihat adalah...", answers: ["Telinga", "Mata", "Hidung", "Mulut"], correct: 1, diff: "mudah" },
-                    { q: "Tanda bahwa hari sudah siang adalah...", answers: ["Gelap gulita", "Banyak bintang", "Matahari bersinar terang", "Bulan muncul"], correct: 2, diff: "sedang" },
-                    { q: "Hewan yang bisa terbang di udara adalah...", answers: ["Kucing", "Ikan", "Burung", "Sapi"], correct: 2, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Lambang negara kita adalah burung...", answers: ["Merpati", "Rajawali", "Garuda", "Kakatua"], correct: 2, diff: "mudah" },
-                    { q: "Sebelum berangkat ke sekolah, kita harus ... kepada orang tua.", answers: ["Marah", "Pamit dan salim", "Menangis", "Sembunyi"], correct: 1, diff: "sedang" },
-                    { q: "Simbol sila pertama Pancasila adalah...", answers: ["Bintang", "Rantai", "Pohon Beringin", "Padi Kapas"], correct: 0, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Alat untuk mewarnai gambar di buku gambar adalah...", answers: ["Pensil warna / Krayon", "Gunting", "Lem", "Penggaris"], correct: 0, diff: "mudah" },
-                    { q: "Lagu 'Balonku Ada Lima' rupa-rupa...", answers: ["Ukurannya", "Warnanya", "Harganya", "Bentuknya"], correct: 1, diff: "sedang" },
-                    { q: "Gerakan daun tertiup angin bisa kita tirukan dengan...", answers: ["Tidur", "Berdiri kaku", "Melambai-lambaikan tangan", "Menutup mata"], correct: 2, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Saat berolahraga kita memakai pakaian...", answers: ["Seragam merah putih", "Baju tidur", "Baju olahraga", "Baju pesta"], correct: 2, diff: "mudah" },
-                    { q: "Olahraga yang menendang bola ke gawang adalah...", answers: ["Renang", "Sepak bola", "Kasti", "Senam"], correct: 1, diff: "sedang" },
-                    { q: "Sebelum berolahraga, kita harus melakukan ... agar tidak cedera.", answers: ["Makan banyak", "Pemanasan", "Tidur", "Minum es"], correct: 1, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "Apa bahasa Inggris dari 'Satu'?", answers: ["Two", "Three", "One", "Four"], correct: 2, diff: "mudah" },
-                    { q: "Warna 'Merah' dalam bahasa Inggris adalah...", answers: ["Blue", "Red", "Yellow", "Green"], correct: 1, diff: "sedang" },
-                    { q: "Apa bahasa Inggris dari 'Apel'?", answers: ["Banana", "Orange", "Apple", "Grape"], correct: 2, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Tuhan yang menciptakan langit dan bumi adalah...", answers: ["Malaikat", "Nabi", "Allah SWT", "Manusia"], correct: 2, diff: "mudah" },
-                    { q: "Sebagai umat Islam, kita beribadah di...", answers: ["Gereja", "Masjid", "Pura", "Vihara"], correct: 1, diff: "sedang" },
-                    { q: "Kitab suci umat Islam adalah...", answers: ["Al-Qur'an", "Taurat", "Injil", "Zabur"], correct: 0, diff: "sulit" }
-                ]
-            },
-            "2": {
-                "matematika": [
-                    { q: "Berapa hasil penjumlahan 15 + 12?", answers: ["25", "27", "28", "30"], correct: 1, diff: "mudah" },
-                    { q: "Jarum pendek menunjuk angka 7, jarum panjang menunjuk angka 12. Pukul berapakah sekarang?", answers: ["Pukul 12", "Pukul 6", "Pukul 7", "Pukul 8"], correct: 2, diff: "sedang" },
-                    { q: "Kakak punya pita panjangnya 10 cm, kemudian dipotong 4 cm. Sisa pita kakak adalah...", answers: ["5 cm", "6 cm", "14 cm", "40 cm"], correct: 1, diff: "sulit" },
-                    { q: "Hasil dari 20 - 8 adalah...", answers: ["10", "11", "12", "13"], correct: 2, diff: "mudah" },
-                    { q: "Berapa hasil dari 5 x 3?", answers: ["12", "15", "18", "20"], correct: 1, diff: "sedang" },
-                    { q: "Angka 7 puluhan dan 4 satuan ditulis...", answers: ["47", "74", "704", "407"], correct: 1, diff: "sedang" },
-                    { q: "Ibu membeli 18 buah salak, dibagikan kepada 3 anak sama banyak. Tiap anak mendapat...", answers: ["5 buah", "6 buah", "7 buah", "8 buah"], correct: 1, diff: "sulit" },
-                    { q: "1 meter sama dengan ... centimeter.", answers: ["10 cm", "100 cm", "1000 cm", "1 cm"], correct: 1, diff: "mudah" },
-                    { q: "Hasil dari 35 + 15 - 10 adalah...", answers: ["30", "40", "45", "50"], correct: 0, diff: "sulit" },
-                    { q: "Nama bilangan dari 145 adalah...", answers: ["Seratus empat puluh lima", "Seratus lima puluh empat", "Empat ratus lima belas", "Lima ratus empat belas"], correct: 0, diff: "mudah" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Huruf kapital digunakan pada...", answers: ["Awal kalimat", "Akhir kalimat", "Tengah kata", "Tanda baca"], correct: 0, diff: "mudah" },
-                    { q: "Kalimat yang digunakan untuk menanyakan sesuatu diakhiri dengan tanda...", answers: ["Titik (.)", "Koma (,)", "Seru (!)", "Tanya (?)"], correct: 3, diff: "sedang" },
-                    { q: "Lawan kata dari 'Panjang' adalah...", answers: ["Tinggi", "Kecil", "Pendek", "Lebar"], correct: 2, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Bagian tumbuhan yang tertanam di dalam tanah adalah...", answers: ["Daun", "Batang", "Akar", "Bunga"], correct: 2, diff: "mudah" },
-                    { q: "Hewan yang memakan rumput adalah...", answers: ["Harimau", "Kucing", "Sapi", "Singa"], correct: 2, diff: "sedang" },
-                    { q: "Es batu jika dibiarkan di tempat terbuka lama kelamaan akan menjadi...", answers: ["Gas", "Air (Cair)", "Uap", "Batu keras"], correct: 1, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Membersihkan kelas bersama-sama merupakan bentuk sikap...", answers: ["Gotong royong", "Malas-malasan", "Egois", "Bermain"], correct: 0, diff: "mudah" },
-                    { q: "Sila kedua Pancasila berlambang...", answers: ["Bintang", "Rantai Emas", "Pohon Beringin", "Kepala Banteng"], correct: 1, diff: "sedang" },
-                    { q: "Aturan di sekolah harus ditaati oleh...", answers: ["Guru saja", "Kepala sekolah", "Semua warga sekolah", "Penjaga sekolah"], correct: 2, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Suara 'Ting-ting-ting' biasanya berasal dari ketukan pada alat...", answers: ["Kendang", "Gelas kaca", "Bantal", "Kardus"], correct: 1, diff: "mudah" },
-                    { q: "Bahan alam yang bisa digunakan untuk membuat kerajinan menempel adalah...", answers: ["Plastik", "Kertas origami", "Daun kering / Biji-bijian", "Kaca"], correct: 2, diff: "sedang" },
-                    { q: "Warna bendera negara kita adalah...", answers: ["Merah Biru", "Putih Merah", "Merah Putih", "Hijau Kuning"], correct: 2, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Berjalan, berlari, dan melompat dapat melatih kekuatan otot...", answers: ["Tangan", "Kaki", "Leher", "Perut"], correct: 1, diff: "mudah" },
-                    { q: "Menangkap bola menggunakan...", answers: ["Satu kaki", "Kepala", "Dua tangan", "Lutut"], correct: 2, diff: "sedang" },
-                    { q: "Permainan tradisional yang menggunakan bambu panjang untuk berjalan adalah...", answers: ["Egrang", "Lompat tali", "Kasti", "Gobak sodor"], correct: 0, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "Bahasa Inggris dari 'Kucing' adalah...", answers: ["Dog", "Cat", "Bird", "Fish"], correct: 1, diff: "mudah" },
-                    { q: "Ucapan 'Selamat Pagi' dalam bahasa Inggris adalah...", answers: ["Good night", "Good afternoon", "Good morning", "Good bye"], correct: 2, diff: "sedang" },
-                    { q: "Angka 'Lima' dalam bahasa Inggris adalah...", answers: ["Three", "Four", "Five", "Six"], correct: 2, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Nabi yang menjadi utusan terakhir adalah...", answers: ["Nabi Adam", "Nabi Nuh", "Nabi Musa", "Nabi Muhammad SAW"], correct: 3, diff: "mudah" },
-                    { q: "Membaca Al-Qur'an dimulai dengan huruf...", answers: ["Alif", "Ba", "Jim", "Dal"], correct: 0, diff: "sedang" },
-                    { q: "Jika kita berbuat salah kepada teman, kita harus segera...", answers: ["Sembunyi", "Meminta maaf", "Menangis", "Marah"], correct: 1, diff: "sulit" }
-                ]
-            },
-            "3": {
-                "matematika": [
-                    { q: "Hasil dari perkalian 4 x 5 adalah...", answers: ["9", "15", "20", "25"], correct: 2, diff: "mudah" },
-                    { q: "Ibu membagi sebuah pizza menjadi 4 bagian sama besar. Satu bagian pizza bernilai pecahan...", answers: ["1/2", "1/3", "1/4", "1/5"], correct: 2, diff: "sedang" },
-                    { q: "Ayah membeli 24 buah apel, kemudian dibagi rata ke dalam 3 kantong. Setiap kantong berisi...", answers: ["6 apel", "7 apel", "8 apel", "9 apel"], correct: 2, diff: "sulit" },
-                    { q: "Berapa hasil dari 7 x 8?", answers: ["54", "56", "64", "63"], correct: 1, diff: "sulit" },
-                    { q: "Pecahan 1/2 lebih besar daripada pecahan...", answers: ["1/3", "3/4", "2/3", "4/5"], correct: 0, diff: "sedang" },
-                    { q: "Hasil dari 120 + 130 - 50 adalah...", answers: ["190", "200", "210", "220"], correct: 1, diff: "sulit" },
-                    { q: "Keliling persegi yang memiliki sisi 12 cm adalah...", answers: ["24 cm", "36 cm", "48 cm", "60 cm"], correct: 2, diff: "sulit" },
-                    { q: "Angka 6 pada bilangan 3.650 menempati nilai tempat...", answers: ["Ribuan", "Ratusan", "Puluhan", "Satuan"], correct: 1, diff: "mudah" },
-                    { q: "Hasil pembagian dari 72 : 8 adalah...", answers: ["7", "8", "9", "6"], correct: 2, diff: "sedang" },
-                    { q: "1 jam terdiri dari ... menit.", answers: ["30 menit", "60 menit", "120 menit", "360 menit"], correct: 1, diff: "mudah" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Cerita yang tokohnya adalah hewan yang bisa bicara disebut...", answers: ["Legenda", "Mitos", "Fabel", "Sejarah"], correct: 2, diff: "mudah" },
-                    { q: "Kalimat utama dalam sebuah paragraf biasanya memuat...", answers: ["Judul", "Ide pokok / Gagasan utama", "Amanat", "Kesimpulan akhir"], correct: 1, diff: "sedang" },
-                    { q: "Kata tanya yang tepat untuk menanyakan tempat adalah...", answers: ["Siapa", "Kapan", "Di mana", "Bagaimana"], correct: 2, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Matahari memberikan energi ... dan ... ke bumi.", answers: ["Bunyi dan Listrik", "Gerak dan Kimia", "Panas dan Cahaya", "Air dan Angin"], correct: 2, diff: "mudah" },
-                    { q: "Benda yang berwujud cair contohnya adalah...", answers: ["Kayu", "Batu", "Air dan Minyak", "Udara"], correct: 2, diff: "sedang" },
-                    { q: "Peristiwa perubahan wujud dari benda padat menjadi cair disebut...", answers: ["Membeku", "Mencair", "Menguap", "Menyublim"], correct: 1, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Semboyan bangsa Indonesia adalah...", answers: ["Pancasila", "Bhinneka Tunggal Ika", "Tut Wuri Handayani", "UUD 1945"], correct: 1, diff: "mudah" },
-                    { q: "Makna dari 'Bhinneka Tunggal Ika' adalah...", answers: ["Berbeda-beda tapi tetap satu jua", "Bersatu kita teguh", "Pantang menyerah", "Rajin pangkal pandai"], correct: 0, diff: "sedang" },
-                    { q: "Sumpah Pemuda diperingati setiap tanggal...", answers: ["17 Agustus", "21 April", "28 Oktober", "10 November"], correct: 2, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Seni melipat kertas dari Jepang disebut...", answers: ["Mozaik", "Kolase", "Origami", "Makrame"], correct: 2, diff: "mudah" },
-                    { q: "Tari kecak berasal dari daerah...", answers: ["Jawa Barat", "Sumatera Barat", "Bali", "Papua"], correct: 2, diff: "sedang" },
-                    { q: "Warna yang dihasilkan jika mencampur merah dan kuning adalah...", answers: ["Hijau", "Oranye", "Ungu", "Cokelat"], correct: 1, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Tujuan melakukan pemanasan sebelum olahraga adalah...", answers: ["Agar cepat lelah", "Mencegah cedera otot", "Mengantuk", "Kepanasan"], correct: 1, diff: "mudah" },
-                    { q: "Gerakan push-up melatih kekuatan otot...", answers: ["Kaki", "Lengan/Tangan", "Leher", "Punggung"], correct: 1, diff: "sedang" },
-                    { q: "Lari secepat-cepatnya dalam jarak pendek disebut lari...", answers: ["Maraton", "Estafet", "Sprint", "Jogging"], correct: 2, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "Bahasa Inggris dari 'Buku' adalah...", answers: ["Pen", "Pencil", "Book", "Bag"], correct: 2, diff: "mudah" },
-                    { q: "Terjemahkan: 'I have two eyes.'", answers: ["Saya punya dua tangan.", "Saya punya dua mata.", "Saya punya dua telinga.", "Saya punya dua kaki."], correct: 1, diff: "sedang" },
-                    { q: "The day after Monday is...", answers: ["Sunday", "Tuesday", "Wednesday", "Friday"], correct: 1, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Malaikat yang bertugas menyampaikan wahyu adalah malaikat...", answers: ["Mikail", "Israfil", "Jibril", "Izrail"], correct: 2, diff: "mudah" },
-                    { q: "Shalat fardhu dalam sehari semalam ada ... waktu.", answers: ["3", "4", "5", "6"], correct: 2, diff: "sedang" },
-                    { q: "Sifat wajib bagi Nabi dan Rasul yang artinya 'Jujur/Benar' adalah...", answers: ["Siddiq", "Amanah", "Tabligh", "Fathanah"], correct: 0, diff: "sulit" }
-                ]
-            },
-            "4": {
-                "matematika": [
-                    { q: "Berapa KPK dari bilangan 4 dan 6?", answers: ["10", "12", "18", "24"], correct: 1, diff: "mudah" },
-                    { q: "Sebuah persegi panjang memiliki panjang 10 cm dan lebar 6 cm. Luasnya adalah...", answers: ["16 cm²", "32 cm²", "60 cm²", "160 cm²"], correct: 2, diff: "sedang" },
-                    { q: "Sudut yang besarnya tepat 90 derajat disebut sudut...", answers: ["Lancip", "Tumpul", "Lurus", "Siku-siku"], correct: 3, diff: "sulit" },
-                    { q: "Berapa FPB dari 24 dan 36?", answers: ["6", "12", "18", "8"], correct: 1, diff: "sulit" },
-                    { q: "Hasil dari 3/4 + 1/2 adalah...", answers: ["4/6", "5/4", "4/8", "2/3"], correct: 1, diff: "sedang" },
-                    { q: "Desimal dari pecahan 3/5 adalah...", answers: ["0.3", "0.5", "0.6", "0.75"], correct: 2, diff: "sedang" },
-                    { q: "Keliling sebuah lapangan berbentuk persegi dengan sisi 25 meter adalah...", answers: ["50 meter", "75 meter", "100 meter", "625 meter"], correct: 2, diff: "mudah" },
-                    { q: "Hasil dari 15² (15 kuadrat) adalah...", answers: ["125", "215", "225", "255"], correct: 2, diff: "sulit" },
-                    { q: "Berapa hasil dari 450 : 15?", answers: ["25", "30", "35", "40"], correct: 1, diff: "sulit" },
-                    { q: "Hasil pembulatan bilangan 346 ke puluhan terdekat adalah...", answers: ["340", "350", "400", "345"], correct: 1, diff: "mudah" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Kegiatan tanya jawab dengan narasumber untuk mencari informasi disebut...", answers: ["Pidato", "Wawancara", "Bercerita", "Puisi"], correct: 1, diff: "mudah" },
-                    { q: "Langkah-langkah dalam memasak mie instan termasuk dalam jenis teks...", answers: ["Narasi", "Deskripsi", "Prosedur", "Eksposisi"], correct: 2, diff: "sedang" },
-                    { q: "Penulisan awalan me- yang benar pada kata dasar 'sapu' adalah...", answers: ["Mensapu", "Mesapu", "Menyapu", "Mengsapu"], correct: 2, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Proses tumbuhan hijau membuat makanannya sendiri dengan bantuan cahaya matahari disebut...", answers: ["Kondensasi", "Fotosintesis", "Respirasi", "Evaporasi"], correct: 1, diff: "mudah" },
-                    { q: "Gaya yang membuat semua benda yang dilempar ke atas jatuh kembali ke bumi adalah...", answers: ["Gaya Magnet", "Gaya Gesek", "Gaya Gravitasi", "Gaya Pegas"], correct: 2, diff: "sedang" },
-                    { q: "Alat pernapasan pada ikan di air adalah...", answers: ["Paru-paru", "Trakea", "Kulit", "Insang"], correct: 3, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Desa dipimpin oleh seorang...", answers: ["Bupati", "Camat", "Kepala Desa / Kades", "Gubernur"], correct: 2, diff: "mudah" },
-                    { q: "Mendapat pelajaran dari guru di sekolah adalah contoh dari ... siswa.", answers: ["Kewajiban", "Hak", "Beban", "Hukuman"], correct: 1, diff: "sedang" },
-                    { q: "Keputusan bersama yang diambil dalam musyawarah mencerminkan pengamalan sila ke-...", answers: ["1 (Satu)", "2 (Dua)", "3 (Tiga)", "4 (Empat)"], correct: 3, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Menempelkan biji-bijian pada gambar pola disebut karya seni...", answers: ["Kolase", "Mozaik", "Lukis", "Patung"], correct: 0, diff: "mudah" },
-                    { q: "Alat musik Angklung dimainkan dengan cara...", answers: ["Ditiup", "Dipetik", "Digoyangkan", "Dipukul"], correct: 2, diff: "sedang" },
-                    { q: "Kain tradisional Indonesia yang dilukis dengan malam dan canting adalah...", answers: ["Ulos", "Batik", "Songket", "Tenun"], correct: 1, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Dalam permainan bola kasti, alat pemukul biasanya terbuat dari...", answers: ["Plastik", "Besi", "Kayu", "Karet"], correct: 2, diff: "mudah" },
-                    { q: "Gaya renang yang gerakannya menyerupai katak adalah gaya...", answers: ["Bebas", "Punggung", "Dada", "Kupu-kupu"], correct: 2, diff: "sedang" },
-                    { q: "Jumlah pemain utama dalam satu regu sepak bola adalah...", answers: ["5 orang", "6 orang", "11 orang", "12 orang"], correct: 2, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "The place in school where you read books is...", answers: ["Canteen", "Library", "Toilet", "Laboratory"], correct: 1, diff: "mudah" },
-                    { q: "My mother's brother is my...", answers: ["Uncle", "Aunt", "Cousin", "Grandfather"], correct: 0, diff: "sedang" },
-                    { q: "The opposite of 'Big' is...", answers: ["Long", "Tall", "Small", "Fast"], correct: 2, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Rukun Islam yang diwajibkan setahun sekali di bulan Ramadhan adalah...", answers: ["Syahadat", "Shalat", "Puasa", "Haji"], correct: 2, diff: "mudah" },
-                    { q: "Nabi yang diperintah membangun bahtera (kapal besar) adalah...", answers: ["Nabi Musa", "Nabi Nuh", "Nabi Ibrahim", "Nabi Isa"], correct: 1, diff: "sedang" },
-                    { q: "Sifat 'Amanah' bagi Rasul berarti...", answers: ["Bisa dipercaya", "Cerdas", "Menyampaikan", "Jujur"], correct: 0, diff: "sulit" }
-                ]
-            },
-            "5": {
-                "matematika": [
-                    { q: "Hasil penjumlahan pecahan 1/2 + 1/4 adalah...", answers: ["2/6", "3/4", "2/4", "3/8"], correct: 1, diff: "mudah" },
-                    { q: "Sebuah mobil melaju menempuh jarak 100 km dalam waktu 2 jam. Kecepatan mobil tersebut adalah...", answers: ["20 km/jam", "40 km/jam", "50 km/jam", "60 km/jam"], correct: 2, diff: "sedang" },
-                    { q: "Volume kubus yang panjang rusuknya 5 cm adalah...", answers: ["25 cm³", "75 cm³", "125 cm³", "150 cm³"], correct: 2, diff: "sulit" },
-                    { q: "Hasil dari 2,5 x 4 adalah...", answers: ["8", "10", "12", "15"], correct: 1, diff: "sedang" },
-                    { q: "Luas segitiga dengan alas 10 cm dan tinggi 8 cm adalah...", answers: ["40 cm²", "80 cm²", "20 cm²", "100 cm²"], correct: 0, diff: "sulit" },
-                    { q: "Akar pangkat tiga dari 1.728 adalah...", answers: ["10", "12", "14", "16"], correct: 1, diff: "sulit" },
-                    { q: "Skala pada peta adalah 1 : 500.000. Jarak pada peta 4 cm, maka jarak sebenarnya adalah...", answers: ["20 km", "200 km", "2 km", "50 km"], correct: 0, diff: "sulit" },
-                    { q: "Hasil dari 3/5 : 1/2 adalah...", answers: ["3/10", "6/5", "5/6", "2/5"], correct: 1, diff: "sedang" },
-                    { q: "Sebuah balok memiliki panjang 12 cm, lebar 6 cm, dan tinggi 5 cm. Volumenya adalah...", answers: ["180 cm³", "360 cm³", "72 cm³", "240 cm³"], correct: 1, diff: "sulit" },
-                    { q: "Pecahan biasa dari 0,75 adalah...", answers: ["1/4", "1/2", "3/4", "2/5"], correct: 2, diff: "mudah" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Puisi lama yang bersajak a-b-a-b dan terdiri dari sampiran dan isi disebut...", answers: ["Gurindam", "Syair", "Pantun", "Karmina"], correct: 2, diff: "mudah" },
-                    { q: "Penulisan tempat dan tanggal pada surat resmi yang benar adalah...", answers: ["Situbondo 1 Oktober 2026", "Situbondo; 1 Oktober 2026", "Situbondo, 1 Oktober 2026", "Situbondo: 1 Oktober 2026"], correct: 2, diff: "sedang" },
-                    { q: "Teks yang menceritakan urutan kejadian secara kronologis disebut teks...", answers: ["Persuasi", "Argumentasi", "Narasi", "Deskripsi"], correct: 2, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Organ tubuh manusia yang berfungsi memompa darah ke seluruh tubuh adalah...", answers: ["Paru-paru", "Jantung", "Hati", "Ginjal"], correct: 1, diff: "mudah" },
-                    { q: "Proses pencernaan makanan secara mekanik (penghancuran kasar) paling banyak terjadi di...", answers: ["Mulut", "Kerongkongan", "Usus halus", "Usus besar"], correct: 0, diff: "sedang" },
-                    { q: "Sifat cahaya yang bisa menembus benda bening dapat kita lihat pada...", answers: ["Cermin cembung", "Tembok bata", "Kaca jendela kaca jernih", "Papan kayu"], correct: 2, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Badan yang dibentuk untuk menyelidiki usaha-usaha persiapan kemerdekaan Indonesia disebut...", answers: ["PPKI", "BPUPKI", "KNIP", "DPR"], correct: 1, diff: "mudah" },
-                    { q: "Keberagaman suku bangsa di Indonesia disatukan oleh semboyan...", answers: ["Bhinneka Tunggal Ika", "Tut Wuri Handayani", "Pancasila Jaya", "NKRI Harga Mati"], correct: 0, diff: "sedang" },
-                    { q: "Sikap tidak memaksakan agama kepada orang lain merupakan pengamalan Pancasila sila ke-...", answers: ["Satu", "Dua", "Tiga", "Lima"], correct: 0, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Seni rupa yang memiliki ukuran panjang, lebar, dan tinggi (keruangan) disebut seni...", answers: ["2 Dimensi", "3 Dimensi", "4 Dimensi", "Terapan"], correct: 1, diff: "mudah" },
-                    { q: "Lagu 'Indonesia Raya' diciptakan oleh...", answers: ["Ibu Sud", "Ismail Marzuki", "W.R. Supratman", "C. Simanjuntak"], correct: 2, diff: "sedang" },
-                    { q: "Tangga nada yang susunannya memberikan kesan ceria dan riang adalah...", answers: ["Diatonis Minor", "Diatonis Mayor", "Pentatonis", "Kromatis"], correct: 1, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Induk organisasi bola voli di Indonesia adalah...", answers: ["PSSI", "PBSI", "PBVSI", "PERBASI"], correct: 2, diff: "mudah" },
-                    { q: "Mengoper bola setinggi dada dalam bola basket disebut...", answers: ["Bounce pass", "Chest pass", "Overhead pass", "Jump pass"], correct: 1, diff: "sedang" },
-                    { q: "Kemampuan otot untuk melakukan kontraksi dalam waktu yang lama tanpa cepat lelah disebut...", answers: ["Kelincahan", "Kecepatan", "Daya tahan (Endurance)", "Kelenturan"], correct: 2, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "She ... a book right now.", answers: ["read", "reads", "is reading", "reading"], correct: 2, diff: "mudah" },
-                    { q: "The comparative of 'Good' is...", answers: ["Gooder", "Better", "Best", "More good"], correct: 1, diff: "sedang" },
-                    { q: "Translate: 'Saya sedang bermain bola.'", answers: ["I play football.", "I am playing football.", "I played football.", "I will play football."], correct: 1, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Surat pertama di dalam Al-Qur'an adalah...", answers: ["Al-Ikhlas", "Al-Baqarah", "An-Nas", "Al-Fatihah"], correct: 3, diff: "mudah" },
-                    { q: "Zakat berupa bahan makanan pokok yang dikeluarkan pada bulan Ramadhan adalah...", answers: ["Zakat Maal", "Zakat Fitrah", "Infaq", "Sedekah"], correct: 1, diff: "sedang" },
-                    { q: "Perjalanan malam Nabi Muhammad SAW dari Masjidil Haram ke Masjidil Aqsa lalu ke Sidratul Muntaha disebut...", answers: ["Nuzulul Qur'an", "Hijrah", "Isra' Mi'raj", "Fathu Makkah"], correct: 2, diff: "sulit" }
-                ]
-            },
-            "6": {
-                "matematika": [
-                    { q: "Sebuah lingkaran memiliki jari-jari (r) 7 cm. Luas lingkaran tersebut adalah (π = 22/7)...", answers: ["44 cm²", "77 cm²", "154 cm²", "314 cm²"], correct: 2, diff: "mudah" },
-                    { q: "Hasil dari operasi hitung campuran: -5 + (3 x 4) adalah...", answers: ["7", "17", "-7", "12"], correct: 0, diff: "sedang" },
-                    { q: "Nilai rata-rata (mean) dari data ulangan 7, 8, 9, 8 adalah...", answers: ["7.5", "8", "8.5", "9"], correct: 1, diff: "sulit" },
-                    { q: "Keliling lingkaran yang memiliki diameter 28 cm adalah (π = 22/7)...", answers: ["44 cm", "88 cm", "154 cm", "616 cm"], correct: 1, diff: "sedang" },
-                    { q: "Hasil dari -15 - (-25) + 10 adalah...", answers: ["0", "10", "20", "-30"], correct: 2, diff: "sedang" },
-                    { q: "Modus dari data nilai ulangan matematika: 7, 8, 9, 8, 6, 8, 7, 10 adalah...", answers: ["6", "7", "8", "9"], correct: 2, diff: "mudah" },
-                    { q: "Volume tabung dengan jari-jari 7 cm dan tinggi 10 cm adalah...", answers: ["1.540 cm³", "3.080 cm³", "770 cm³", "154 cm³"], correct: 0, diff: "sulit" },
-                    { q: "Hasil dari 3/4 x 8/9 adalah...", answers: ["1/2", "2/3", "3/8", "5/12"], correct: 1, diff: "sulit" },
-                    { q: "Jika harga sebuah buku Rp 15.000 diskon 20%, maka uang yang harus dibayar adalah...", answers: ["Rp 10.000", "Rp 11.000", "Rp 12.000", "Rp 13.000"], correct: 2, diff: "sulit" },
-                    { q: "Berapa hasil dari 2,4 + 3 bagian dari 1/2?", answers: ["3.9", "4.0", "2.9", "3.5"], correct: 0, diff: "sulit" }
-                ],
-                "bahasaIndonesia": [
-                    { q: "Kegiatan berbicara di depan umum untuk menyampaikan gagasan disebut...", answers: ["Puisi", "Drama", "Pidato", "Wawancara"], correct: 2, diff: "mudah" },
-                    { q: "Gaya bahasa membandingkan benda mati seolah-olah hidup (bernyawa) disebut majas...", answers: ["Hiperbola", "Personifikasi", "Metafora", "Litotes"], correct: 1, diff: "sedang" },
-                    { q: "Teks yang berisi simpulan akhir berdasarkan percobaan atau pengamatan nyata disebut teks...", answers: ["Laporan observasi", "Cerita pendek", "Dongeng", "Argumentasi"], correct: 0, diff: "sulit" }
-                ],
-                "ipas": [
-                    { q: "Planet terbesar dalam tata surya kita adalah...", answers: ["Bumi", "Mars", "Jupiter", "Saturnus"], correct: 2, diff: "mudah" },
-                    { q: "Rangkaian listrik yang disusun secara sejajar (bercabang) disebut rangkaian...", answers: ["Seri", "Paralel", "Campuran", "Tertutup"], correct: 1, diff: "sedang" },
-                    { q: "Masa transisi dari anak-anak menuju dewasa yang ditandai dengan perubahan fisik dan hormon disebut masa...", answers: ["Pubertas", "Lansia", "Balita", "Kanak-kanak"], correct: 0, diff: "sulit" }
-                ],
-                "pancasila": [
-                    { q: "Organisasi persatuan negara-negara di kawasan Asia Tenggara adalah...", answers: ["PBB", "OPEC", "ASEAN", "WHO"], correct: 2, diff: "mudah" },
-                    { q: "Peraturan perundang-undangan tertinggi di Indonesia adalah...", answers: ["TAP MPR", "Undang-Undang (UU)", "Peraturan Pemerintah", "UUD 1945"], correct: 3, diff: "sedang" },
-                    { q: "Sikap adil dan suka bekerja keras adalah cerminan Pancasila sila ke-...", answers: ["2 (Dua)", "3 (Tiga)", "4 (Empat)", "5 (Lima)"], correct: 3, diff: "sulit" }
-                ],
-                "seni": [
-                    { q: "Pahatan 3 dimensi yang menempel pada dinding datar seperti di Candi Borobudur disebut...", answers: ["Patung", "Relief", "Mozaik", "Grafis"], correct: 1, diff: "mudah" },
-                    { q: "Bernyanyi sekelompok orang tanpa iringan musik sama sekali disebut...", answers: ["Kanon", "Unisono", "A capella", "Seriosa"], correct: 2, diff: "sedang" },
-                    { q: "Batik yang pengerjaannya sepenuhnya digambar manual dengan malam dan canting dinamakan...", answers: ["Batik Cap", "Batik Tulis", "Batik Sablon", "Batik Lukis"], correct: 1, diff: "sulit" }
-                ],
-                "pjok": [
-                    { q: "Waktu normal satu babak pertandingan sepak bola (tanpa tambahan) adalah...", answers: ["30 Menit", "45 Menit", "60 Menit", "90 Menit"], correct: 1, diff: "mudah" },
-                    { q: "Lompatan dengan melentingkan badan di udara pada lompat jauh disebut gaya...", answers: ["Jongkok", "Berjalan di udara", "Menggantung", "Flop"], correct: 2, diff: "sedang" },
-                    { q: "Pemain sepak bola yang posisinya berada lebih dekat ke gawang lawan dibanding bek terakhir lawan saat menerima umpan disebut...", answers: ["Corner kick", "Penalty", "Offside", "Free kick"], correct: 2, diff: "sulit" }
-                ],
-                "inggris": [
-                    { q: "I ... to Bali last week.", answers: ["go", "went", "gone", "going"], correct: 1, diff: "mudah" },
-                    { q: "The passive form of 'The cat ate the fish' is...", answers: ["The fish ate the cat.", "The cat was eaten.", "The fish was eaten by the cat.", "The fish is eating."], correct: 2, diff: "sedang" },
-                    { q: "Synonym of 'Huge' is...", answers: ["Tiny", "Small", "Enormous / Very big", "Beautiful"], correct: 2, diff: "sulit" }
-                ],
-                "pai": [
-                    { q: "Hari kiamat di mana semua amal perbuatan ditimbang disebut Yaumul...", answers: ["Ba'ats", "Mahsyar", "Mizan", "Hisab"], correct: 2, diff: "mudah" },
-                    { q: "Hukum bacaan jika Nun Sukun bertemu huruf Ba' sehingga bunyinya menjadi 'M' disebut...", answers: ["Idzhar", "Ikhfa", "Iqlab", "Idgham"], correct: 2, diff: "sedang" },
-                    { q: "Kewajiban mengurus jenazah bagi masyarakat muslim di sekitarnya hukumnya adalah...", answers: ["Fardhu 'Ain", "Fardhu Kifayah", "Sunnah Muakkad", "Mubah"], correct: 1, diff: "sulit" }
-                ]
-            }
-        };
+    <!-- LAYAR HASIL -->
+    <div id="resultScreen" class="screen">
+      <div class="res-box">
+        <h2 class="res-title">🎈 PERMAINAN SELESAI! 🎈</h2>
+        <p class="res-sub">SD NEGERI KESILIR 02</p>
 
-        /* =========================================================================
-           GAME STATE & ENGINE
-        ========================================================================= */
-        let activeQuestionBank = defaultCPQuestionBank;
+        <div id="winnerBanner" class="win-box">
+          <span class="win-icon" id="winnerIcon">🏆</span>
+          <div class="win-tag" id="winnerLabel">PEMENANG</div>
+          <div class="win-name" id="winnerName">PLAYER 1</div>
+          <div class="win-desc" id="winnerDesc">Selamat! Kamu mendapatkan poin terbanyak.</div>
+        </div>
 
-        let gameState = {
-            selectedClass: 4, 
-            selectedSubject: "matematika", 
-            difficulty: "mudah", 
-            targetQuestions: 10,  
-            roundQuestions: 10,   
-            currentQuestion: 0, questions: [], p1Score: 0, p2Score: 0, 
-            p1Correct: 0, p2Correct: 0, p1Wrong: 0, p2Wrong: 0, p1Late: 0, p2Late: 0,
-            p1Answered: false, p2Answered: false, roundResolved: false,
-            soundEnabled: true, paused: false
-        };
+        <div class="grid-scores">
+          <div class="res-card rc-p1">
+            <div class="rc-avatar">👦</div>
+            <div class="rc-name p1-text">PLAYER 1</div>
+            <div class="rc-num" id="finalScoreP1">0</div>
+            <div class="rc-stats">
+              <span class="c-ok">Benar: <strong id="finalCorrectP1">0</strong></span>
+              <span class="c-err">Salah: <strong id="finalWrongP1">0</strong></span>
+            </div>
+          </div>
 
-        const balloonColors = ['#ff3366', '#00c6ff', '#10b981', '#ffcc00', '#a855f7', '#fb923c', '#06b6d4', '#f43f5e'];
+          <div class="res-card rc-p2">
+            <div class="rc-avatar">👧</div>
+            <div class="rc-name p2-text">PLAYER 2</div>
+            <div class="rc-num" id="finalScoreP2">0</div>
+            <div class="rc-stats">
+              <span class="c-ok">Benar: <strong id="finalCorrectP2">0</strong></span>
+              <span class="c-err">Salah: <strong id="finalWrongP2">0</strong></span>
+            </div>
+          </div>
+        </div>
 
-        async function fetchCPUpdates() {
-            const btn = document.querySelector('.sync-btn');
-            const originalText = btn.innerText;
-            btn.innerText = "⏳ Sedang Sinkronisasi...";
-            
-            try {
-                await new Promise(resolve => setTimeout(resolve, 800));
-                const savedBank = localStorage.getItem('SDN_KESILIR02_CP_BANK_V5');
-                if (savedBank) {
-                    activeQuestionBank = JSON.parse(savedBank);
-                } else {
-                    localStorage.setItem('SDN_KESILIR02_CP_BANK_V5', JSON.stringify(defaultCPQuestionBank));
-                }
-            } catch(e) { console.error(e); }
-            
-            btn.innerText = originalText;
+        <div class="res-acts">
+          <button id="btnPlayAgain" class="btn-again" type="button">
+            <span>🔄</span><span>MAIN LAGI</span>
+          </button>
+          <button id="btnBackToMenuFromResults" class="btn-home" type="button">
+            <span>🏠</span><span>KEMBALI KE MENU</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       DATA BANK SOAL
+    ============================================================ */
+    const questionBank = {
+      kelas1: {
+        matematika: [
+          { q: "Berapa hasil dari 3 + 2?", a: ["4", "5", "6", "7"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 5 - 2?", a: ["2", "3", "4", "5"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 4 + 4?", a: ["7", "8", "9", "10"], c: 1, d: "mudah" },
+          { q: "Angka setelah angka 6 adalah...", a: ["5", "7", "8", "9"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 7 + 3?", a: ["9", "10", "11", "12"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 9 - 4?", a: ["3", "4", "5", "6"], c: 2, d: "sedang" },
+          { q: "Bentuk bangun bola adalah...", a: ["Kotak", "Segitiga", "Lingkaran", "Garis"], c: 2, d: "sedang" },
+          { q: "Berapa hasil dari 10 - 7?", a: ["2", "3", "4", "5"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 6 + 7?", a: ["12", "13", "14", "15"], c: 1, d: "sulit" },
+          { q: "Ada 12 apel, dimakan 4 apel. Sisa apel adalah...", a: ["6", "7", "8", "9"], c: 2, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Huruf pertama dari kata 'Buku' adalah...", a: ["A", "B", "C", "D"], c: 1, d: "mudah" },
+          { q: "Benda untuk menulis di buku adalah...", a: ["Pensil", "Sendok", "Piring", "Sepatu"], c: 0, d: "mudah" },
+          { q: "Huruf vokal pada kata 'SAPA' adalah...", a: ["S dan P", "A", "B dan C", "O"], c: 1, d: "mudah" },
+          { q: "Kata 'Mata' terdiri dari berapa suku kata?", a: ["1", "2", "3", "4"], c: 1, d: "mudah" },
+          { q: "Kucing bersuara...", a: ["Kwek-kwek", "Guk-guk", "Meong-meong", "Moo-moo"], c: 2, d: "sedang" },
+          { q: "Lawan kata dari 'Besar' adalah...", a: ["Kecil", "Tinggi", "Lebar", "Jauh"], c: 0, d: "sedang" },
+          { q: "Ibu memasak di...", a: ["Dapur", "Kamar", "Halaman", "Garasi"], c: 0, d: "sedang" },
+          { q: "Lawan kata dari 'Terang' adalah...", a: ["Gelap", "Silau", "Putih", "Benderang"], c: 0, d: "sedang" },
+          { q: "Roni sedang ... sepeda ke sekolah.", a: ["memakan", "mengayuh", "menulis", "meminum"], c: 1, d: "sulit" },
+          { q: "Budi mengucapkan ... saat diberi hadiah.", a: ["Maaf", "Terima kasih", "Permisi", "Halo"], c: 1, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Mata kita gunakan untuk...", a: ["Mendengar", "Melihat", "Mencium", "Meraba"], c: 1, d: "mudah" },
+          { q: "Telinga kita berguna untuk...", a: ["Melihat", "Mendengar", "Mengecap", "Berlari"], c: 1, d: "mudah" },
+          { q: "Hewan yang memiliki belalai panjang adalah...", a: ["Kucing", "Gajah", "Ayam", "Kambing"], c: 1, d: "mudah" },
+          { q: "Matahari terbit pada waktu...", a: ["Malam", "Pagi", "Sore", "Tengah malam"], c: 1, d: "mudah" },
+          { q: "Bagian tubuh untuk mengecap rasa makanan adalah...", a: ["Hidung", "Lidah", "Telinga", "Tangan"], c: 1, d: "sedang" },
+          { q: "Tanaman membutuhkan ... untuk hidup dan tumbuh.", a: ["Air dan sinar", "Minyak", "Batu", "Plastik"], c: 0, d: "sedang" },
+          { q: "Hewan yang dapat terbang di udara adalah...", a: ["Ikan", "Burung", "Sapi", "Kura-kura"], c: 1, d: "sedang" },
+          { q: "Benda langit yang bersinar pada malam hari adalah...", a: ["Bulan", "Matahari", "Pelangi", "Awan"], c: 0, d: "sedang" },
+          { q: "Sebelum makan kita harus mencuci...", a: ["Kaki", "Tangan", "Baju", "Sepatu"], c: 1, d: "sulit" },
+          { q: "Lingkungan yang bersih membuat kita menjadi...", a: ["Sakit", "Sehat", "Sedih", "Kotor"], c: 1, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Lambang negara Indonesia adalah burung...", a: ["Elang", "Garuda", "Kutilang", "Merak"], c: 1, d: "mudah" },
+          { q: "Warna bendera negara Indonesia adalah...", a: ["Merah dan Putih", "Biru dan Putih", "Kuning dan Merah", "Hijau dan Putih"], c: 0, d: "mudah" },
+          { q: "Simbol sila pertama Pancasila adalah...", a: ["Bintang", "Rantai", "Pohon Beringin", "Kepala Banteng"], c: 0, d: "mudah" },
+          { q: "Bersama-sama membersihkan kelas disebut...", a: ["Bertengkar", "Gotong royong", "Bermain", "Berdiam diri"], c: 1, d: "mudah" },
+          { q: "Sikap yang baik kepada teman di sekolah adalah...", a: ["Mengejek", "Menolong", "Memusuhi", "Mencubit"], c: 1, d: "sedang" },
+          { q: "Sebelum belajar di kelas kita harus...", a: ["Berdoa", "Tidur", "Berteriak", "Makan"], c: 0, d: "sedang" },
+          { q: "Aturan di rumah dibuat agar hidup menjadi...", a: ["Kacau", "Tertib", "Susah", "Ramai"], c: 1, d: "sedang" },
+          { q: "Jika berbuat salah kepada teman, kita harus segera...", a: ["Marah", "Minta maaf", "Lari", "Tertawa"], c: 1, d: "sedang" },
+          { q: "Menghormati orang tua di rumah adalah kewajiban...", a: ["Tetangga", "Anak", "Guru", "Satpam"], c: 1, d: "sulit" },
+          { q: "Menjaga kebersihan sekolah adalah tugas...", a: ["Penjaga saja", "Semua warga sekolah", "Guru saja", "Kepala sekolah saja"], c: 1, d: "sulit" }
+        ]
+      },
+
+      kelas2: {
+        matematika: [
+          { q: "Berapa hasil dari 25 + 14?", a: ["37", "39", "40", "41"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 48 - 15?", a: ["31", "32", "33", "34"], c: 2, d: "mudah" },
+          { q: "Berapa hasil dari 3 x 4?", a: ["10", "11", "12", "14"], c: 2, d: "mudah" },
+          { q: "Nilai tempat angka 5 pada bilangan 52 adalah...", a: ["Satuan", "Puluhan", "Ratusan", "Ribuan"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 5 x 5?", a: ["20", "25", "30", "35"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 18 : 2?", a: ["7", "8", "9", "10"], c: 2, d: "sedang" },
+          { q: "1 meter sama dengan berapa sentimeter?", a: ["10 cm", "50 cm", "100 cm", "1000 cm"], c: 2, d: "sedang" },
+          { q: "Jam menunjukkan jarum pendek di 8 dan panjang di 12, artinya pukul...", a: ["07.00", "08.00", "09.00", "12.00"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 75 + 48?", a: ["121", "123", "125", "127"], c: 1, d: "sulit" },
+          { q: "Ibu membeli 4 kotak kue. Setiap kotak berisi 6 kue. Jumlah kue adalah...", a: ["20", "22", "24", "26"], c: 2, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Tanda baca yang digunakan pada akhir kalimat tanya adalah...", a: ["Titik (.)", "Tanya (?)", "Seru (!)", "Koma (,)"], c: 1, d: "mudah" },
+          { q: "Lawan kata dari 'Rajin' adalah...", a: ["Pintar", "Malas", "Cerdas", "Giat"], c: 1, d: "mudah" },
+          { q: "Kata tanya untuk menanyakan tempat adalah...", a: ["Siapa", "Di mana", "Kapan", "Berapa"], c: 1, d: "mudah" },
+          { q: "Sinonim dari kata 'Gembira' adalah...", a: ["Sedih", "Senang", "Kecewa", "Takut"], c: 1, d: "mudah" },
+          { q: "Kalimat perintah biasanya diakhiri dengan tanda...", a: ["Tanya (?)", "Seru (!)", "Titik (.)", "Koma (,)"], c: 1, d: "sedang" },
+          { q: "Kata tanya untuk menanyakan waktu adalah...", a: ["Di mana", "Kapan", "Siapa", "Mengapa"], c: 1, d: "sedang" },
+          { q: "Dongeng tentang binatang yang bisa berbicara disebut...", a: ["Fabel", "Mite", "Legenda", "Puisi"], c: 0, d: "sedang" },
+          { q: "Penulisan huruf kapital yang benar pada nama orang adalah...", a: ["ahmad", "Ahmad", "aHmad", "ahmAd"], c: 1, d: "sedang" },
+          { q: "Ungkapan 'Kutu buku' artinya orang yang...", a: ["Banyak kutu", "Suka membaca buku", "Penjual buku", "Suka merusak buku"], c: 1, d: "sulit" },
+          { q: "Paman pulang ... Surabaya membawa oleh-oleh.", a: ["ke", "dari", "di", "pada"], c: 1, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Ikan bernapas di air menggunakan...", a: ["Paru-paru", "Insang", "Trakea", "Kulit"], c: 1, d: "mudah" },
+          { q: "Hewan yang berkembang biak dengan bertelur adalah...", a: ["Kucing", "Ayam", "Sapi", "Kambing"], c: 1, d: "mudah" },
+          { q: "Bagian tumbuhan yang menyerap air dari dalam tanah adalah...", a: ["Daun", "Akar", "Bunga", "Buah"], c: 1, d: "mudah" },
+          { q: "Benda yang bentuknya tetap dan keras termasuk benda...", a: ["Padat", "Cair", "Gas", "Udara"], c: 0, d: "mudah" },
+          { q: "Air dan susu termasuk benda...", a: ["Padat", "Cair", "Gas", "Keras"], c: 1, d: "sedang" },
+          { q: "Kucing dan kambing berkembang biak dengan cara...", a: ["Bertelur", "Melahirkan", "Membelah diri", "Tunas"], c: 1, d: "sedang" },
+          { q: "Daun pada tumbuhan umumnya berwarna hijau karena zat...", a: ["Klorofil", "Oksigen", "Karbon", "Vitamin"], c: 0, d: "sedang" },
+          { q: "Hewan pemakan tumbuhan disebut...", a: ["Karnivora", "Herbivora", "Omnivora", "Insektivora"], c: 1, d: "sedang" },
+          { q: "Tempat hidup katak bisa di darat dan di air, sehingga disebut...", a: ["Mamalia", "Amfibi", "Reptil", "Unggas"], c: 1, d: "sulit" },
+          { q: "Energi utama terbesar bagi bumi adalah...", a: ["Batu bara", "Matahari", "Baterai", "Angin"], c: 1, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Simbol sila kedua Pancasila adalah...", a: ["Bintang", "Rantai emas", "Pohon Beringin", "Padi dan Kapas"], c: 1, d: "mudah" },
+          { q: "Semboyan negara kita adalah Bhinneka Tunggal...", a: ["Eka", "Ika", "Jaya", "Abadi"], c: 1, d: "mudah" },
+          { q: "Saling menghargai teman yang berbeda agama adalah pengamalan sila ke-...", a: ["1", "2", "3", "4"], c: 0, d: "mudah" },
+          { q: "Saat guru sedang menerangkan di depan kelas, sikap kita adalah...", a: ["Bercanda", "Mendengarkan", "Tidur", "Mengobrol"], c: 1, d: "mudah" },
+          { q: "Simbol sila ketiga 'Persatuan Indonesia' adalah...", a: ["Rantai", "Pohon Beringin", "Banteng", "Bintang"], c: 1, d: "sedang" },
+          { q: "Piket kebersihan kelas dilakukan secara...", a: ["Sendiri-sendiri", "Bersama-sama", "Terpaksa", "Diam-diam"], c: 1, d: "sedang" },
+          { q: "Keputusan bersama dalam musyawarah harus kita laksanakan dengan...", a: ["Ikhlas", "Marah", "Menolak", "Kecewa"], c: 0, d: "sedang" },
+          { q: "Sikap adil kepada semua teman sesuai dengan Pancasila sila ke-...", a: ["1", "2", "3", "5"], c: 3, d: "sedang" },
+          { q: "Menolong teman yang terjatuh dari sepeda merupakan wujud sikap...", a: ["Kemanusiaan", "Keserakahan", "Ketinggian", "Kemewahan"], c: 0, d: "sulit" },
+          { q: "Simbol padi dan kapas melambangkan...", a: ["Kekuatan", "Pangan dan sandang", "Ketakutan", "Kemarahan"], c: 1, d: "sulit" }
+        ]
+      },
+
+      kelas3: {
+        matematika: [
+          { q: "Berapa hasil dari 6 x 8?", a: ["42", "46", "48", "54"], c: 2, d: "mudah" },
+          { q: "Berapa hasil dari 56 : 7?", a: ["6", "7", "8", "9"], c: 2, d: "mudah" },
+          { q: "Pecahan satu per empat ditulis...", a: ["1/2", "1/3", "1/4", "4/1"], c: 2, d: "mudah" },
+          { q: "Keliling persegi dengan panjang sisi 5 cm adalah...", a: ["15 cm", "20 cm", "25 cm", "30 cm"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 125 + 235?", a: ["350", "360", "370", "380"], c: 1, d: "sedang" },
+          { q: "1 kilogram sama dengan berapa gram?", a: ["100 gram", "500 gram", "1000 gram", "10.000 gram"], c: 2, d: "sedang" },
+          { q: "2 jam sama dengan berapa menit?", a: ["60 menit", "100 menit", "120 menit", "180 menit"], c: 2, d: "sedang" },
+          { q: "Bangun datar yang memiliki 3 sisi dan 3 sudut adalah...", a: ["Persegi", "Segitiga", "Lingkaran", "Trapesium"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 3/5 + 1/5?", a: ["2/5", "4/5", "4/10", "3/10"], c: 1, d: "sulit" },
+          { q: "Sebuah kebun persegi panjang berukuran panjang 10 m dan lebar 6 m. Luasnya...", a: ["32 m²", "40 m²", "60 m²", "72 m²"], c: 2, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Gagasan utama dalam sebuah paragraf disebut...", a: ["Ide pokok", "Kalimat penjelas", "Judul", "Amanat"], c: 0, d: "mudah" },
+          { q: "Sinonim dari kata 'Pintar' adalah...", a: ["Pandai", "Bodoh", "Malas", "Lambat"], c: 0, d: "mudah" },
+          { q: "Lawan kata dari 'Subur' adalah...", a: ["Gersang", "Hijau", "Basah", "Lebat"], c: 0, d: "mudah" },
+          { q: "Tanda baca untuk mengakhiri kalimat berita adalah...", a: ["Koma", "Titik", "Seru", "Tanya"], c: 1, d: "mudah" },
+          { q: "Kata dasar dari 'Memasak' adalah...", a: ["Masak", "Pasak", "Samak", "Asak"], c: 0, d: "sedang" },
+          { q: "Pesan kebaikan yang terkandung dalam cerita disebut...", a: ["Alur", "Amanat", "Latar", "Tokoh"], c: 1, d: "sedang" },
+          { q: "Kalimat yang berisi anjuran atau masukan disebut kalimat...", a: ["Perintah", "Saran", "Tanya", "Larangan"], c: 1, d: "sedang" },
+          { q: "Lengkapilah: 'Sebaiknya kamu belajar giat ... nilaimu bagus.'", a: ["agar", "tetapi", "karena", "walaupun"], c: 0, d: "sedang" },
+          { q: "Penggunaan huruf kapital yang tepat terdapat pada...", a: ["kota bandung", "Kota Bandung", "kota Bandung", "Kota bandung"], c: 1, d: "sulit" },
+          { q: "Tokoh yang memiliki sifat baik dalam dongeng disebut tokoh...", a: ["Antagonis", "Protagonis", "Tritagonis", "Figuran"], c: 1, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Perubahan wujud dari benda padat menjadi cair disebut...", a: ["Membeku", "Mencair", "Menguap", "Mengembun"], c: 1, d: "mudah" },
+          { q: "Es batu yang diletakkan di tempat terbuka akan...", a: ["Mencair", "Membeku", "Menguap", "Menyublim"], c: 0, d: "mudah" },
+          { q: "Kupu-kupu berkembang biak melalui tahapan metamorfosis mulai dari...", a: ["Kepompong", "Telur", "Ulat", "Kupu muda"], c: 1, d: "mudah" },
+          { q: "Benda yang menghasilkan energi cahaya adalah...", a: ["Lampu", "Buku", "Meja", "Pintu"], c: 0, d: "mudah" },
+          { q: "Perubahan wujud air menjadi es batu disebut...", a: ["Mencair", "Membeku", "Menguap", "Mengkristal"], c: 1, d: "sedang" },
+          { q: "Tumbuhan bernapas menghirup gas oksigen dan menyerap...", a: ["Karbon dioksida", "Nitrogen", "Hidrogen", "Helium"], c: 0, d: "sedang" },
+          { q: "Alat untuk mengukur suhu udara adalah...", a: ["Barometer", "Termometer", "Spidometer", "Higrometer"], c: 1, d: "sedang" },
+          { q: "Sumber energi kincir angin berasal dari kekuatan...", a: ["Air", "Angin", "Matahari", "Listrik"], c: 1, d: "sedang" },
+          { q: "Hewan yang mengalami metamorfosis sempurna adalah...", a: ["Katak dan Kupu-kupu", "Ayam dan Bebek", "Kucing dan Sapi", "Kecoak dan Belalang"], c: 0, d: "sulit" },
+          { q: "Perubahan uap air menjadi titik-titik air disebut...", a: ["Menguap", "Mengembun", "Membeku", "Menyublim"], c: 1, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Hak seorang anak di sekolah adalah mendapatkan...", a: ["Nilai dan pengajaran", "Hukuman", "Tugas piket", "Uang jajan"], c: 0, d: "mudah" },
+          { q: "Kewajiban utama seorang pelajar adalah...", a: ["Bermain game", "Belajar tekun", "Menonton TV", "Tidur siang"], c: 1, d: "mudah" },
+          { q: "Lambang sila keempat Pancasila adalah...", a: ["Kepala Banteng", "Pohon Beringin", "Bintang", "Rantai"], c: 0, d: "mudah" },
+          { q: "Menghargai keragaman budaya adalah wujud cinta...", a: ["Tanah air", "Uang", "Diri sendiri", "Barang mewah"], c: 0, d: "mudah" },
+          { q: "Musyawarah dilakukan untuk mencapai...", a: ["Mufakat", "Kekalahan", "Permusuhan", "Hadiah"], c: 0, d: "sedang" },
+          { q: "Gotong royong membersihkan selokan desa mencerminkan sila ke-...", a: ["1", "2", "3", "4"], c: 2, d: "sedang" },
+          { q: "Arti semboyan Bhinneka Tunggal Ika adalah...", a: ["Berbeda-beda tetap satu", "Sama selalu bersama", "Bersatu kita teguh", "Maju tak gentar"], c: 0, d: "sedang" },
+          { q: "Mentaati rambu lalu lintas di jalan raya adalah kewajiban...", a: ["Polisi saja", "Semua pengguna jalan", "Pengemudi truk", "Anak kecil"], c: 1, d: "sedang" },
+          { q: "Menghormati teman yang sedang beribadah adalah penerapan sila ke-...", a: ["Pertama", "Kedua", "Ketiga", "Kelima"], c: 0, d: "sulit" },
+          { q: "Membantu korban bencana alam tanpa membeda-bedakan suku merupakan sila ke-...", a: ["1", "2", "3", "4"], c: 1, d: "sulit" }
+        ]
+      },
+
+      kelas4: {
+        matematika: [
+          { q: "Kelipatan persekutuan terkecil (KPK) dari 4 dan 6 adalah...", a: ["8", "12", "16", "24"], c: 1, d: "mudah" },
+          { q: "Faktor persekutuan terbesar (FPB) dari 12 dan 18 adalah...", a: ["2", "3", "6", "9"], c: 2, d: "mudah" },
+          { q: "Pecahan yang senilai dengan 1/2 adalah...", a: ["2/4", "2/5", "3/8", "4/6"], c: 0, d: "mudah" },
+          { q: "Sudut yang besarnya tepat 90 derajat disebut sudut...", a: ["Lancip", "Siku-siku", "Tumpul", "Lurus"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari 3/4 + 1/4?", a: ["1/2", "3/8", "1", "4/8"], c: 2, d: "sedang" },
+          { q: "Sudut yang besarnya kurang dari 90 derajat dinamakan sudut...", a: ["Siku-siku", "Lancip", "Tumpul", "Refleks"], c: 1, d: "sedang" },
+          { q: "Luas persegi dengan sisi 8 cm adalah...", a: ["32 cm²", "54 cm²", "64 cm²", "72 cm²"], c: 2, d: "sedang" },
+          { q: "Pembulatan bilangan 348 ke ratusan terdekat adalah...", a: ["300", "340", "350", "400"], c: 0, d: "sedang" },
+          { q: "Berapa hasil dari 2/3 + 1/6?", a: ["3/9", "4/6", "5/6", "1"], c: 2, d: "sulit" },
+          { q: "Keliling persegi panjang dengan panjang 12 cm dan lebar 7 cm adalah...", a: ["19 cm", "38 cm", "84 cm", "90 cm"], c: 1, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Kalimat yang memuat ide pokok suatu paragraf disebut kalimat...", a: ["Utama", "Penjelas", "Tanya", "Saran"], c: 0, d: "mudah" },
+          { q: "Orang yang mengajukan pertanyaan dalam wawancara disebut...", a: ["Narasumber", "Pewawancara", "Penonton", "Notulen"], c: 1, d: "mudah" },
+          { q: "Teks yang berisi petunjuk membuat sesuatu disebut teks...", a: ["Prosedur", "Narasi", "Deskripsi", "Argumentasi"], c: 0, d: "mudah" },
+          { q: "Kalimat yang memerlukan objek disebut kalimat...", a: ["Transitif", "Intransitif", "Pasif", "Tanya"], c: 0, d: "mudah" },
+          { q: "Gaya bahasa yang membandingkan benda mati seolah hidup adalah...", a: ["Personifikasi", "Metafora", "Hiperbola", "Litotes"], c: 0, d: "sedang" },
+          { q: "Orang yang memberikan jawaban dan informasi dalam wawancara adalah...", a: ["Pewawancara", "Narasumber", "Moderator", "Editor"], c: 1, d: "sedang" },
+          { q: "Sinonim kata 'Konservasi' adalah...", a: ["Pelestarian", "Pengrusakan", "Penebangan", "Pencemaran"], c: 0, d: "sedang" },
+          { q: "Penulisan kata baku yang benar adalah...", a: ["Apotik", "Apotek", "Apotik-an", "Apoteek"], c: 1, d: "sedang" },
+          { q: "Contoh kalimat intransitif (tanpa objek) adalah...", a: ["Ibu memasak nasi", "Adik menangis tersedu-sedu", "Ayah membaca koran", "Rani menulis surat"], c: 1, d: "sulit" },
+          { q: "Paragraf yang kalimat utamanya berada di awal paragraf disebut...", a: ["Induktif", "Deduktif", "Campuran", "Naratif"], c: 1, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Bagian tumbuhan yang berfungsi sebagai tempat fotosintesis adalah...", a: ["Akar", "Batang", "Daun", "Bunga"], c: 2, d: "mudah" },
+          { q: "Gaya yang menyebabkan buah apel jatuh ke tanah adalah gaya...", a: ["Gravitasi", "Gesek", "Magnet", "Pegas"], c: 0, d: "mudah" },
+          { q: "Zat hijau pada daun tumbuhan dinamakan...", a: ["Klorofil", "Oksigen", "Stomata", "Glukosa"], c: 0, d: "mudah" },
+          { q: "Energi yang dihasilkan oleh blender saat digunakan adalah...", a: ["Energi gerak", "Energi kimia", "Energi nuklir", "Energi pegas"], c: 0, d: "mudah" },
+          { q: "Hasil utama dari proses fotosintesis tumbuhan adalah...", a: ["Karbon dioksida dan air", "Oksigen dan glukosa", "Minyak dan racun", "Asap dan debu"], c: 1, d: "sedang" },
+          { q: "Gaya yang timbul akibat gesekan dua permukaan benda disebut gaya...", a: ["Otot", "Gesek", "Magnet", "Listrik"], c: 1, d: "sedang" },
+          { q: "Sumber daya alam yang tidak dapat diperbarui adalah...", a: ["Minyak bumi", "Tumbuhan", "Air", "Udara"], c: 0, d: "sedang" },
+          { q: "Perubahan energi pada setrika listrik adalah energi listrik menjadi...", a: ["Panas", "Cahaya", "Bunyi", "Kimia"], c: 0, d: "sedang" },
+          { q: "Proses penguapan air laut ke udara dalam siklus air dinamakan...", a: ["Evaporasi", "Kondensasi", "Presipitasi", "Infiltrasi"], c: 0, d: "sulit" },
+          { q: "Tumbuhan dapat membuat makanan sendiri, sehingga disebut makhluk...", a: ["Heterotrof", "Autotrof", "Saprofit", "Parasit"], c: 1, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Sila keempat Pancasila dipimpin oleh hikmat dalam permusyawaratan/...", a: ["Perwakilan", "Keadilan", "Persatuan", "Kesejahteraan"], c: 0, d: "mudah" },
+          { q: "Rumah adat khas suku Minangkabau adalah Rumah...", a: ["Gadang", "Joglo", "Honai", "Tongkonan"], c: 0, d: "mudah" },
+          { q: "Semboyan Bhinneka Tunggal Ika terdapat pada kitab karangan...", a: ["Mpu Tantular", "Mpu Prapanca", "Gajah Mada", "Hayam Wuruk"], c: 0, d: "mudah" },
+          { q: "Aturan tidak tertulis yang hidup dalam masyarakat disebut...", a: ["Norma", "Undang-Undang", "Hukum pidana", "Vonis"], c: 0, d: "mudah" },
+          { q: "Sikap menghargai perbedaan adat istiadat suku lain merupakan sila ke-...", a: ["1", "2", "3", "5"], c: 2, d: "sedang" },
+          { q: "Tari Saman adalah tarian tradisional yang berasal dari provinsi...", a: ["Aceh", "Bali", "Jawa Barat", "Papua"], c: 0, d: "sedang" },
+          { q: "Musyawarah di lingkungan desa biasanya dipimpin oleh...", a: ["Kepala Desa", "Guru", "Siswa", "Dokter"], c: 0, d: "sedang" },
+          { q: "Menjalankan aturan sekolah dengan disiplin merupakan...", a: ["Kewajiban siswa", "Hak siswa", "Beban siswa", "Hukuman"], c: 0, d: "sedang" },
+          { q: "Alat musik Sasando berasal dari daerah...", a: ["Nusa Tenggara Timur", "Jawa Timur", "Maluku", "Kalimantan Barat"], c: 0, d: "sulit" },
+          { q: "Norma yang bersumber dari hati nurani manusia adalah norma...", a: ["Agama", "Kesusilaan", "Hukum", "Kesopanan"], c: 1, d: "sulit" }
+        ]
+      },
+
+      kelas5: {
+        matematika: [
+          { q: "Berapa hasil dari 1/2 + 1/3?", a: ["2/5", "3/5", "5/6", "4/6"], c: 2, d: "mudah" },
+          { q: "Bentuk desimal dari pecahan 1/4 adalah...", a: ["0,20", "0,25", "0,50", "0,75"], c: 1, d: "mudah" },
+          { q: "Bentuk persen dari 0,65 adalah...", a: ["6,5%", "65%", "650%", "0,65%"], c: 1, d: "mudah" },
+          { q: "Volume kubus dengan panjang rusuk 5 cm adalah...", a: ["25 cm³", "75 cm³", "125 cm³", "150 cm³"], c: 2, d: "mudah" },
+          { q: "Berapa hasil dari 3/4 - 1/2?", a: ["1/4", "2/4", "1/6", "2/6"], c: 0, d: "sedang" },
+          { q: "Sebuah balok berukuran p = 8 cm, l = 5 cm, t = 4 cm. Volumenya...", a: ["120 cm³", "160 cm³", "180 cm³", "200 cm³"], c: 1, d: "sedang" },
+          { q: "Skala pada peta 1 : 100.000. Jarak 2 cm di peta sama dengan...", a: ["2 km", "20 km", "200 m", "20.000 m"], c: 0, d: "sedang" },
+          { q: "Berapa hasil perkalian 2/5 x 15?", a: ["4", "6", "8", "10"], c: 1, d: "sedang" },
+          { q: "Berapa hasil dari 2 1/2 + 1 1/4?", a: ["3 1/4", "3 2/4", "3 3/4", "4 1/4"], c: 2, d: "sulit" },
+          { q: "Perbandingan kelereng Andi & Budi 2:3. Kelereng Andi 10, kelereng Budi...", a: ["12 butir", "15 butir", "18 butir", "20 butir"], c: 1, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Teks yang menjelaskan proses fenomena alam disebut teks...", a: ["Eksplanasi", "Fabel", "Puisi", "Drama"], c: 0, d: "mudah" },
+          { q: "Inti sari atau ikhtisar akhir dari sebuah bacaan disebut...", a: ["Simpulan", "Judul", "Paragraf", "Daftar pustaka"], c: 0, d: "mudah" },
+          { q: "Kalimat yang mengandung subjek dan predikat lebih dari satu disebut...", a: ["Majemuk", "Tunggal", "Tanya", "Perintah"], c: 0, d: "mudah" },
+          { q: "Surat resmi biasanya dilengkapi dengan kepala surat yang disebut...", a: ["Kop surat", "Isi surat", "Lampiran", "Tembusan"], c: 0, d: "mudah" },
+          { q: "Makna kata berimbuhan 'ter-' pada kata 'tertidur' menyatakan...", a: ["Tidak sengaja", "Paling", "Sangat", "Dapat di-"], c: 0, d: "sedang" },
+          { q: "Kata tanya yang tepat untuk menanyakan alasan atau penyebab adalah...", a: ["Mengapa", "Bagaimana", "Kapan", "Berapa"], c: 0, d: "sedang" },
+          { q: "Lawan kata dari 'Optimis' adalah...", a: ["Pesimis", "Dinamis", "Praktis", "Kritis"], c: 0, d: "sedang" },
+          { q: "Penulisan kata baku yang tepat adalah...", a: ["Ijin", "Izin", "Idzin", "Ijen"], c: 1, d: "sedang" },
+          { q: "Kalimat yang menggunakan kata penghubung sebab-akibat adalah...", a: ["Budi rajin sehingga ia juara", "Ibu pergi lalu memasak", "Ayah membaca atau menonton", "Adik menangis tetapi tertawa"], c: 0, d: "sulit" },
+          { q: "Tujuan teks eksplanasi adalah untuk...", a: ["Menceritakan dongeng", "Menjelaskan proses peristiwa", "Mempromosikan barang", "Membuat lelucon"], c: 1, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Organ tubuh yang berfungsi memompa darah ke seluruh tubuh adalah...", a: ["Jantung", "Paru-paru", "Hati", "Ginjal"], c: 0, d: "mudah" },
+          { q: "Organ utama sistem pernapasan manusia adalah...", a: ["Paru-paru", "Jantung", "Lambung", "Pankreas"], c: 0, d: "mudah" },
+          { q: "Makhluk hidup yang berperan sebagai produsen dalam rantai makanan adalah...", a: ["Tumbuhan hijau", "Kelinci", "Singa", "Bakteri"], c: 0, d: "mudah" },
+          { q: "Proses pencernaan mekanik pada manusia pertama kali terjadi di...", a: ["Mulut", "Lambung", "Usus halus", "Kerongkongan"], c: 0, d: "mudah" },
+          { q: "Tempat pertukaran oksigen dan karbon dioksida di dalam paru-paru adalah...", a: ["Bronkus", "Alveolus", "Trakea", "Faring"], c: 1, d: "sedang" },
+          { q: "Hewan yang memakan hewan lain dalam rantai makanan disebut...", a: ["Konsumen sekunder", "Produsen", "Pengurai", "Herbivora"], c: 0, d: "sedang" },
+          { q: "Bunyi dapat merambat paling cepat melalui benda...", a: ["Padat", "Cair", "Gas", "Ruang hampa"], c: 0, d: "sedang" },
+          { q: "Hubungan timbal balik antara makhluk hidup dan lingkungannya adalah...", a: ["Ekosistem", "Populasi", "Komunitas", "Habitat"], c: 0, d: "sedang" },
+          { q: "Organ yang berfungsi menyaring darah dan menghasilkan urine adalah...", a: ["Ginjal", "Hati", "Usus besar", "Empedu"], c: 0, d: "sulit" },
+          { q: "Sifat cahaya yang membuat pensil tampak patah di dalam gelas berisi air adalah...", a: ["Pembiasan cahaya", "Pemantulan cahaya", "Merambat lurus", "Menembus benda"], c: 0, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Pancasila disahkan sebagai dasar negara pada tanggal...", a: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "28 Oktober 1928"], c: 1, d: "mudah" },
+          { q: "Hari Lahir Pancasila diperingati setiap tanggal...", a: ["1 Juni", "17 Agustus", "1 Oktober", "2 Mei"], c: 0, d: "mudah" },
+          { q: "Sikap menjaga persatuan dan kesatuan bangsa sesuai dengan sila ke-...", a: ["1", "2", "3", "4"], c: 2, d: "mudah" },
+          { q: "Lagu kebangsaan negara Indonesia adalah...", a: ["Indonesia Raya", "Bagimu Negeri", "Garuda Pancasila", "Hari Merdeka"], c: 0, d: "mudah" },
+          { q: "Tokoh yang menyampaikan usulan Pancasila pada 1 Juni 1945 adalah...", a: ["Ir. Soekarno", "Moh. Hatta", "Soepomo", "Moh. Yamin"], c: 0, d: "sedang" },
+          { q: "Norma yang sanksinya berupa hukuman penjara atau denda adalah norma...", a: ["Hukum", "Agama", "Kesopanan", "Kesusilaan"], c: 0, d: "sedang" },
+          { q: "Menghormati hak orang lain dan tidak bergaya hidup boros adalah sila ke-...", a: ["Ke-5", "Ke-4", "Ke-3", "Ke-2"], c: 0, d: "sedang" },
+          { q: "Pemberian hak suara dalam pemilihan ketua kelas merupakan wujud sila ke-...", a: ["1", "2", "3", "4"], c: 3, d: "sedang" },
+          { q: "Sikap mengutamakan kepentingan bangsa di atas kepentingan pribadi disebut...", a: ["Patriotisme", "Egoisme", "Konsumerisme", "Individualisme"], c: 0, d: "sulit" },
+          { q: "Panitia sembilan menghasilkan piagam bersejarah yang dikenal sebagai...", a: ["Piagam Jakarta", "Dekrit Presiden", "Supersemar", "Sumpah Pemuda"], c: 0, d: "sulit" }
+        ]
+      },
+
+      kelas6: {
+        matematika: [
+          { q: "Berapa hasil dari -8 + 15?", a: ["-7", "7", "23", "-23"], c: 1, d: "mudah" },
+          { q: "Berapa hasil dari -5 x 6?", a: ["-30", "30", "-25", "25"], c: 0, d: "mudah" },
+          { q: "Garis dari titik pusat lingkaran ke tepi lingkaran disebut...", a: ["Jari-jari", "Diameter", "Tali busur", "Juring"], c: 0, d: "mudah" },
+          { q: "Jika jari-jari lingkaran 7 cm, maka panjang diameternya adalah...", a: ["14 cm", "21 cm", "28 cm", "49 cm"], c: 0, d: "mudah" },
+          { q: "Berapa hasil dari 25 + (-10) x 3?", a: ["45", "-5", "-15", "5"], c: 1, d: "sedang" },
+          { q: "Keliling lingkaran dengan diameter 14 cm (π = 22/7) adalah...", a: ["44 cm", "88 cm", "154 cm", "308 cm"], c: 0, d: "sedang" },
+          { q: "Sebuah tabung memiliki jari-jari 7 cm dan tinggi 10 cm. Volumenya...", a: ["770 cm³", "1.540 cm³", "2.200 cm³", "3.080 cm³"], c: 1, d: "sedang" },
+          { q: "Nilai rata-rata dari data 7, 8, 9, 8, 8 adalah...", a: ["7,5", "8", "8,2", "8,5"], c: 1, d: "sedang" },
+          { q: "Luas lingkaran dengan jari-jari 10 cm (π = 3,14) adalah...", a: ["31,4 cm²", "314 cm²", "62,8 cm²", "628 cm²"], c: 1, d: "sulit" },
+          { q: "Prisma segitiga dengan luas alas 24 cm² dan tinggi 15 cm memiliki volume...", a: ["180 cm³", "240 cm³", "360 cm³", "480 cm³"], c: 2, d: "sulit" }
+        ],
+        bahasaIndonesia: [
+          { q: "Teks yang disampaikan secara lisan di depan umum untuk mengajak disebut...", a: ["Pidato", "Cerpen", "Iklan", "Wawancara"], c: 0, d: "mudah" },
+          { q: "Bagian awal pidato yang berisi salam dan puji syukur disebut...", a: ["Pembuka", "Isi", "Penutup", "Lampiran"], c: 0, d: "mudah" },
+          { q: "Lembar isian data diri saat mendaftar kegiatan dinamakan...", a: ["Formulir", "Kwitansi", "Undangan", "Nota"], c: 0, d: "mudah" },
+          { q: "Kalimat yang disusun sesuai kaidah tata bahasa yang berlaku disebut...", a: ["Efektif", "Majemuk", "Tidak baku", "Puitis"], c: 0, d: "mudah" },
+          { q: "Ungkapan 'Besar kepala' memiliki arti...", a: ["Sombong", "Pintar", "Keras kepala", "Baik hati"], c: 0, d: "sedang" },
+          { q: "Peribahasa 'Tong kosong nyaring bunyinya' bermakna...", a: ["Orang bodoh banyak bicara", "Orang kaya dermawan", "Benda antik mahal", "Orang pendiam berilmu"], c: 0, d: "sedang" },
+          { q: "Kata baku untuk kata tidak baku 'Praktek' adalah...", a: ["Praktik", "Praktik-an", "Praktikum", "Praktekan"], c: 0, d: "sedang" },
+          { q: "Antonim dari kata 'Konkret' adalah...", a: ["Abstrak", "Nyata", "Jelas", "Pasti"], c: 0, d: "sedang" },
+          { q: "Contoh kalimat efektif yang tepat adalah...", a: ["Para siswa-siswa saling tolong-menolong", "Para siswa saling menolong", "Semua siswa sangat rajin sekali", "Ia memakai daripada baju baru"], c: 1, d: "sulit" },
+          { q: "Kutipan: 'Marilah kita senantiasa menjaga kebersihan.' termasuk bagian...", a: ["Isi pidato", "Salam penutup", "Kop surat", "Daftar hadir"], c: 0, d: "sulit" }
+        ],
+        ipas: [
+          { q: "Pusat tata surya kita adalah...", a: ["Bumi", "Matahari", "Bulan", "Mars"], c: 1, d: "mudah" },
+          { q: "Planet terdekat dengan matahari adalah...", a: ["Merkurius", "Venus", "Bumi", "Mars"], c: 0, d: "mudah" },
+          { q: "Perkembangbiakan tumbuhan secara kawin (melalui biji) disebut...", a: ["Generatif", "Vegetatif", "Tunas", "Cangkok"], c: 0, d: "mudah" },
+          { q: "Rangkaian listrik berderet tanpa cabang disebut rangkaian...", a: ["Seri", "Paralel", "Campuran", "Terbuka"], c: 0, d: "mudah" },
+          { q: "Perputaran bumi mengelilingi matahari mengakibatkan...", a: ["Siang dan malam", "Pergantian musim", "Pasang surut air laut", "Gerak semu harian"], c: 1, d: "sedang" },
+          { q: "Bunglon beradaptasi dengan mengubah warna kulitnya, cara ini disebut...", a: ["Kamuflase/Mimikri", "Autotomi", "Ekolokasi", "Hibernasi"], c: 0, d: "sedang" },
+          { q: "Perputaran bumi pada porosnya disebut...", a: ["Rotasi bumi", "Revolusi bumi", "Presesi", "Gravitasi"], c: 0, d: "sedang" },
+          { q: "Batu baterai dan aki menyimpan energi dalam bentuk energi...", a: ["Kimia", "Gerak", "Panas", "Bunyi"], c: 0, d: "sedang" },
+          { q: "Planet yang dijuluki 'Planet Merah' adalah...", a: ["Venus", "Mars", "Jupiter", "Saturnus"], c: 1, d: "sulit" },
+          { q: "Kemampuan kelelawar mendeteksi mangsa dengan pantulan suara adalah...", a: ["Mimikri", "Ekolokasi", "Autotomi", "Kamuflase"], c: 1, d: "sulit" }
+        ],
+        pancasila: [
+          { q: "Pancasila berkedudukan sebagai ... negara Indonesia.", a: ["Dasar", "Hadiah", "Bunga", "Kekayaan"], c: 0, d: "mudah" },
+          { q: "Lembaga pembuat undang-undang bersama Presiden adalah...", a: ["DPR", "MA", "MK", "BPK"], c: 0, d: "mudah" },
+          { q: "Musyawarah untuk mufakat merupakan ciri kepribadian bangsa sesuai sila ke-...", a: ["1", "2", "3", "4"], c: 3, d: "mudah" },
+          { q: "Pemilihan umum di Indonesia diselenggarakan setiap...", a: ["3 tahun", "5 tahun", "7 tahun", "10 tahun"], c: 1, d: "mudah" },
+          { q: "Perwujudan sila ke-3 dalam menjaga persatuan NKRI dilakukan dengan...", a: ["Pilih teman sesuku", "Cinta produk dalam negeri", "Suka berdebat", "Menghina budaya lain"], c: 1, d: "sedang" },
+          { q: "Pasal 29 UUD 1945 menjamin setiap warga negara bebas memeluk...", a: ["Agama dan kepercayaan", "Pekerjaan mewah", "Organisasi terlarang", "Hobi belanja"], c: 0, d: "sedang" },
+          { q: "Hak asasi manusia harus diimbangi dengan pelaksanaan...", a: ["Kewajiban", "Hukuman", "Tuntutan", "Kemewahan"], c: 0, d: "sedang" },
+          { q: "Pancasila sebagai sumber tertib hukum tercantum pada pembukaan UUD 1945 alinea...", a: ["1", "2", "3", "4"], c: 3, d: "sedang" },
+          { q: "Sikap rela berkorban demi kepentingan bangsa disebut...", a: ["Patriotisme", "Egoisme", "Liberalisme", "Kapitalisme"], c: 0, d: "sulit" },
+          { q: "Kedaulatan berada di tangan rakyat mencerminkan sistem...", a: ["Monarki", "Demokrasi", "Oligarki", "Diktator"], c: 1, d: "sulit" }
+        ]
+      }
+    };
+
+    /* ============================================================
+       STATE GAME
+    ============================================================ */
+    const gameState = {
+      selectedClass: 1,
+      selectedSubject: "matematika",
+      difficulty: "mudah",
+      totalQuestions: 10,
+      currentQuestion: 0,
+      player1Score: 0,
+      player2Score: 0,
+      player1Correct: 0,
+      player2Correct: 0,
+      player1Wrong: 0,
+      player2Wrong: 0,
+      player1Answered: false,
+      player2Answered: false,
+      player1Active: true,
+      player2Active: true,
+      soundEnabled: true,
+      paused: false,
+      questionQueue: [],
+      currentQuestionData: null,
+      transitionTimer: null
+    };
+
+    const balloonColors = ["b-red", "b-blue", "b-green", "b-yellow", "b-purple", "b-orange", "b-pink", "b-cyan"];
+    const animationStyles = ["floatA", "floatB", "floatC", "floatD", "swayA", "swayB"];
+
+    /* ============================================================
+       WEB AUDIO API
+    ============================================================ */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) audioCtx = new AudioClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!gameState.soundEnabled) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      try {
+        const now = ctx.currentTime;
+        if (type === "click") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(900, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.05);
+        } else if (type === "pop") {
+          const bSize = ctx.sampleRate * 0.07;
+          const buf = ctx.createBuffer(1, bSize, ctx.sampleRate);
+          const d = buf.getChannelData(0);
+          for (let i = 0; i < bSize; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bSize * 0.28));
+          const noise = ctx.createBufferSource();
+          noise.buffer = buf;
+          const filter = ctx.createBiquadFilter();
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(750, now);
+          filter.frequency.exponentialRampToValueAtTime(80, now + 0.07);
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
+          noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+          noise.start(now);
+        } else if (type === "correct") {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+            gain.gain.setValueAtTime(0, now + idx * 0.07);
+            gain.gain.linearRampToValueAtTime(0.24, now + idx * 0.07 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.26);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(now + idx * 0.07); osc.stop(now + idx * 0.07 + 0.28);
+          });
+        } else if (type === "wrong") {
+          [220, 164.81].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.2, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.16);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(now + idx * 0.12); osc.stop(now + idx * 0.12 + 0.16);
+          });
+        } else if (type === "win") {
+          [
+            { f: 523.25, d: 0.14, t: 0 }, { f: 659.25, d: 0.14, t: 0.14 },
+            { f: 783.99, d: 0.18, t: 0.28 }, { f: 1046.50, d: 0.45, t: 0.46 }
+          ].forEach(item => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(item.f, now + item.t);
+            gain.gain.setValueAtTime(0.3, now + item.t);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + item.t + item.d);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(now + item.t); osc.stop(now + item.t + item.d);
+          });
         }
+      } catch (e) { console.warn(e); }
+    }
 
-        /* =========================================================================
-           LOGIKA MURNI 1 MAPEL & ANTI-DUPLIKAT (TIDAK ADA PENCAMPURAN MAPEL)
-        ========================================================================= */
-        function getUniqueQuestions(kelas, mapel, difficulty, targetCount) {
-            let classKey = kelas.toString();
-            let classBank = activeQuestionBank[classKey] || activeQuestionBank["4"];
-            
-            // Map ketat untuk memastikan tidak ada soal kembar di mapel yang sama
-            let uniqueQuestionsMap = new Map();
+    function toggleSound() {
+      gameState.soundEnabled = !gameState.soundEnabled;
+      const icon = document.getElementById("soundIcon");
+      const label = document.getElementById("soundLabel");
+      if (gameState.soundEnabled) {
+        icon.textContent = "🔊"; label.textContent = "SOUND ON"; playSound("click");
+      } else {
+        icon.textContent = "🔇"; label.textContent = "SOUND OFF";
+      }
+    }
 
-            // MURNI HANYA MENGAMBIL DARI MAPEL YANG DIPILIH OLEH USER
-            let mapelBank = classBank[mapel] || classBank["matematika"];
+    /* ============================================================
+       HELPER SHUFFLE & SOAL
+    ============================================================ */
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
 
-            // 1. Ambil prioritas tingkat kesulitan yang dipilih user
-            mapelBank.forEach(q => {
-                if (q.diff === difficulty) {
-                    uniqueQuestionsMap.set(q.q, q);
-                }
-            });
+    function getQuestionPool(selectedClass, selectedSubject) {
+      const key = "kelas" + selectedClass;
+      return (questionBank[key] && questionBank[key][selectedSubject]) ? questionBank[key][selectedSubject] : [];
+    }
 
-            // 2. Jika soal kurang dari target (misal minta 20 tapi yg mudah ada 10), 
-            //    ambil sisa soal dari tingkat kesulitan lain di MAPEL YANG SAMA (TETAP MURNI 1 MAPEL)
-            if (uniqueQuestionsMap.size < targetCount) {
-                mapelBank.forEach(q => {
-                    if (q.diff !== difficulty) {
-                        uniqueQuestionsMap.set(q.q, q);
-                    }
-                });
-            }
+    function filterQuestions(pool, difficulty, requestedCount) {
+      if (!pool || pool.length === 0) return [];
+      let match = pool.filter(q => q.d === difficulty);
+      let rest = pool.filter(q => q.d !== difficulty);
+      let res = [...shuffleArray(match), ...shuffleArray(rest)];
+      while (res.length < requestedCount) res = res.concat(shuffleArray(pool));
+      return res.slice(0, requestedCount);
+    }
 
-            // Ubah Map menjadi Array murni
-            let pool = Array.from(uniqueQuestionsMap.values());
+    /* ============================================================
+       INISIALISASI & MENU
+    ============================================================ */
+    function initializeGame() {
+      // Pilihan Kelas
+      document.querySelectorAll("#classSelector .opt-card").forEach(c => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll("#classSelector .opt-card").forEach(x => x.classList.remove("active"));
+          c.classList.add("active");
+          gameState.selectedClass = parseInt(c.dataset.class, 10);
+          playSound("click");
+        });
+      });
+      // Pilihan Mapel
+      document.querySelectorAll("#subjectSelector .opt-card").forEach(c => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll("#subjectSelector .opt-card").forEach(x => x.classList.remove("active"));
+          c.classList.add("active");
+          gameState.selectedSubject = c.dataset.subject;
+          playSound("click");
+        });
+      });
+      // Pilihan Kesulitan
+      document.querySelectorAll("#difficultySelector .opt-card").forEach(c => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll("#difficultySelector .opt-card").forEach(x => x.classList.remove("active"));
+          c.classList.add("active");
+          gameState.difficulty = c.dataset.difficulty;
+          playSound("click");
+        });
+      });
+      // Pilihan Jumlah Soal
+      document.querySelectorAll("#countSelector .opt-card").forEach(c => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll("#countSelector .opt-card").forEach(x => x.classList.remove("active"));
+          c.classList.add("active");
+          gameState.totalQuestions = parseInt(c.dataset.count, 10);
+          playSound("click");
+        });
+      });
 
-            // Acak urutan soal
-            let shuffledPool = shuffleArray(pool);
+      // Tombol Aksi
+      document.getElementById("btnStartGame").addEventListener("click", () => {
+        playSound("click"); getAudioContext(); startGame();
+      });
+      document.getElementById("btnSoundToggle").addEventListener("click", toggleSound);
+      document.getElementById("btnPause").addEventListener("click", pauseGame);
+      document.getElementById("btnResume").addEventListener("click", resumeGame);
+      document.getElementById("btnExitToMenu").addEventListener("click", returnToMenu);
+      document.getElementById("btnPlayAgain").addEventListener("click", () => {
+        playSound("click"); startGame();
+      });
+      document.getElementById("btnBackToMenuFromResults").addEventListener("click", returnToMenu);
 
-            // Potong pas sesuai target (tanpa duplikat)
-            let finalQuestions = shuffledPool.slice(0, targetCount);
+      showStartScreen();
+    }
 
-            return JSON.parse(JSON.stringify(finalQuestions));
-        }
+    function showStartScreen() {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("startScreen").classList.add("active");
+      document.getElementById("pauseModal").classList.remove("active");
+    }
 
-        /* =========================================================================
-           WEB AUDIO API (SOUND EFFECT)
-        ========================================================================= */
-        let audioCtx = null;
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    /* ============================================================
+       GAMEPLAY
+    ============================================================ */
+    function startGame() {
+      resetGame();
+      const pool = getQuestionPool(gameState.selectedClass, gameState.selectedSubject);
+      gameState.questionQueue = filterQuestions(pool, gameState.difficulty, gameState.totalQuestions);
 
-        function playSound(type) {
-            if (!gameState.soundEnabled) return;
-            initAudio();
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
+      const mapSubj = { matematika: "Matematika", bahasaIndonesia: "B. Indonesia", ipas: "IPAS", pancasila: "Pancasila" };
+      document.getElementById("gameMetaBadge").textContent = `Kelas ${gameState.selectedClass} - ${mapSubj[gameState.selectedSubject] || "Umum"}`;
 
-            if (type === 'pop') {
-                osc.type = 'triangle'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(150, now + 0.1);
-                gain.gain.setValueAtTime(0.5, now); gain.gain.linearRampToValueAtTime(0, now + 0.1);
-                osc.start(now); osc.stop(now + 0.1);
-            } else if (type === 'correct') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.1); osc.frequency.setValueAtTime(783.99, now + 0.2);
-                gain.gain.setValueAtTime(0.4, now); gain.gain.linearRampToValueAtTime(0, now + 0.35);
-                osc.start(now); osc.stop(now + 0.35);
-            } else if (type === 'wrong') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(250, now); osc.frequency.setValueAtTime(150, now + 0.15);
-                gain.gain.setValueAtTime(0.35, now); gain.gain.linearRampToValueAtTime(0, now + 0.25);
-                osc.start(now); osc.stop(now + 0.25);
-            } else if (type === 'win') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(800, now + 0.5);
-                gain.gain.setValueAtTime(0.5, now); gain.gain.linearRampToValueAtTime(0, now + 0.5);
-                osc.start(now); osc.stop(now + 0.5);
-            }
-        }
+      updateScore();
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("gameScreen").classList.add("active");
+      document.getElementById("pauseModal").classList.remove("active");
 
-        function toggleSound() {
-            gameState.soundEnabled = !gameState.soundEnabled;
-            document.getElementById('audio-btn').innerText = gameState.soundEnabled ? '🔊' : '🔇';
-        }
+      loadQuestion();
+    }
 
-        /* =========================================================================
-           GAME CONTROLLER
-        ========================================================================= */
-        function selectOption(key, value, elem) {
-            gameState[key] = value;
-            const parent = elem.parentElement;
-            parent.querySelectorAll('.opt-btn').forEach(btn => btn.classList.remove('selected'));
-            elem.classList.add('selected'); playSound('pop');
-        }
+    function loadQuestion() {
+      if (gameState.transitionTimer) {
+        clearTimeout(gameState.transitionTimer);
+        gameState.transitionTimer = null;
+      }
+      if (gameState.currentQuestion >= gameState.totalQuestions) {
+        finishGame(); return;
+      }
 
-        function switchScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
+      const q = gameState.questionQueue[gameState.currentQuestion];
+      gameState.currentQuestionData = q;
+      gameState.player1Answered = false;
+      gameState.player2Answered = false;
+      gameState.player1Active = true;
+      gameState.player2Active = true;
 
-        function startGame() {
-            initAudio();
-            gameState.p1Score = 0; gameState.p2Score = 0; 
-            gameState.p1Correct = 0; gameState.p2Correct = 0;
-            gameState.p1Wrong = 0; gameState.p2Wrong = 0; 
-            gameState.p1Late = 0; gameState.p2Late = 0; 
-            gameState.currentQuestion = 0; gameState.paused = false;
+      document.getElementById("questionCounter").textContent = `SOAL ${gameState.currentQuestion + 1} / ${gameState.totalQuestions}`;
+      document.getElementById("questionDisplay").textContent = q.q;
+      updateProgress();
+      updateRoundStatusUI();
 
-            document.getElementById('p1-score').innerText = '0'; document.getElementById('p2-score').innerText = '0';
-            document.getElementById('result-modal').classList.remove('active'); document.getElementById('pause-modal').classList.remove('active');
+      hideFeedback(1);
+      hideFeedback(2);
 
-            // Tarik Soal Murni 1 Mapel & Anti Duplikat
-            gameState.questions = getUniqueQuestions(gameState.selectedClass, gameState.selectedSubject, gameState.difficulty, gameState.targetQuestions);
-            
-            gameState.roundQuestions = gameState.questions.length;
+      createBalloons();
+    }
 
-            switchScreen('game-screen'); loadNextQuestion();
-        }
+    function updateProgress() {
+      const pct = (gameState.currentQuestion / gameState.totalQuestions) * 100;
+      document.getElementById("progressBar").style.width = `${pct}%`;
+    }
 
-        function loadNextQuestion() {
-            if (gameState.currentQuestion >= gameState.roundQuestions) { finishGame(); return; }
+    function updateScore() {
+      document.getElementById("p1Score").textContent = gameState.player1Score;
+      document.getElementById("p2Score").textContent = gameState.player2Score;
+      document.getElementById("p1CorrectCount").textContent = gameState.player1Correct;
+      document.getElementById("p1WrongCount").textContent = gameState.player1Wrong;
+      document.getElementById("p2CorrectCount").textContent = gameState.player2Correct;
+      document.getElementById("p2WrongCount").textContent = gameState.player2Wrong;
+    }
 
-            gameState.p1Answered = false; gameState.p2Answered = false; gameState.roundResolved = false;
-            document.getElementById('p1-status').classList.remove('active'); document.getElementById('p2-status').classList.remove('active');
-            document.getElementById('p1-balloons').classList.remove('disabled'); document.getElementById('p2-balloons').classList.remove('disabled');
+    function updateRoundStatusUI() {
+      const p1 = document.getElementById("p1StatusBadge");
+      const p2 = document.getElementById("p2StatusBadge");
 
-            const qObj = gameState.questions[gameState.currentQuestion];
-            document.getElementById('q-progress-text').innerText = `SOAL ${gameState.currentQuestion + 1} / ${gameState.roundQuestions}`;
-            document.getElementById('question-text').innerText = qObj.q;
-            document.getElementById('progress-bar').style.width = `${((gameState.currentQuestion) / gameState.roundQuestions) * 100}%`;
+      if (gameState.player1Answered) { p1.className = "p-badge b-done"; p1.textContent = "✅ Selesai!"; }
+      else if (!gameState.player1Active) { p1.className = "p-badge b-fail"; p1.textContent = "❌ Balon Habis"; }
+      else if (gameState.player2Answered) { p1.className = "p-badge b-wait"; p1.textContent = "⏳ Giliranmu!"; }
+      else { p1.className = "p-badge b-ready"; p1.textContent = "Giliran Bermain"; }
 
-            renderSharedFallingBalloons(qObj);
-        }
+      if (gameState.player2Answered) { p2.className = "p-badge b-done"; p2.textContent = "✅ Selesai!"; }
+      else if (!gameState.player2Active) { p2.className = "p-badge b-fail"; p2.textContent = "❌ Balon Habis"; }
+      else if (gameState.player1Answered) { p2.className = "p-badge b-wait"; p2.textContent = "⏳ Giliranmu!"; }
+      else { p2.className = "p-badge b-ready"; p2.textContent = "Giliran Bermain"; }
+    }
 
-        function renderSharedFallingBalloons(qData) {
-            const container1 = document.getElementById('p1-balloons'); const container2 = document.getElementById('p2-balloons');
-            container1.innerHTML = ''; container2.innerHTML = '';
+    /* ============================================================
+       SISTEM BALON
+    ============================================================ */
+    function createBalloons() {
+      const q = gameState.currentQuestionData;
+      if (!q) return;
+      const rightAnswer = q.a[q.c];
+      renderPlayerBalloons(1, shuffleArray(q.a), rightAnswer);
+      renderPlayerBalloons(2, shuffleArray(q.a), rightAnswer);
+    }
 
-            const options = [...qData.answers];
-            generateBalloonsForContainer(container1, options, qData.correct, 1);
-            generateBalloonsForContainer(container2, options, qData.correct, 2);
-        }
+    function renderPlayerBalloons(playerNum, answers, correctAnswerText) {
+      const canvas = document.getElementById(playerNum === 1 ? "canvasPlayer1" : "canvasPlayer2");
+      canvas.innerHTML = "";
 
-        function generateBalloonsForContainer(container, options, correctIndex, playerNum) {
-            const lanePositions = [10, 35, 60, 85];
-            const shuffledLanes = shuffleArray([...lanePositions]);
+      const slots = shuffleArray([
+        { top: 12, left: 14 }, { top: 15, left: 56 },
+        { top: 52, left: 12 }, { top: 50, left: 54 }
+      ]);
 
-            options.forEach((optText, idx) => {
-                const b = document.createElement('div');
-                b.className = 'balloon';
-                
-                const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
-                b.style.backgroundColor = color; b.style.color = color;
-                
-                b.style.left = `${shuffledLanes[idx]}%`;
-                
-                const duration = Math.random() * 5 + 17;
-                b.style.animation = `fallColumn ${duration}s linear infinite`;
-                b.style.animationDelay = `${idx * 1.3}s`;
+      answers.forEach((ans, idx) => {
+        const slot = slots[idx];
+        const isRight = (ans === correctAnswerText);
+        const b = document.createElement("div");
+        b.className = `balloon ${balloonColors[(idx * 2 + playerNum) % balloonColors.length]}`;
+        b.dataset.player = playerNum;
 
-                const isCorrect = (idx === correctIndex);
+        const anim = animationStyles[Math.floor(Math.random() * animationStyles.length)];
+        const dur = (7 + Math.random() * 4).toFixed(1);
+        const delay = (Math.random() * 2).toFixed(1);
+        b.style.animation = `${anim} ${dur}s ease-in-out ${delay}s infinite alternate`;
 
-                b.innerHTML = `
-                    <div class="balloon-string"></div>
-                    <div class="balloon-shine"></div>
-                    <div class="balloon-face">
-                        <div class="balloon-eyes"><div class="balloon-eye"></div><div class="balloon-eye"></div></div>
-                        <div class="balloon-cheeks"><div class="balloon-cheek"></div><div class="balloon-cheek"></div></div>
-                        <div class="balloon-mouth"></div>
-                    </div>
-                    <span style="color:white; z-index:2; margin-top:22px; padding:0 4px;">${optText}</span>
-                `;
+        const top = Math.max(8, Math.min(68, slot.top + (Math.random() * 6 - 3)));
+        const left = Math.max(8, Math.min(66, slot.left + (Math.random() * 6 - 3)));
+        b.style.top = `${top}%`;
+        b.style.left = `${left}%`;
 
-                b.onclick = () => handleBalloonClick(playerNum, isCorrect, b);
-                container.appendChild(b);
-            });
-        }
+        const string = document.createElement("div");
+        string.className = "b-string";
 
-        function handleBalloonClick(playerNum, isCorrect, balloonElem) {
-            if (gameState.paused || gameState.roundResolved) return;
-            if (playerNum === 1 && gameState.p1Answered) return;
-            if (playerNum === 2 && gameState.p2Answered) return;
+        const text = document.createElement("div");
+        text.className = "b-text";
+        text.textContent = ans;
 
-            balloonElem.classList.add('popping'); playSound('pop');
+        b.appendChild(text);
+        b.appendChild(string);
 
-            const pointsPerQuestion = 100 / gameState.roundQuestions;
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handleBalloonClick(playerNum, b, isRight);
+        });
 
-            if (isCorrect) {
-                gameState.roundResolved = true; playSound('correct');
+        canvas.appendChild(b);
+      });
+    }
 
-                if (playerNum === 1) {
-                    gameState.p1Score += pointsPerQuestion; gameState.p1Correct++; gameState.p1Answered = true;
-                    document.getElementById('p1-score').innerText = Math.round(gameState.p1Score * 10) / 10;
-                    showStatus(1, `⚡ BENAR! (+${Math.round(pointsPerQuestion)} Poin)`);
-                    showStatus(2, '❌ KETIKUNG! LAWAN BENAR DULUAN');
-                    if (!gameState.p2Answered) gameState.p2Late++;
-                } else {
-                    gameState.p2Score += pointsPerQuestion; gameState.p2Correct++; gameState.p2Answered = true;
-                    document.getElementById('p2-score').innerText = Math.round(gameState.p2Score * 10) / 10;
-                    showStatus(2, `⚡ BENAR! (+${Math.round(pointsPerQuestion)} Poin)`);
-                    showStatus(1, '❌ KETIKUNG! LAWAN BENAR DULUAN');
-                    if (!gameState.p1Answered) gameState.p1Late++;
-                }
+    function handleBalloonClick(playerNum, balloonElem, isCorrect) {
+      if (gameState.paused) return;
+      if (playerNum === 1 && (gameState.player1Answered || !gameState.player1Active)) return;
+      if (playerNum === 2 && (gameState.player2Answered || !gameState.player2Active)) return;
 
-                document.getElementById('p1-balloons').classList.add('disabled');
-                document.getElementById('p2-balloons').classList.add('disabled');
+      createBurstParticles(balloonElem);
+      playSound("pop");
+      balloonElem.classList.add("popping");
 
-                setTimeout(() => {
-                    gameState.currentQuestion++;
-                    loadNextQuestion();
-                }, 1400);
+      setTimeout(() => {
+        balloonElem.remove();
+        checkAnswer(playerNum, isCorrect);
+      }, 250);
+    }
 
-            } else {
-                playSound('wrong');
+    function checkAnswer(playerNum, isCorrect) {
+      if (isCorrect) {
+        handleCorrectAnswer(playerNum);
+      } else {
+        handleWrongAnswer(playerNum);
+      }
+    }
 
-                if (playerNum === 1) {
-                    gameState.p1Wrong++; gameState.p1Answered = true;
-                    document.getElementById('p1-balloons').classList.add('disabled');
-                    showStatus(1, '❌ SALAH! Menunggu Lawan...');
-                } else {
-                    gameState.p2Wrong++; gameState.p2Answered = true;
-                    document.getElementById('p2-balloons').classList.add('disabled');
-                    showStatus(2, '❌ SALAH! Menunggu Lawan...');
-                }
+    function handleCorrectAnswer(playerNum) {
+      playSound("correct");
+      if (playerNum === 1) {
+        gameState.player1Score += 10; gameState.player1Correct++; gameState.player1Answered = true;
+        showFeedback(1, "🎉 BENAR! +10", "fb-ok"); pulseScore(1); disableBalloons(1);
+      } else {
+        gameState.player2Score += 10; gameState.player2Correct++; gameState.player2Answered = true;
+        showFeedback(2, "🎉 BENAR! +10", "fb-ok"); pulseScore(2); disableBalloons(2);
+      }
+      updateScore();
+      updateRoundStatusUI();
+      checkRoundComplete();
+    }
 
-                if (gameState.p1Answered && gameState.p2Answered) {
-                    gameState.roundResolved = true;
-                    setTimeout(() => {
-                        gameState.currentQuestion++;
-                        loadNextQuestion();
-                    }, 1400);
-                }
-            }
-        }
+    function handleWrongAnswer(playerNum) {
+      playSound("wrong");
+      if (playerNum === 1) {
+        gameState.player1Wrong++; showFeedback(1, "❌ SALAH! Coba lagi!", "fb-err");
+      } else {
+        gameState.player2Wrong++; showFeedback(2, "❌ SALAH! Coba lagi!", "fb-err");
+      }
+      updateScore();
 
-        function showStatus(playerNum, text) {
-            const statusElem = document.getElementById(`p${playerNum}-status`);
-            statusElem.innerText = text; statusElem.classList.add('active');
-        }
+      const canvasId = playerNum === 1 ? "canvasPlayer1" : "canvasPlayer2";
+      const remaining = document.querySelectorAll(`#${canvasId} .balloon:not(.popping)`);
+      if (remaining.length === 0) {
+        if (playerNum === 1) gameState.player1Active = false;
+        if (playerNum === 2) gameState.player2Active = false;
+        updateRoundStatusUI();
+        checkRoundComplete();
+      }
+    }
 
-        function finishGame() {
-            playSound('win');
-            document.getElementById('res-p1-score').innerText = Math.round(gameState.p1Score); 
-            document.getElementById('res-p1-c').innerText = gameState.p1Correct; 
-            document.getElementById('res-p1-w').innerText = gameState.p1Wrong;
-            document.getElementById('res-p1-l').innerText = gameState.p1Late;
+    function disableBalloons(playerNum) {
+      const canvasId = playerNum === 1 ? "canvasPlayer1" : "canvasPlayer2";
+      document.querySelectorAll(`#${canvasId} .balloon`).forEach(b => {
+        b.style.pointerEvents = "none";
+        b.style.opacity = "0.75";
+      });
+    }
 
-            document.getElementById('res-p2-score').innerText = Math.round(gameState.p2Score); 
-            document.getElementById('res-p2-c').innerText = gameState.p2Correct; 
-            document.getElementById('res-p2-w').innerText = gameState.p2Wrong;
-            document.getElementById('res-p2-l').innerText = gameState.p2Late;
+    function pulseScore(playerNum) {
+      const box = document.getElementById(playerNum === 1 ? "p1ScoreBox" : "p2ScoreBox");
+      box.classList.add("score-pulse");
+      setTimeout(() => box.classList.remove("score-pulse"), 300);
+    }
 
-            const winAnnounce = document.getElementById('winner-announcement');
-            if (gameState.p1Score > gameState.p2Score) {
-                winAnnounce.innerHTML = "🦊 PLAYER 1 MENANG! 🏆"; winAnnounce.style.color = "#d97706"; winAnnounce.style.borderColor = "#f59e0b"; winAnnounce.style.background = "#ffcc00";
-            } else if (gameState.p2Score > gameState.p1Score) {
-                winAnnounce.innerHTML = "🐸 PLAYER 2 MENANG! 🏆"; winAnnounce.style.color = "#0369a1"; winAnnounce.style.borderColor = "#0ea5e9"; winAnnounce.style.background = "#bae6fd";
-            } else {
-                winAnnounce.innerHTML = "🤝 HASIL SERI! SANGAT HEBAT! 🤝"; winAnnounce.style.color = "#15803d"; winAnnounce.style.borderColor = "#22c55e"; winAnnounce.style.background = "#bbf7d0";
-            }
+    function showFeedback(playerNum, msg, cls) {
+      const el = document.getElementById(playerNum === 1 ? "p1Feedback" : "p2Feedback");
+      el.textContent = msg; el.className = `p-feedback ${cls}`;
+    }
 
-            document.getElementById('result-modal').classList.add('active'); triggerConfetti();
-        }
+    function hideFeedback(playerNum) {
+      const el = document.getElementById(playerNum === 1 ? "p1Feedback" : "p2Feedback");
+      el.className = "p-feedback"; el.textContent = "";
+    }
 
-        function pauseGame() { gameState.paused = true; document.getElementById('pause-modal').classList.add('active'); }
-        function resumeGame() { gameState.paused = false; document.getElementById('pause-modal').classList.remove('active'); }
-        function returnToMenu() { gameState.paused = false; document.getElementById('pause-modal').classList.remove('active'); document.getElementById('result-modal').classList.remove('active'); switchScreen('menu-screen'); }
-        function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+    function checkRoundComplete() {
+      const p1Done = gameState.player1Answered || !gameState.player1Active;
+      const p2Done = gameState.player2Answered || !gameState.player2Active;
+      if (p1Done && p2Done) {
+        gameState.transitionTimer = setTimeout(nextQuestion, 1300);
+      }
+    }
 
-        function triggerConfetti() {
-            const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const particles = []; const colors = ['#ff3366', '#00c6ff', '#10b981', '#ffcc00', '#a855f7'];
+    function nextQuestion() {
+      gameState.currentQuestion++;
+      loadQuestion();
+    }
 
-            for (let i = 0; i < 150; i++) {
-                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, size: Math.random() * 14 + 6, color: colors[Math.floor(Math.random() * colors.length)], vy: Math.random() * 4 + 2, vx: Math.random() * 3 - 1.5 });
-            }
+    /* ============================================================
+       HASIL AKHIR & STATUS
+    ============================================================ */
+    function finishGame() {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("resultScreen").classList.add("active");
 
-            function render() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.y += p.vy; p.x += p.vx; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2); ctx.fill();
-                });
-                if (particles.some(p => p.y < canvas.height)) requestAnimationFrame(render);
-            }
-            render();
-        }
+      playSound("win");
+      createConfetti(100);
 
-        window.onload = function() {
-            setTimeout(fetchCPUpdates, 500);
-        };
-    </script>
+      animateScore("finalScoreP1", gameState.player1Score);
+      animateScore("finalScoreP2", gameState.player2Score);
+
+      document.getElementById("finalCorrectP1").textContent = gameState.player1Correct;
+      document.getElementById("finalWrongP1").textContent = gameState.player1Wrong;
+      document.getElementById("finalCorrectP2").textContent = gameState.player2Correct;
+      document.getElementById("finalWrongP2").textContent = gameState.player2Wrong;
+
+      showResult();
+    }
+
+    function showResult() {
+      const lbl = document.getElementById("winnerLabel");
+      const name = document.getElementById("winnerName");
+      const desc = document.getElementById("winnerDesc");
+      const icon = document.getElementById("winnerIcon");
+
+      if (gameState.player1Score > gameState.player2Score) {
+        icon.textContent = "🏆"; lbl.textContent = "PEMENANG!";
+        name.textContent = "👦 PLAYER 1"; name.className = "win-name p1-text";
+        desc.textContent = "Selamat! Kamu mendapatkan poin terbanyak!";
+      } else if (gameState.player2Score > gameState.player1Score) {
+        icon.textContent = "🏆"; lbl.textContent = "PEMENANG!";
+        name.textContent = "👧 PLAYER 2"; name.className = "win-name p2-text";
+        desc.textContent = "Selamat! Kamu mendapatkan poin terbanyak!";
+      } else {
+        icon.textContent = "🤝"; lbl.textContent = "HASIL PERTANDINGAN";
+        name.textContent = "HASIL SERI!"; name.className = "win-name";
+        desc.textContent = "Hebat sekali! Skor kalian berdua sama!";
+      }
+    }
+
+    function animateScore(id, target) {
+      const el = document.getElementById(id);
+      if (target === 0) { el.textContent = "0"; return; }
+      let cur = 0; const step = target / 20;
+      const t = setInterval(() => {
+        cur += step;
+        if (cur >= target) { el.textContent = target; clearInterval(t); }
+        else { el.textContent = Math.floor(cur); }
+      }, 50);
+    }
+
+    function pauseGame() {
+      gameState.paused = true;
+      document.getElementById("pauseModal").classList.add("active");
+    }
+
+    function resumeGame() {
+      gameState.paused = false;
+      document.getElementById("pauseModal").classList.remove("active");
+      playSound("click");
+    }
+
+    function returnToMenu() {
+      if (gameState.transitionTimer) clearTimeout(gameState.transitionTimer);
+      resetGame();
+      showStartScreen();
+    }
+
+    function resetGame() {
+      gameState.currentQuestion = 0;
+      gameState.player1Score = 0; gameState.player2Score = 0;
+      gameState.player1Correct = 0; gameState.player2Correct = 0;
+      gameState.player1Wrong = 0; gameState.player2Wrong = 0;
+      gameState.paused = false; gameState.questionQueue = [];
+      gameState.currentQuestionData = null;
+    }
+
+    /* ============================================================
+       PARTIKEL & CONFETTI
+    ============================================================ */
+    function createBurstParticles(elem) {
+      const r = elem.getBoundingClientRect();
+      const ox = r.left + r.width / 2;
+      const oy = r.top + r.height / 2;
+      const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"];
+      for (let i = 0; i < 10; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = `${ox}px`; p.style.top = `${oy}px`;
+        const a = (Math.PI * 2 / 10) * i;
+        const dist = 35 + Math.random() * 45;
+        p.style.setProperty("--tx", `${Math.cos(a) * dist}px`);
+        p.style.setProperty("--ty", `${Math.sin(a) * dist}px`);
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 550);
+      }
+    }
+
+    function createConfetti(count = 75) {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ["#f43f5e", "#0ea5e9", "#10b981", "#f59e0b", "#a855f7", "#ec4899", "#eab308"];
+      const items = [];
+      for (let i = 0; i < count; i++) {
+        items.push({
+          x: Math.random() * canvas.width, y: Math.random() * -canvas.height,
+          sz: Math.random() * 7 + 4, color: colors[Math.floor(Math.random() * colors.length)],
+          vx: Math.random() * 4 - 2, vy: Math.random() * 4 + 3,
+          rot: Math.random() * 360, vr: Math.random() * 8 - 4
+        });
+      }
+      let frames = 0;
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+        items.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          if (p.y < canvas.height) active = true;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.sz / 2, -p.sz / 2, p.sz, p.sz * 0.6);
+          ctx.restore();
+        });
+        frames++;
+        if (active && frames < 160) requestAnimationFrame(loop);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      loop();
+    }
+
+    window.addEventListener("DOMContentLoaded", initializeGame);
+  </script>
 </body>
 </html>
